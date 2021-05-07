@@ -1,17 +1,15 @@
-REST/beans/Users.java
- REST.beans.Users
-SubTest.java
- SubTest
- SubTest$1
-REST/beans/User.java
- REST.beans.User
-REST/services/HelloWorld.java
- REST.services.HelloWorld
-REST/services/UsersService.java
- REST.services.UsersService
+DRONAZON/SubTest.java
+ DRONAZON.SubTest
+ DRONAZON.SubTest$1
 REST/StartServer.java
  REST.StartServer
-Order.java
- Order
-Dronazon.java
- Dronazon
+DRONAZON/Dronazon.java
+ DRONAZON.Dronazon
+REST/beans/Drone.java
+ REST.beans.Drone
+DRONAZON/Order.java
+ DRONAZON.Order
+REST/services/DronesService.java
+ REST.services.DronesService
+REST/beans/Drones.java
+ REST.beans.Drones
