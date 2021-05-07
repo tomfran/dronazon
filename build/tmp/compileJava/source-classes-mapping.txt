@@ -1,15 +1,15 @@
+REST/beans/Drone.java
+ REST.beans.Drone
+REST/services/DronesService.java
+ REST.services.DronesService
 DRONAZON/SubTest.java
  DRONAZON.SubTest
  DRONAZON.SubTest$1
-REST/StartServer.java
- REST.StartServer
 DRONAZON/Dronazon.java
  DRONAZON.Dronazon
-REST/beans/Drone.java
- REST.beans.Drone
 DRONAZON/Order.java
  DRONAZON.Order
-REST/services/DronesService.java
- REST.services.DronesService
+REST/StartServer.java
+ REST.StartServer
 REST/beans/Drones.java
  REST.beans.Drones
