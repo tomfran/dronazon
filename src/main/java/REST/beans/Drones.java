@@ -9,6 +9,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
+
+import static java.lang.Math.abs;
 
 @XmlRootElement
 @XmlAccessorType (XmlAccessType.FIELD)
@@ -42,20 +45,27 @@ public class Drones {
         this.dronesDict = dronesDict;
     }
 
-    public synchronized boolean add(Drone u){
+    private int[] randomCoordinates() {
+        Random rd = new Random();
+        int x = abs(rd.nextInt()%10);
+        int y = abs(rd.nextInt()%10);
+        return new int[]{x, y};
+    }
+
+    public synchronized CoordDroneList add(Drone u){
         if( !dronesDict.containsKey(u.getId()) ) {
             dronesDict.put(u.getId(), u);
-            return true;
+            return new CoordDroneList(getDronesList(), randomCoordinates());
         } else {
-            return false;
+            return null;
         }
     }
 
-    public Drone getById(int id){
-        return getDronesDict().get(id);
+    public synchronized Drone getById(int id){
+        return this.dronesDict.get(id);
     }
 
-    public Drone deleteById(int id) {
+    public synchronized Drone deleteById(int id) {
         return this.dronesDict.remove(id);
     }
 }

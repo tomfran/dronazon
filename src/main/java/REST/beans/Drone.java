@@ -1,9 +1,5 @@
 package REST.beans;
 
-/**
- * Created by civi on 26/04/16.
- */
-
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement

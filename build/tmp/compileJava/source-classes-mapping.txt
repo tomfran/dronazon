@@ -2,6 +2,8 @@ REST/beans/Drone.java
  REST.beans.Drone
 REST/services/DronesService.java
  REST.services.DronesService
+REST/beans/CoordDroneList.java
+ REST.beans.CoordDroneList
 DRONAZON/SubTest.java
  DRONAZON.SubTest
  DRONAZON.SubTest$1

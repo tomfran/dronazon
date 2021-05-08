@@ -1,6 +1,6 @@
 package REST.services;
 
-
+import REST.beans.CoordDroneList;
 import REST.beans.Drone;
 import REST.beans.Drones;
 
@@ -22,8 +22,12 @@ public class DronesService {
     @POST
     @Consumes({"application/json", "application/xml"})
     public Response addDrone(Drone u){
-        boolean result = Drones.getInstance().add(u);
-        return result? Response.ok().build() : Response.status(Response.Status.CONFLICT).build();
+        CoordDroneList result = Drones.getInstance().add(u);
+        if(result != null){
+            return Response.ok(result).build();
+        } else {
+            return Response.status(Response.Status.CONFLICT).build();
+        }
     }
 
     @Path("get")
