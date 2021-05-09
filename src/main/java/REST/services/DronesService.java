@@ -23,11 +23,10 @@ public class DronesService {
     @Consumes({"application/json", "application/xml"})
     public Response addDrone(Drone u){
         CoordDroneList result = Drones.getInstance().add(u);
-        if(result != null){
+        if(result != null)
             return Response.ok(result).build();
-        } else {
+        else
             return Response.status(Response.Status.CONFLICT).build();
-        }
     }
 
     @Path("get")

@@ -1,7 +1,7 @@
 REST/beans/Drone.java
  REST.beans.Drone
-REST/services/DronesService.java
- REST.services.DronesService
+REST/StartServer.java
+ REST.StartServer
 REST/beans/CoordDroneList.java
  REST.beans.CoordDroneList
 DRONAZON/SubTest.java
@@ -11,7 +11,7 @@ DRONAZON/Dronazon.java
  DRONAZON.Dronazon
 DRONAZON/Order.java
  DRONAZON.Order
-REST/StartServer.java
- REST.StartServer
+REST/services/DronesService.java
+ REST.services.DronesService
 REST/beans/Drones.java
  REST.beans.Drones
