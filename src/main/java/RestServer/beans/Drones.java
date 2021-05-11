@@ -1,4 +1,4 @@
-package REST.beans;
+package RestServer.beans;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

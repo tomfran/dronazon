@@ -1,8 +1,8 @@
-package REST.services;
+package RestServer.services;
 
-import REST.beans.CoordDroneList;
-import REST.beans.Drone;
-import REST.beans.Drones;
+import RestServer.beans.CoordDroneList;
+import RestServer.beans.Drone;
+import RestServer.beans.Drones;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
