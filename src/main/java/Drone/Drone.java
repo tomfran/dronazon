@@ -45,7 +45,7 @@ public class Drone {
         System.out.println(this);
     }
 
-    public void stop(){
+    public void stop() {
         restMethods.quit();
         if (monitorOrders != null) {
             monitorOrders.disconnect();
