@@ -1,4 +1,4 @@
-package DronazonOrders;
+package Drone;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -7,45 +7,19 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import java.awt.geom.Point2D;
-import java.util.ArrayList;
+public class RestMethods {
+    Drone drone;
 
-public class Drone {
-
-    // drone fields
-    private int id;
-    private String ip;
-    private int port;
-    private int[] coordinates;
-    private int battery;
-    private ArrayList<Drone> dronesList;
-
-    // rest api base
-    public static String restBaseAddress = "http://localhost:1337/drones/";
-
-    //master drone fields
-    private boolean isMaster;
-
-    public Drone(int id, String ip, int port) {
-        this.id = id;
-        this.ip = ip;
-        this.port = port;
-        this.battery = 100;
-        this.dronesList = new ArrayList<>();
-        this.coordinates = new int[2];
+    public RestMethods(Drone drone) {
+        this.drone = drone;
     }
 
-    public void run(){
-        request();
-        System.out.println(this);
-    }
-
-    public boolean request() {
+    public boolean initialize() {
         System.out.println("Initial information request");
         try {
             Client client = Client.create();
             WebResource webResource = client
-                    .resource(restBaseAddress + "add");
+                    .resource(Drone.restBaseAddress + "add");
 
             String payload = this.getPostPayload();
 
@@ -58,14 +32,14 @@ public class Drone {
             if (status == 200) {
                 // no conflict, unpack the response and go on
                 unpackResponse(response.getEntity(String.class));
-                System.out.println("Drone (" + this.id + ") initialization completed");
+                System.out.println("ADD: Drone " + drone.id + " initialization completed");
                 return true;
             } else if (status == 409) {
                 // if rest api gives a conflict response
-                System.out.println("The given ID (" + this.id + ") is already in the system, retry.");
+                System.out.println("ADD: The given ID " + drone.id + " is already in the system, retry.");
             } else {
                 // unhandled
-                System.out.println("Unhandled case: response.getStatus() = " + status);
+                System.out.println("ADD: Unhandled case: response.getStatus() = " + status);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -75,9 +49,9 @@ public class Drone {
 
     private String getPostPayload() throws JSONException {
         JSONObject payload = new JSONObject();
-        payload.put("id", this.id);
-        payload.put("ip", this.ip);
-        payload.put("port", this.port);
+        payload.put("id", drone.id);
+        payload.put("ip", drone.ip);
+        payload.put("port", drone.port);
         return payload.toString();
     }
 
@@ -88,7 +62,7 @@ public class Drone {
         // unpack coordinates
         JSONArray coordinates = input.getJSONArray("coordinates");
         for (int i = 0; i < 2; i++)
-            this.coordinates[i] = coordinates.getInt(i);
+            drone.coordinates[i] = coordinates.getInt(i);
 
         /*
         unpack drone list
@@ -102,35 +76,41 @@ public class Drone {
                 int id = current.getInt("id");
                 String ip = current.getString("id");
                 int port = current.getInt("port");
-                if (id != this.id)
-                    this.dronesList.add(new Drone(id, ip, port));
+                if (id != drone.id)
+                    drone.dronesList.add(new Drone(id, ip, port));
             }
         } catch (JSONException e) {
-            isMaster = true;
+            drone.isMaster = true;
         }
     }
 
-    public String getInfo(){
-        return (isMaster? "MASTER" : "SIMPLE") + " DRONE" + " Id: " + id +
-                "\nIp and port: " + this.ip + ":" + port;
+    public void quit() {
+        System.out.println("Quitting drone " + drone.id);
+        try {
+            Client client = Client.create();
+            // calling a DELETE host/remove/id removes the drone with the given id
+            WebResource webResource = client
+                    .resource(Drone.restBaseAddress + "remove/" + drone.id);
+
+            ClientResponse response = webResource.type("application/json")
+                    .delete(ClientResponse.class);
+
+            // if the id is not present in the system
+            int status = response.getStatus();
+
+            if (status == 200) {
+                // id found
+                System.out.println("REMOVE: Drone " + drone.id + " removed from REST api");
+            } else if (status == 404) {
+                // if rest api gives a conflict response
+                System.out.println("REMOVE: Drone " + drone.id + " was not found on rest api");
+            } else {
+                // unhandled
+                System.out.println("REMOVE: Unhandled case: response.getStatus() = " + status);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // stop threads and quit
     }
-
-    public String toString(){
-        String ret = getInfo() + "\nDrones list: [\n";
-
-        for (Drone d : dronesList)
-            ret += "\n" + d.getInfo() + ", \n\n";
-
-        ret += "]";
-        return ret;
-    }
-
-    public static void main(String[] args) {
-        Drone d1 = new Drone(3, "localhost", 5000);
-        Drone d2 = new Drone(4, "localhost", 6000);
-
-        d1.run();
-        d2.run();
-    }
-
 }

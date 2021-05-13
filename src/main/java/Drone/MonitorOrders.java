@@ -1,16 +1,24 @@
-package DronazonOrders;
+package Drone;
 
 import org.eclipse.paho.client.mqttv3.*;
 
 import java.sql.Timestamp;
 import java.util.Scanner;
 
-public class SubTest {
-    public static void main(String[] args) {
-        MqttClient client;
-        String broker = "tcp://localhost:1883";
-        String clientId = MqttClient.generateClientId();
-        String topic = "dronazon/smartcity/orders";
+public class MonitorOrders extends Thread{
+    private Drone drone;
+    private MqttClient client;
+    private static String broker = "tcp://localhost:1883";
+    private String clientId;
+    private static String topic = "dronazon/smartcity/orders";
+
+    public MonitorOrders(Drone drone) {
+        this.drone = drone;
+        this.clientId = MqttClient.generateClientId();
+    }
+
+    public void run() {
+
         int qos = 2;
 
         try {
@@ -25,19 +33,16 @@ public class SubTest {
 
             // Callback
             client.setCallback(new MqttCallback() {
-
                 public void messageArrived(String topic, MqttMessage message) {
                     // Called when a message arrives from the server that matches any subscription made by the client
                     String time = new Timestamp(System.currentTimeMillis()).toString();
                     String receivedMessage = new String(message.getPayload());
-                    System.out.println(clientId +" Received a Message! - Callback - Thread PID: " + Thread.currentThread().getId() +
+                    System.out.println(clientId +" MASTER DRONE Received a Message! - Callback - Thread PID: " + Thread.currentThread().getId() +
                             "\n\tTime:    " + time +
                             "\n\tTopic:   " + topic +
                             "\n\tMessage: " + receivedMessage +
                             "\n\tQoS:     " + message.getQos() + "\n");
-
-                    System.out.println("\n ***  Press a random key to exit *** \n");
-
+                    // find closest drone, and send him the order
                 }
 
                 public void connectionLost(Throwable cause) {
@@ -53,12 +58,6 @@ public class SubTest {
             client.subscribe(topic,qos);
             System.out.println(clientId + " Subscribed to topics : " + topic);
 
-
-            System.out.println("\n ***  Press a random key to exit *** \n");
-            Scanner command = new Scanner(System.in);
-            command.nextLine();
-            client.disconnect();
-
         } catch (MqttException me ) {
             System.out.println("reason " + me.getReasonCode());
             System.out.println("msg " + me.getMessage());
@@ -68,8 +67,19 @@ public class SubTest {
             me.printStackTrace();
         }
 
-
     }
 
+    public void disconnect() {
+        try {
+            client.disconnect();
+        } catch (MqttException me ) {
+            System.out.println("reason " + me.getReasonCode());
+            System.out.println("msg " + me.getMessage());
+            System.out.println("loc " + me.getLocalizedMessage());
+            System.out.println("cause " + me.getCause());
+            System.out.println("excep " + me);
+            me.printStackTrace();
+        }
+    }
 
 }

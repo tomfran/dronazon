@@ -1,4 +1,4 @@
-package DronazonOrders;
+package Dronazon;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
