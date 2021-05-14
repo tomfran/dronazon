@@ -1,0 +1,37 @@
+syntax = "proto3";
+package com.drone.grpc;
+
+service InfoGetter {
+  rpc GetInfo (InfoRequest) returns (InfoResponse) {}
+}
+
+message Coordinates {
+  string x = 1;
+  string y = 2;
+}
+
+message InfoRequest {}
+
+message InfoResponse {
+  int32 id = 1;
+  int32 residualBattery = 2;
+  Coordinates position = 3;
+}
+
+service OrderAssignment {
+  rpc AssignOrder (OrderRequest) returns (OrderResponse) {}
+}
+
+message OrderRequest {
+  int32 id = 1;
+  Coordinates start = 2;
+  Coordinates end = 3;
+}
+
+message OrderResponse {
+  int64 timestamp = 1;
+  Coordinates newPosition = 2;
+  int32 km = 3;
+  int32 pollutionAverage = 4;
+  int32 residualBattery = 5;
+}
