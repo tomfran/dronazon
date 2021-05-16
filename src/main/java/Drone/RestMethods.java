@@ -74,13 +74,14 @@ public class RestMethods {
             for (int i = 0; i < list.length(); i++) {
                 JSONObject current = list.getJSONObject(i);
                 int id = current.getInt("id");
-                String ip = current.getString("id");
+                String ip = current.getString("ip");
                 int port = current.getInt("port");
                 if (id != drone.id)
                     drone.dronesList.add(new Drone(id, ip, port));
             }
+            //drone.isMaster = false;
         } catch (JSONException e) {
-            drone.isMaster = true;
+            //drone.isMaster = true;
         }
     }
 
