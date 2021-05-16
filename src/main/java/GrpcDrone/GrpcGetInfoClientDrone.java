@@ -13,12 +13,12 @@ import io.grpc.stub.StreamObserver;
 
 import java.util.concurrent.TimeUnit;
 
-public class GrpcInfoClientDrone extends Thread {
+public class GrpcGetInfoClientDrone extends Thread {
     private Drone senderDrone;
     private Drone receiverDrone;
     private int listIndex;
 
-    public GrpcInfoClientDrone(Drone senderDrone, Drone receiverDrone, int listIndex) {
+    public GrpcGetInfoClientDrone(Drone senderDrone, Drone receiverDrone, int listIndex) {
         this.senderDrone = senderDrone;
         this.receiverDrone = receiverDrone;
         this.listIndex = listIndex;

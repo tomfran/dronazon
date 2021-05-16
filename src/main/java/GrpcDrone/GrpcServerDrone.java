@@ -16,6 +16,8 @@ public class GrpcServerDrone extends Thread{
     public void run(){
         Server server = ServerBuilder.forPort(drone.getPort())
                 .addService(new InfoGetterImpl(drone))
+                //.addService(new InfoSenderImpl(drone))
+                //.addService(new OrderAssignmentImpl(drone))
                 .build();
 
         try {

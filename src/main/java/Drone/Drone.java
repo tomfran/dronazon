@@ -1,6 +1,6 @@
 package Drone;
 
-import GrpcDrone.GrpcInfoClientDrone;
+import GrpcDrone.GrpcGetInfoClientDrone;
 import GrpcDrone.GrpcServerDrone;
 import com.drone.grpc.DroneService;
 
@@ -78,7 +78,7 @@ public class Drone {
 
     public void requestDronesInfo() {
         // list of threads to then stop them
-        ArrayList<GrpcInfoClientDrone> threadList = new ArrayList<>();
+        ArrayList<GrpcGetInfoClientDrone> threadList = new ArrayList<>();
 
         // create a thread for each drone in the list
         // and start requesting infos
@@ -87,14 +87,14 @@ public class Drone {
         int i = 0;
         for ( Drone d : dronesList ) {
             threadList.add(
-                    new GrpcInfoClientDrone(this, d, i)
+                    new GrpcGetInfoClientDrone(this, d, i)
             );
 
             threadList.get(i).start();
             i++;
         }
 
-        for ( GrpcInfoClientDrone t : threadList) {
+        for ( GrpcGetInfoClientDrone t : threadList) {
             try {
                 t.join();
             } catch (InterruptedException e) {
