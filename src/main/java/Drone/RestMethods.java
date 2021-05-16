@@ -79,8 +79,10 @@ public class RestMethods {
                 if (id != drone.id)
                     drone.dronesList.add(new Drone(id, ip, port));
             }
+            // TODO remove
             //drone.isMaster = false;
         } catch (JSONException e) {
+            // TODO remove
             //drone.isMaster = true;
         }
     }

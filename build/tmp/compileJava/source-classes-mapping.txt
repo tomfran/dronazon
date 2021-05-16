@@ -9,10 +9,27 @@ com/drone/grpc/InfoGetterGrpc.java
  com.drone.grpc.InfoGetterGrpc$InfoGetterMethodDescriptorSupplier
  com.drone.grpc.InfoGetterGrpc$InfoGetterStub
  com.drone.grpc.InfoGetterGrpc$MethodHandlers
-Dronazon/Dronazon.java
- Dronazon.Dronazon
-GrpcDrone/OrderAssignmentImpl.java
- GrpcDrone.OrderAssignmentImpl
+GrpcDrone/GrpcServerDrone.java
+ GrpcDrone.GrpcServerDrone
+Drone/MonitorOrders.java
+ Drone.MonitorOrders
+ Drone.MonitorOrders$1
+Drone/QuitDrone.java
+ Drone.QuitDrone
+GrpcDrone/GrpcGetInfoClientDrone.java
+ GrpcDrone.GrpcGetInfoClientDrone
+ GrpcDrone.GrpcGetInfoClientDrone$1
+com/drone/grpc/InfoSenderGrpc.java
+ com.drone.grpc.InfoSenderGrpc
+ com.drone.grpc.InfoSenderGrpc$1
+ com.drone.grpc.InfoSenderGrpc$InfoSenderBaseDescriptorSupplier
+ com.drone.grpc.InfoSenderGrpc$InfoSenderBlockingStub
+ com.drone.grpc.InfoSenderGrpc$InfoSenderFileDescriptorSupplier
+ com.drone.grpc.InfoSenderGrpc$InfoSenderFutureStub
+ com.drone.grpc.InfoSenderGrpc$InfoSenderImplBase
+ com.drone.grpc.InfoSenderGrpc$InfoSenderMethodDescriptorSupplier
+ com.drone.grpc.InfoSenderGrpc$InfoSenderStub
+ com.drone.grpc.InfoSenderGrpc$MethodHandlers
 com/drone/grpc/DroneService.java
  com.drone.grpc.DroneService
  com.drone.grpc.DroneService$1
@@ -36,15 +53,21 @@ com/drone/grpc/DroneService.java
  com.drone.grpc.DroneService$OrderResponse$1
  com.drone.grpc.DroneService$OrderResponse$Builder
  com.drone.grpc.DroneService$OrderResponseOrBuilder
+ com.drone.grpc.DroneService$SenderInfoRequest
+ com.drone.grpc.DroneService$SenderInfoRequest$1
+ com.drone.grpc.DroneService$SenderInfoRequest$Builder
+ com.drone.grpc.DroneService$SenderInfoRequestOrBuilder
+ com.drone.grpc.DroneService$SenderInfoResponse
+ com.drone.grpc.DroneService$SenderInfoResponse$1
+ com.drone.grpc.DroneService$SenderInfoResponse$Builder
+ com.drone.grpc.DroneService$SenderInfoResponseOrBuilder
 RestServer/services/DronesService.java
  RestServer.services.DronesService
 Dronazon/SubTest.java
  Dronazon.SubTest
  Dronazon.SubTest$1
-Dronazon/Order.java
- Dronazon.Order
-RestServer/beans/CoordDroneList.java
- RestServer.beans.CoordDroneList
+GrpcDrone/InfoGetterImpl.java
+ GrpcDrone.InfoGetterImpl
 com/drone/grpc/OrderAssignmentGrpc.java
  com.drone.grpc.OrderAssignmentGrpc
  com.drone.grpc.OrderAssignmentGrpc$1
@@ -58,23 +81,23 @@ com/drone/grpc/OrderAssignmentGrpc.java
  com.drone.grpc.OrderAssignmentGrpc$OrderAssignmentStub
 RestServer/beans/Drones.java
  RestServer.beans.Drones
-RestServer/StartServer.java
- RestServer.StartServer
-RestServer/beans/Drone.java
- RestServer.beans.Drone
-GrpcDrone/GrpcInfoClientDrone.java
- GrpcDrone.GrpcInfoClientDrone
- GrpcDrone.GrpcInfoClientDrone$1
 Drone/Drone.java
  Drone.Drone
-GrpcDrone/GrpcServerDrone.java
- GrpcDrone.GrpcServerDrone
-Drone/MonitorOrders.java
- Drone.MonitorOrders
- Drone.MonitorOrders$1
-Drone/QuitDrone.java
- Drone.QuitDrone
-GrpcDrone/InfoGetterImpl.java
- GrpcDrone.InfoGetterImpl
+RestServer/beans/Drone.java
+ RestServer.beans.Drone
+GrpcDrone/GrpcSendInfoClientDrone.java
+ GrpcDrone.GrpcSendInfoClientDrone
+Dronazon/Order.java
+ Dronazon.Order
 Drone/RestMethods.java
  Drone.RestMethods
+GrpcDrone/OrderAssignmentImpl.java
+ GrpcDrone.OrderAssignmentImpl
+Dronazon/Dronazon.java
+ Dronazon.Dronazon
+GrpcDrone/InfoSenderImpl.java
+ GrpcDrone.InfoSenderImpl
+RestServer/StartServer.java
+ RestServer.StartServer
+RestServer/beans/CoordDroneList.java
+ RestServer.beans.CoordDroneList

@@ -28,7 +28,6 @@ public class Drone {
     private GrpcServerDrone grpcServer;
     private QuitDrone quitDrone;
 
-
     public Drone(int id, String ip, int port) {
         this.id = id;
         this.ip = ip;
@@ -104,6 +103,12 @@ public class Drone {
 
         System.out.println(this);
     }
+
+    // todo, send infomation to everyone after registration
+    public void sendDroneInfo(){}
+
+    // todo, add a new registered drone
+    public void addNewDrone(){}
 
     public void invalidateDrone(int listIndex) {
         // method used to invalidate a drone entry
