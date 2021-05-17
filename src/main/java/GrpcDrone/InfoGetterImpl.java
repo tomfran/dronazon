@@ -10,10 +10,9 @@ import io.grpc.stub.StreamObserver;
 import java.sql.SQLOutput;
 
 public class InfoGetterImpl extends InfoGetterImplBase {
-    private Drone drone;
+    private final Drone drone;
 
     public InfoGetterImpl(Drone drone) {
-        System.out.println("InfogetterIMPL constructor " + drone.getId());
         this.drone = drone;
     }
 

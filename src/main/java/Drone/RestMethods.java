@@ -31,9 +31,10 @@ public class RestMethods {
 
             if (status == 200) {
                 // no conflict, unpack the response and go on
-                unpackResponse(response.getEntity(String.class));
-                System.out.println("ADD: Drone " + drone.id + " initialization completed");
-                return true;
+                if (unpackResponse(response.getEntity(String.class))) {
+                    System.out.println("ADD: Drone " + drone.id + " initialization completed");
+                    return true;
+                }
             } else if (status == 409) {
                 // if rest api gives a conflict response
                 System.out.println("ADD: The given ID " + drone.id + " is already in the system, retry.");
@@ -55,14 +56,20 @@ public class RestMethods {
         return payload.toString();
     }
 
-    private void unpackResponse(String response) throws JSONException {
+    private boolean unpackResponse(String response) {
 
-        JSONObject input = new JSONObject(response);
+        JSONObject input = null;
+        try {
+            input = new JSONObject(response);
+            // unpack coordinates
+            JSONArray coordinates = input.getJSONArray("coordinates");
+            for (int i = 0; i < 2; i++)
+                drone.coordinates[i] = coordinates.getInt(i);
 
-        // unpack coordinates
-        JSONArray coordinates = input.getJSONArray("coordinates");
-        for (int i = 0; i < 2; i++)
-            drone.coordinates[i] = coordinates.getInt(i);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return false;
+        }
 
         /*
         unpack drone list
@@ -79,12 +86,11 @@ public class RestMethods {
                 if (id != drone.id)
                     drone.dronesList.add(new Drone(id, ip, port));
             }
-            // TODO remove
-            //drone.isMaster = false;
+            drone.isMaster = false;
         } catch (JSONException e) {
-            // TODO remove
-            //drone.isMaster = true;
+            drone.isMaster = true;
         }
+        return true;
     }
 
     public void quit() {

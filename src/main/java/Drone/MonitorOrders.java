@@ -1,5 +1,6 @@
 package Drone;
 
+import Dronazon.Order;
 import org.eclipse.paho.client.mqttv3.*;
 
 import java.sql.Timestamp;
@@ -9,7 +10,7 @@ public class MonitorOrders extends Thread{
     private Drone drone;
     private MqttClient client;
     private static String broker = "tcp://localhost:1883";
-    private String clientId;
+    private final String clientId;
     private static String topic = "dronazon/smartcity/orders";
 
     public MonitorOrders(Drone drone) {
@@ -37,12 +38,13 @@ public class MonitorOrders extends Thread{
                     // Called when a message arrives from the server that matches any subscription made by the client
                     String time = new Timestamp(System.currentTimeMillis()).toString();
                     String receivedMessage = new String(message.getPayload());
-                    System.out.println(clientId +" MASTER DRONE Received a Message! - Callback - Thread PID: " + Thread.currentThread().getId() +
-                            "\n\tTime:    " + time +
-                            "\n\tTopic:   " + topic +
-                            "\n\tMessage: " + receivedMessage +
-                            "\n\tQoS:     " + message.getQos() + "\n");
-                    // find closest drone, and send him the order
+
+                    Order o = Order.unpackJson(receivedMessage);
+                    if (o.id == -1){
+                        System.out.println("ERROR while unpacking order json");
+                    } else {
+                        drone.orderQueue.addOrder(o);
+                    }
                 }
 
                 public void connectionLost(Throwable cause) {

@@ -1820,29 +1820,47 @@ public final class DroneService {
     int getId();
 
     /**
-     * <code>int32 residualBattery = 2;</code>
+     * <code>string ip = 2;</code>
+     * @return The ip.
+     */
+    java.lang.String getIp();
+    /**
+     * <code>string ip = 2;</code>
+     * @return The bytes for ip.
+     */
+    com.google.protobuf.ByteString
+        getIpBytes();
+
+    /**
+     * <code>int32 port = 3;</code>
+     * @return The port.
+     */
+    int getPort();
+
+    /**
+     * <code>int32 residualBattery = 4;</code>
      * @return The residualBattery.
      */
     int getResidualBattery();
 
     /**
-     * <code>bool isMaster = 3;</code>
+     * <code>bool isMaster = 5;</code>
      * @return The isMaster.
      */
     boolean getIsMaster();
 
     /**
-     * <code>.com.drone.grpc.Coordinates position = 4;</code>
+     * <code>.com.drone.grpc.Coordinates position = 6;</code>
      * @return Whether the position field is set.
      */
     boolean hasPosition();
     /**
-     * <code>.com.drone.grpc.Coordinates position = 4;</code>
+     * <code>.com.drone.grpc.Coordinates position = 6;</code>
      * @return The position.
      */
     com.drone.grpc.DroneService.Coordinates getPosition();
     /**
-     * <code>.com.drone.grpc.Coordinates position = 4;</code>
+     * <code>.com.drone.grpc.Coordinates position = 6;</code>
      */
     com.drone.grpc.DroneService.CoordinatesOrBuilder getPositionOrBuilder();
   }
@@ -1859,6 +1877,7 @@ public final class DroneService {
       super(builder);
     }
     private SenderInfoRequest() {
+      ip_ = "";
     }
 
     @java.lang.Override
@@ -1896,17 +1915,28 @@ public final class DroneService {
               id_ = input.readInt32();
               break;
             }
-            case 16: {
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
 
-              residualBattery_ = input.readInt32();
+              ip_ = s;
               break;
             }
             case 24: {
 
+              port_ = input.readInt32();
+              break;
+            }
+            case 32: {
+
+              residualBattery_ = input.readInt32();
+              break;
+            }
+            case 40: {
+
               isMaster_ = input.readBool();
               break;
             }
-            case 34: {
+            case 50: {
               com.drone.grpc.DroneService.Coordinates.Builder subBuilder = null;
               if (position_ != null) {
                 subBuilder = position_.toBuilder();
@@ -1961,44 +1991,90 @@ public final class DroneService {
       return id_;
     }
 
-    public static final int RESIDUALBATTERY_FIELD_NUMBER = 2;
+    public static final int IP_FIELD_NUMBER = 2;
+    private volatile java.lang.Object ip_;
+    /**
+     * <code>string ip = 2;</code>
+     * @return The ip.
+     */
+    public java.lang.String getIp() {
+      java.lang.Object ref = ip_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        ip_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string ip = 2;</code>
+     * @return The bytes for ip.
+     */
+    public com.google.protobuf.ByteString
+        getIpBytes() {
+      java.lang.Object ref = ip_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        ip_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int PORT_FIELD_NUMBER = 3;
+    private int port_;
+    /**
+     * <code>int32 port = 3;</code>
+     * @return The port.
+     */
+    public int getPort() {
+      return port_;
+    }
+
+    public static final int RESIDUALBATTERY_FIELD_NUMBER = 4;
     private int residualBattery_;
     /**
-     * <code>int32 residualBattery = 2;</code>
+     * <code>int32 residualBattery = 4;</code>
      * @return The residualBattery.
      */
     public int getResidualBattery() {
       return residualBattery_;
     }
 
-    public static final int ISMASTER_FIELD_NUMBER = 3;
+    public static final int ISMASTER_FIELD_NUMBER = 5;
     private boolean isMaster_;
     /**
-     * <code>bool isMaster = 3;</code>
+     * <code>bool isMaster = 5;</code>
      * @return The isMaster.
      */
     public boolean getIsMaster() {
       return isMaster_;
     }
 
-    public static final int POSITION_FIELD_NUMBER = 4;
+    public static final int POSITION_FIELD_NUMBER = 6;
     private com.drone.grpc.DroneService.Coordinates position_;
     /**
-     * <code>.com.drone.grpc.Coordinates position = 4;</code>
+     * <code>.com.drone.grpc.Coordinates position = 6;</code>
      * @return Whether the position field is set.
      */
     public boolean hasPosition() {
       return position_ != null;
     }
     /**
-     * <code>.com.drone.grpc.Coordinates position = 4;</code>
+     * <code>.com.drone.grpc.Coordinates position = 6;</code>
      * @return The position.
      */
     public com.drone.grpc.DroneService.Coordinates getPosition() {
       return position_ == null ? com.drone.grpc.DroneService.Coordinates.getDefaultInstance() : position_;
     }
     /**
-     * <code>.com.drone.grpc.Coordinates position = 4;</code>
+     * <code>.com.drone.grpc.Coordinates position = 6;</code>
      */
     public com.drone.grpc.DroneService.CoordinatesOrBuilder getPositionOrBuilder() {
       return getPosition();
@@ -2021,14 +2097,20 @@ public final class DroneService {
       if (id_ != 0) {
         output.writeInt32(1, id_);
       }
+      if (!getIpBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, ip_);
+      }
+      if (port_ != 0) {
+        output.writeInt32(3, port_);
+      }
       if (residualBattery_ != 0) {
-        output.writeInt32(2, residualBattery_);
+        output.writeInt32(4, residualBattery_);
       }
       if (isMaster_ != false) {
-        output.writeBool(3, isMaster_);
+        output.writeBool(5, isMaster_);
       }
       if (position_ != null) {
-        output.writeMessage(4, getPosition());
+        output.writeMessage(6, getPosition());
       }
       unknownFields.writeTo(output);
     }
@@ -2043,17 +2125,24 @@ public final class DroneService {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(1, id_);
       }
+      if (!getIpBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, ip_);
+      }
+      if (port_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(3, port_);
+      }
       if (residualBattery_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(2, residualBattery_);
+          .computeInt32Size(4, residualBattery_);
       }
       if (isMaster_ != false) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(3, isMaster_);
+          .computeBoolSize(5, isMaster_);
       }
       if (position_ != null) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, getPosition());
+          .computeMessageSize(6, getPosition());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -2072,6 +2161,10 @@ public final class DroneService {
 
       if (getId()
           != other.getId()) return false;
+      if (!getIp()
+          .equals(other.getIp())) return false;
+      if (getPort()
+          != other.getPort()) return false;
       if (getResidualBattery()
           != other.getResidualBattery()) return false;
       if (getIsMaster()
@@ -2094,6 +2187,10 @@ public final class DroneService {
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + ID_FIELD_NUMBER;
       hash = (53 * hash) + getId();
+      hash = (37 * hash) + IP_FIELD_NUMBER;
+      hash = (53 * hash) + getIp().hashCode();
+      hash = (37 * hash) + PORT_FIELD_NUMBER;
+      hash = (53 * hash) + getPort();
       hash = (37 * hash) + RESIDUALBATTERY_FIELD_NUMBER;
       hash = (53 * hash) + getResidualBattery();
       hash = (37 * hash) + ISMASTER_FIELD_NUMBER;
@@ -2238,6 +2335,10 @@ public final class DroneService {
         super.clear();
         id_ = 0;
 
+        ip_ = "";
+
+        port_ = 0;
+
         residualBattery_ = 0;
 
         isMaster_ = false;
@@ -2275,6 +2376,8 @@ public final class DroneService {
       public com.drone.grpc.DroneService.SenderInfoRequest buildPartial() {
         com.drone.grpc.DroneService.SenderInfoRequest result = new com.drone.grpc.DroneService.SenderInfoRequest(this);
         result.id_ = id_;
+        result.ip_ = ip_;
+        result.port_ = port_;
         result.residualBattery_ = residualBattery_;
         result.isMaster_ = isMaster_;
         if (positionBuilder_ == null) {
@@ -2332,6 +2435,13 @@ public final class DroneService {
         if (other == com.drone.grpc.DroneService.SenderInfoRequest.getDefaultInstance()) return this;
         if (other.getId() != 0) {
           setId(other.getId());
+        }
+        if (!other.getIp().isEmpty()) {
+          ip_ = other.ip_;
+          onChanged();
+        }
+        if (other.getPort() != 0) {
+          setPort(other.getPort());
         }
         if (other.getResidualBattery() != 0) {
           setResidualBattery(other.getResidualBattery());
@@ -2401,16 +2511,122 @@ public final class DroneService {
         return this;
       }
 
+      private java.lang.Object ip_ = "";
+      /**
+       * <code>string ip = 2;</code>
+       * @return The ip.
+       */
+      public java.lang.String getIp() {
+        java.lang.Object ref = ip_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          ip_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string ip = 2;</code>
+       * @return The bytes for ip.
+       */
+      public com.google.protobuf.ByteString
+          getIpBytes() {
+        java.lang.Object ref = ip_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          ip_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string ip = 2;</code>
+       * @param value The ip to set.
+       * @return This builder for chaining.
+       */
+      public Builder setIp(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        ip_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string ip = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearIp() {
+        
+        ip_ = getDefaultInstance().getIp();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string ip = 2;</code>
+       * @param value The bytes for ip to set.
+       * @return This builder for chaining.
+       */
+      public Builder setIpBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        ip_ = value;
+        onChanged();
+        return this;
+      }
+
+      private int port_ ;
+      /**
+       * <code>int32 port = 3;</code>
+       * @return The port.
+       */
+      public int getPort() {
+        return port_;
+      }
+      /**
+       * <code>int32 port = 3;</code>
+       * @param value The port to set.
+       * @return This builder for chaining.
+       */
+      public Builder setPort(int value) {
+        
+        port_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 port = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearPort() {
+        
+        port_ = 0;
+        onChanged();
+        return this;
+      }
+
       private int residualBattery_ ;
       /**
-       * <code>int32 residualBattery = 2;</code>
+       * <code>int32 residualBattery = 4;</code>
        * @return The residualBattery.
        */
       public int getResidualBattery() {
         return residualBattery_;
       }
       /**
-       * <code>int32 residualBattery = 2;</code>
+       * <code>int32 residualBattery = 4;</code>
        * @param value The residualBattery to set.
        * @return This builder for chaining.
        */
@@ -2421,7 +2637,7 @@ public final class DroneService {
         return this;
       }
       /**
-       * <code>int32 residualBattery = 2;</code>
+       * <code>int32 residualBattery = 4;</code>
        * @return This builder for chaining.
        */
       public Builder clearResidualBattery() {
@@ -2433,14 +2649,14 @@ public final class DroneService {
 
       private boolean isMaster_ ;
       /**
-       * <code>bool isMaster = 3;</code>
+       * <code>bool isMaster = 5;</code>
        * @return The isMaster.
        */
       public boolean getIsMaster() {
         return isMaster_;
       }
       /**
-       * <code>bool isMaster = 3;</code>
+       * <code>bool isMaster = 5;</code>
        * @param value The isMaster to set.
        * @return This builder for chaining.
        */
@@ -2451,7 +2667,7 @@ public final class DroneService {
         return this;
       }
       /**
-       * <code>bool isMaster = 3;</code>
+       * <code>bool isMaster = 5;</code>
        * @return This builder for chaining.
        */
       public Builder clearIsMaster() {
@@ -2465,14 +2681,14 @@ public final class DroneService {
       private com.google.protobuf.SingleFieldBuilderV3<
           com.drone.grpc.DroneService.Coordinates, com.drone.grpc.DroneService.Coordinates.Builder, com.drone.grpc.DroneService.CoordinatesOrBuilder> positionBuilder_;
       /**
-       * <code>.com.drone.grpc.Coordinates position = 4;</code>
+       * <code>.com.drone.grpc.Coordinates position = 6;</code>
        * @return Whether the position field is set.
        */
       public boolean hasPosition() {
         return positionBuilder_ != null || position_ != null;
       }
       /**
-       * <code>.com.drone.grpc.Coordinates position = 4;</code>
+       * <code>.com.drone.grpc.Coordinates position = 6;</code>
        * @return The position.
        */
       public com.drone.grpc.DroneService.Coordinates getPosition() {
@@ -2483,7 +2699,7 @@ public final class DroneService {
         }
       }
       /**
-       * <code>.com.drone.grpc.Coordinates position = 4;</code>
+       * <code>.com.drone.grpc.Coordinates position = 6;</code>
        */
       public Builder setPosition(com.drone.grpc.DroneService.Coordinates value) {
         if (positionBuilder_ == null) {
@@ -2499,7 +2715,7 @@ public final class DroneService {
         return this;
       }
       /**
-       * <code>.com.drone.grpc.Coordinates position = 4;</code>
+       * <code>.com.drone.grpc.Coordinates position = 6;</code>
        */
       public Builder setPosition(
           com.drone.grpc.DroneService.Coordinates.Builder builderForValue) {
@@ -2513,7 +2729,7 @@ public final class DroneService {
         return this;
       }
       /**
-       * <code>.com.drone.grpc.Coordinates position = 4;</code>
+       * <code>.com.drone.grpc.Coordinates position = 6;</code>
        */
       public Builder mergePosition(com.drone.grpc.DroneService.Coordinates value) {
         if (positionBuilder_ == null) {
@@ -2531,7 +2747,7 @@ public final class DroneService {
         return this;
       }
       /**
-       * <code>.com.drone.grpc.Coordinates position = 4;</code>
+       * <code>.com.drone.grpc.Coordinates position = 6;</code>
        */
       public Builder clearPosition() {
         if (positionBuilder_ == null) {
@@ -2545,7 +2761,7 @@ public final class DroneService {
         return this;
       }
       /**
-       * <code>.com.drone.grpc.Coordinates position = 4;</code>
+       * <code>.com.drone.grpc.Coordinates position = 6;</code>
        */
       public com.drone.grpc.DroneService.Coordinates.Builder getPositionBuilder() {
         
@@ -2553,7 +2769,7 @@ public final class DroneService {
         return getPositionFieldBuilder().getBuilder();
       }
       /**
-       * <code>.com.drone.grpc.Coordinates position = 4;</code>
+       * <code>.com.drone.grpc.Coordinates position = 6;</code>
        */
       public com.drone.grpc.DroneService.CoordinatesOrBuilder getPositionOrBuilder() {
         if (positionBuilder_ != null) {
@@ -2564,7 +2780,7 @@ public final class DroneService {
         }
       }
       /**
-       * <code>.com.drone.grpc.Coordinates position = 4;</code>
+       * <code>.com.drone.grpc.Coordinates position = 6;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           com.drone.grpc.DroneService.Coordinates, com.drone.grpc.DroneService.Coordinates.Builder, com.drone.grpc.DroneService.CoordinatesOrBuilder> 
@@ -5013,25 +5229,26 @@ public final class DroneService {
       "oRequest\"t\n\014InfoResponse\022\n\n\002id\030\001 \001(\005\022\027\n\017" +
       "residualBattery\030\002 \001(\005\022\020\n\010isMaster\030\003 \001(\010\022" +
       "-\n\010position\030\004 \001(\0132\033.com.drone.grpc.Coord" +
-      "inates\"y\n\021SenderInfoRequest\022\n\n\002id\030\001 \001(\005\022" +
-      "\027\n\017residualBattery\030\002 \001(\005\022\020\n\010isMaster\030\003 \001" +
-      "(\010\022-\n\010position\030\004 \001(\0132\033.com.drone.grpc.Co" +
-      "ordinates\"2\n\022SenderInfoResponse\022\n\n\002id\030\001 " +
-      "\001(\005\022\020\n\010isMaster\030\002 \001(\010\"p\n\014OrderRequest\022\n\n" +
-      "\002id\030\001 \001(\005\022*\n\005start\030\002 \001(\0132\033.com.drone.grp" +
-      "c.Coordinates\022(\n\003end\030\003 \001(\0132\033.com.drone.g" +
-      "rpc.Coordinates\"\223\001\n\rOrderResponse\022\021\n\ttim" +
-      "estamp\030\001 \001(\003\0220\n\013newPosition\030\002 \001(\0132\033.com." +
-      "drone.grpc.Coordinates\022\n\n\002km\030\003 \001(\005\022\030\n\020po" +
-      "llutionAverage\030\004 \001(\005\022\027\n\017residualBattery\030" +
-      "\005 \001(\0052T\n\nInfoGetter\022F\n\007GetInfo\022\033.com.dro" +
-      "ne.grpc.InfoRequest\032\034.com.drone.grpc.Inf" +
-      "oResponse\"\0002a\n\nInfoSender\022S\n\010SendInfo\022!." +
-      "com.drone.grpc.SenderInfoRequest\032\".com.d" +
-      "rone.grpc.SenderInfoResponse\"\0002_\n\017OrderA" +
-      "ssignment\022L\n\013AssignOrder\022\034.com.drone.grp" +
-      "c.OrderRequest\032\035.com.drone.grpc.OrderRes" +
-      "ponse\"\000b\006proto3"
+      "inates\"\223\001\n\021SenderInfoRequest\022\n\n\002id\030\001 \001(\005" +
+      "\022\n\n\002ip\030\002 \001(\t\022\014\n\004port\030\003 \001(\005\022\027\n\017residualBa" +
+      "ttery\030\004 \001(\005\022\020\n\010isMaster\030\005 \001(\010\022-\n\010positio" +
+      "n\030\006 \001(\0132\033.com.drone.grpc.Coordinates\"2\n\022" +
+      "SenderInfoResponse\022\n\n\002id\030\001 \001(\005\022\020\n\010isMast" +
+      "er\030\002 \001(\010\"p\n\014OrderRequest\022\n\n\002id\030\001 \001(\005\022*\n\005" +
+      "start\030\002 \001(\0132\033.com.drone.grpc.Coordinates" +
+      "\022(\n\003end\030\003 \001(\0132\033.com.drone.grpc.Coordinat" +
+      "es\"\223\001\n\rOrderResponse\022\021\n\ttimestamp\030\001 \001(\003\022" +
+      "0\n\013newPosition\030\002 \001(\0132\033.com.drone.grpc.Co" +
+      "ordinates\022\n\n\002km\030\003 \001(\005\022\030\n\020pollutionAverag" +
+      "e\030\004 \001(\005\022\027\n\017residualBattery\030\005 \001(\0052T\n\nInfo" +
+      "Getter\022F\n\007GetInfo\022\033.com.drone.grpc.InfoR" +
+      "equest\032\034.com.drone.grpc.InfoResponse\"\0002a" +
+      "\n\nInfoSender\022S\n\010SendInfo\022!.com.drone.grp" +
+      "c.SenderInfoRequest\032\".com.drone.grpc.Sen" +
+      "derInfoResponse\"\0002_\n\017OrderAssignment\022L\n\013" +
+      "AssignOrder\022\034.com.drone.grpc.OrderReques" +
+      "t\032\035.com.drone.grpc.OrderResponse\"\000b\006prot" +
+      "o3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -5060,7 +5277,7 @@ public final class DroneService {
     internal_static_com_drone_grpc_SenderInfoRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_drone_grpc_SenderInfoRequest_descriptor,
-        new java.lang.String[] { "Id", "ResidualBattery", "IsMaster", "Position", });
+        new java.lang.String[] { "Id", "Ip", "Port", "ResidualBattery", "IsMaster", "Position", });
     internal_static_com_drone_grpc_SenderInfoResponse_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_com_drone_grpc_SenderInfoResponse_fieldAccessorTable = new

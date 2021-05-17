@@ -19,6 +19,24 @@ message InfoResponse {
   Coordinates position = 4;
 }
 
+service InfoSender {
+  rpc SendInfo (SenderInfoRequest) returns (SenderInfoResponse) {}
+}
+
+message SenderInfoRequest {
+  int32 id = 1;
+  string ip = 2;
+  int32 port = 3;
+  int32 residualBattery = 4;
+  bool isMaster = 5;
+  Coordinates position = 6;
+}
+
+message SenderInfoResponse {
+  int32 id = 1;
+  bool isMaster = 2;
+}
+
 service OrderAssignment {
   rpc AssignOrder (OrderRequest) returns (OrderResponse) {}
 }

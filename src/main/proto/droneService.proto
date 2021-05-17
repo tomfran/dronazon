@@ -25,9 +25,11 @@ service InfoSender {
 
 message SenderInfoRequest {
   int32 id = 1;
-  int32 residualBattery = 2;
-  bool isMaster = 3;
-  Coordinates position = 4;
+  string ip = 2;
+  int32 port = 3;
+  int32 residualBattery = 4;
+  bool isMaster = 5;
+  Coordinates position = 6;
 }
 
 message SenderInfoResponse {
