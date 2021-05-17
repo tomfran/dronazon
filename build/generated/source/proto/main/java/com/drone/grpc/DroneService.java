@@ -1022,6 +1022,12 @@ public final class DroneService {
      * <code>.com.drone.grpc.Coordinates position = 4;</code>
      */
     com.drone.grpc.DroneService.CoordinatesOrBuilder getPositionOrBuilder();
+
+    /**
+     * <code>bool available = 5;</code>
+     * @return The available.
+     */
+    boolean getAvailable();
   }
   /**
    * Protobuf type {@code com.drone.grpc.InfoResponse}
@@ -1094,6 +1100,11 @@ public final class DroneService {
                 position_ = subBuilder.buildPartial();
               }
 
+              break;
+            }
+            case 40: {
+
+              available_ = input.readBool();
               break;
             }
             default: {
@@ -1181,6 +1192,16 @@ public final class DroneService {
       return getPosition();
     }
 
+    public static final int AVAILABLE_FIELD_NUMBER = 5;
+    private boolean available_;
+    /**
+     * <code>bool available = 5;</code>
+     * @return The available.
+     */
+    public boolean getAvailable() {
+      return available_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -1207,6 +1228,9 @@ public final class DroneService {
       if (position_ != null) {
         output.writeMessage(4, getPosition());
       }
+      if (available_ != false) {
+        output.writeBool(5, available_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -1231,6 +1255,10 @@ public final class DroneService {
       if (position_ != null) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(4, getPosition());
+      }
+      if (available_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(5, available_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1258,6 +1286,8 @@ public final class DroneService {
         if (!getPosition()
             .equals(other.getPosition())) return false;
       }
+      if (getAvailable()
+          != other.getAvailable()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -1280,6 +1310,9 @@ public final class DroneService {
         hash = (37 * hash) + POSITION_FIELD_NUMBER;
         hash = (53 * hash) + getPosition().hashCode();
       }
+      hash = (37 * hash) + AVAILABLE_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getAvailable());
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -1425,6 +1458,8 @@ public final class DroneService {
           position_ = null;
           positionBuilder_ = null;
         }
+        available_ = false;
+
         return this;
       }
 
@@ -1459,6 +1494,7 @@ public final class DroneService {
         } else {
           result.position_ = positionBuilder_.build();
         }
+        result.available_ = available_;
         onBuilt();
         return result;
       }
@@ -1518,6 +1554,9 @@ public final class DroneService {
         }
         if (other.hasPosition()) {
           mergePosition(other.getPosition());
+        }
+        if (other.getAvailable() != false) {
+          setAvailable(other.getAvailable());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -1756,6 +1795,36 @@ public final class DroneService {
         }
         return positionBuilder_;
       }
+
+      private boolean available_ ;
+      /**
+       * <code>bool available = 5;</code>
+       * @return The available.
+       */
+      public boolean getAvailable() {
+        return available_;
+      }
+      /**
+       * <code>bool available = 5;</code>
+       * @param value The available to set.
+       * @return This builder for chaining.
+       */
+      public Builder setAvailable(boolean value) {
+        
+        available_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool available = 5;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearAvailable() {
+        
+        available_ = false;
+        onChanged();
+        return this;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -1863,6 +1932,12 @@ public final class DroneService {
      * <code>.com.drone.grpc.Coordinates position = 6;</code>
      */
     com.drone.grpc.DroneService.CoordinatesOrBuilder getPositionOrBuilder();
+
+    /**
+     * <code>bool available = 7;</code>
+     * @return The available.
+     */
+    boolean getAvailable();
   }
   /**
    * Protobuf type {@code com.drone.grpc.SenderInfoRequest}
@@ -1947,6 +2022,11 @@ public final class DroneService {
                 position_ = subBuilder.buildPartial();
               }
 
+              break;
+            }
+            case 56: {
+
+              available_ = input.readBool();
               break;
             }
             default: {
@@ -2080,6 +2160,16 @@ public final class DroneService {
       return getPosition();
     }
 
+    public static final int AVAILABLE_FIELD_NUMBER = 7;
+    private boolean available_;
+    /**
+     * <code>bool available = 7;</code>
+     * @return The available.
+     */
+    public boolean getAvailable() {
+      return available_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -2111,6 +2201,9 @@ public final class DroneService {
       }
       if (position_ != null) {
         output.writeMessage(6, getPosition());
+      }
+      if (available_ != false) {
+        output.writeBool(7, available_);
       }
       unknownFields.writeTo(output);
     }
@@ -2144,6 +2237,10 @@ public final class DroneService {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(6, getPosition());
       }
+      if (available_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(7, available_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -2174,6 +2271,8 @@ public final class DroneService {
         if (!getPosition()
             .equals(other.getPosition())) return false;
       }
+      if (getAvailable()
+          != other.getAvailable()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -2200,6 +2299,9 @@ public final class DroneService {
         hash = (37 * hash) + POSITION_FIELD_NUMBER;
         hash = (53 * hash) + getPosition().hashCode();
       }
+      hash = (37 * hash) + AVAILABLE_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getAvailable());
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -2349,6 +2451,8 @@ public final class DroneService {
           position_ = null;
           positionBuilder_ = null;
         }
+        available_ = false;
+
         return this;
       }
 
@@ -2385,6 +2489,7 @@ public final class DroneService {
         } else {
           result.position_ = positionBuilder_.build();
         }
+        result.available_ = available_;
         onBuilt();
         return result;
       }
@@ -2451,6 +2556,9 @@ public final class DroneService {
         }
         if (other.hasPosition()) {
           mergePosition(other.getPosition());
+        }
+        if (other.getAvailable() != false) {
+          setAvailable(other.getAvailable());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -2794,6 +2902,36 @@ public final class DroneService {
           position_ = null;
         }
         return positionBuilder_;
+      }
+
+      private boolean available_ ;
+      /**
+       * <code>bool available = 7;</code>
+       * @return The available.
+       */
+      public boolean getAvailable() {
+        return available_;
+      }
+      /**
+       * <code>bool available = 7;</code>
+       * @param value The available to set.
+       * @return This builder for chaining.
+       */
+      public Builder setAvailable(boolean value) {
+        
+        available_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool available = 7;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearAvailable() {
+        
+        available_ = false;
+        onChanged();
+        return this;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
@@ -5226,29 +5364,30 @@ public final class DroneService {
     java.lang.String[] descriptorData = {
       "\n\022droneService.proto\022\016com.drone.grpc\"#\n\013" +
       "Coordinates\022\t\n\001x\030\001 \001(\005\022\t\n\001y\030\002 \001(\005\"\r\n\013Inf" +
-      "oRequest\"t\n\014InfoResponse\022\n\n\002id\030\001 \001(\005\022\027\n\017" +
-      "residualBattery\030\002 \001(\005\022\020\n\010isMaster\030\003 \001(\010\022" +
-      "-\n\010position\030\004 \001(\0132\033.com.drone.grpc.Coord" +
-      "inates\"\223\001\n\021SenderInfoRequest\022\n\n\002id\030\001 \001(\005" +
-      "\022\n\n\002ip\030\002 \001(\t\022\014\n\004port\030\003 \001(\005\022\027\n\017residualBa" +
-      "ttery\030\004 \001(\005\022\020\n\010isMaster\030\005 \001(\010\022-\n\010positio" +
-      "n\030\006 \001(\0132\033.com.drone.grpc.Coordinates\"2\n\022" +
-      "SenderInfoResponse\022\n\n\002id\030\001 \001(\005\022\020\n\010isMast" +
-      "er\030\002 \001(\010\"p\n\014OrderRequest\022\n\n\002id\030\001 \001(\005\022*\n\005" +
-      "start\030\002 \001(\0132\033.com.drone.grpc.Coordinates" +
-      "\022(\n\003end\030\003 \001(\0132\033.com.drone.grpc.Coordinat" +
-      "es\"\223\001\n\rOrderResponse\022\021\n\ttimestamp\030\001 \001(\003\022" +
-      "0\n\013newPosition\030\002 \001(\0132\033.com.drone.grpc.Co" +
-      "ordinates\022\n\n\002km\030\003 \001(\005\022\030\n\020pollutionAverag" +
-      "e\030\004 \001(\005\022\027\n\017residualBattery\030\005 \001(\0052T\n\nInfo" +
-      "Getter\022F\n\007GetInfo\022\033.com.drone.grpc.InfoR" +
-      "equest\032\034.com.drone.grpc.InfoResponse\"\0002a" +
-      "\n\nInfoSender\022S\n\010SendInfo\022!.com.drone.grp" +
-      "c.SenderInfoRequest\032\".com.drone.grpc.Sen" +
-      "derInfoResponse\"\0002_\n\017OrderAssignment\022L\n\013" +
-      "AssignOrder\022\034.com.drone.grpc.OrderReques" +
-      "t\032\035.com.drone.grpc.OrderResponse\"\000b\006prot" +
-      "o3"
+      "oRequest\"\207\001\n\014InfoResponse\022\n\n\002id\030\001 \001(\005\022\027\n" +
+      "\017residualBattery\030\002 \001(\005\022\020\n\010isMaster\030\003 \001(\010" +
+      "\022-\n\010position\030\004 \001(\0132\033.com.drone.grpc.Coor" +
+      "dinates\022\021\n\tavailable\030\005 \001(\010\"\246\001\n\021SenderInf" +
+      "oRequest\022\n\n\002id\030\001 \001(\005\022\n\n\002ip\030\002 \001(\t\022\014\n\004port" +
+      "\030\003 \001(\005\022\027\n\017residualBattery\030\004 \001(\005\022\020\n\010isMas" +
+      "ter\030\005 \001(\010\022-\n\010position\030\006 \001(\0132\033.com.drone." +
+      "grpc.Coordinates\022\021\n\tavailable\030\007 \001(\010\"2\n\022S" +
+      "enderInfoResponse\022\n\n\002id\030\001 \001(\005\022\020\n\010isMaste" +
+      "r\030\002 \001(\010\"p\n\014OrderRequest\022\n\n\002id\030\001 \001(\005\022*\n\005s" +
+      "tart\030\002 \001(\0132\033.com.drone.grpc.Coordinates\022" +
+      "(\n\003end\030\003 \001(\0132\033.com.drone.grpc.Coordinate" +
+      "s\"\223\001\n\rOrderResponse\022\021\n\ttimestamp\030\001 \001(\003\0220" +
+      "\n\013newPosition\030\002 \001(\0132\033.com.drone.grpc.Coo" +
+      "rdinates\022\n\n\002km\030\003 \001(\005\022\030\n\020pollutionAverage" +
+      "\030\004 \001(\005\022\027\n\017residualBattery\030\005 \001(\0052T\n\nInfoG" +
+      "etter\022F\n\007GetInfo\022\033.com.drone.grpc.InfoRe" +
+      "quest\032\034.com.drone.grpc.InfoResponse\"\0002a\n" +
+      "\nInfoSender\022S\n\010SendInfo\022!.com.drone.grpc" +
+      ".SenderInfoRequest\032\".com.drone.grpc.Send" +
+      "erInfoResponse\"\0002_\n\017OrderAssignment\022L\n\013A" +
+      "ssignOrder\022\034.com.drone.grpc.OrderRequest" +
+      "\032\035.com.drone.grpc.OrderResponse\"\000b\006proto" +
+      "3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -5271,13 +5410,13 @@ public final class DroneService {
     internal_static_com_drone_grpc_InfoResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_drone_grpc_InfoResponse_descriptor,
-        new java.lang.String[] { "Id", "ResidualBattery", "IsMaster", "Position", });
+        new java.lang.String[] { "Id", "ResidualBattery", "IsMaster", "Position", "Available", });
     internal_static_com_drone_grpc_SenderInfoRequest_descriptor =
       getDescriptor().getMessageTypes().get(3);
     internal_static_com_drone_grpc_SenderInfoRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_drone_grpc_SenderInfoRequest_descriptor,
-        new java.lang.String[] { "Id", "Ip", "Port", "ResidualBattery", "IsMaster", "Position", });
+        new java.lang.String[] { "Id", "Ip", "Port", "ResidualBattery", "IsMaster", "Position", "Available", });
     internal_static_com_drone_grpc_SenderInfoResponse_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_com_drone_grpc_SenderInfoResponse_fieldAccessorTable = new

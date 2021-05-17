@@ -18,6 +18,7 @@ public class Drone {
     protected int battery;
     protected ArrayList<Drone> dronesList;
     protected RestMethods restMethods;
+    protected boolean isAvailable;
 
     // rest api base
     public static String restBaseAddress = "http://localhost:1337/drones/";
@@ -39,15 +40,17 @@ public class Drone {
         this.dronesList = new ArrayList<>();
         this.coordinates = new int[2];
         this.restMethods = new RestMethods(this);
+        this.isAvailable = true;
     }
 
-    public Drone(int id, String ip, int port, int[] coordinates, int battery, boolean isMaster) {
+    public Drone(int id, String ip, int port, int[] coordinates, int battery, boolean isMaster, boolean isAvailable) {
         this.id = id;
         this.ip = ip;
         this.port = port;
         this.coordinates = coordinates;
         this.battery = battery;
         this.isMaster = isMaster;
+        this.isAvailable = isAvailable;
     }
 
     public void run(){
@@ -174,12 +177,13 @@ public class Drone {
         // TODO if a simple drone receive this, he might now need to
         // save all this infos and stick to the simple id, port, ip constructor
         dronesList.add(new Drone(
-            value.getId(),
+                value.getId(),
                 value.getIp(),
                 value.getPort(),
                 new int[]{value.getPosition().getX(), value.getPosition().getY()},
                 value.getResidualBattery(),
-                value.getIsMaster()
+                value.getIsMaster(),
+                value.getAvailable()
         ));
     }
 
@@ -200,6 +204,7 @@ public class Drone {
         d.coordinates[1] = value.getPosition().getY();
         d.battery = value.getResidualBattery();
         d.isMaster = value.getIsMaster();
+        d.isAvailable = value.getAvailable();
     }
 
     // called when receiving response after a info send
@@ -248,6 +253,10 @@ public class Drone {
         return isMaster;
     }
 
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+
     public int getPort() {
         return port;
     }
@@ -256,7 +265,8 @@ public class Drone {
         return (isMaster? "MASTER" : "SIMPLE") + " DRONE" + " Id: " + id +
                 "\nIp and port: " + this.ip + ":" + port +
                 "\nCoordinates: (" + this.getX() + ", " + this.getY() + ")" +
-                "\nBattery: " + this.battery;
+                "\nBattery: " + this.battery +
+                "\nAvailable: " + this.isAvailable;
     }
 
     public String toString(){

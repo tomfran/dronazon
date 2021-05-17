@@ -30,6 +30,7 @@ public class InfoGetterImpl extends InfoGetterImplBase {
                 .setResidualBattery(drone.getBattery())
                 .setPosition(cord)
                 .setIsMaster(drone.isMaster())
+                .setAvailable(drone.isAvailable())
                 .build();
 
         responseObserver.onNext(response);

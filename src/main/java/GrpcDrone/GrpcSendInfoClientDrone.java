@@ -43,6 +43,7 @@ public class GrpcSendInfoClientDrone extends Thread {
                             .setY(senderDrone.getY())
                             .build()
                 )
+                .setAvailable(senderDrone.isAvailable())
                 .build();
 
         stub.sendInfo(req, new StreamObserver<SenderInfoResponse>() {

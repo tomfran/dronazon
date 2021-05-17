@@ -17,6 +17,7 @@ message InfoResponse {
   int32 residualBattery = 2;
   bool isMaster = 3;
   Coordinates position = 4;
+  bool available = 5;
 }
 
 service InfoSender {
@@ -30,6 +31,7 @@ message SenderInfoRequest {
   int32 residualBattery = 4;
   bool isMaster = 5;
   Coordinates position = 6;
+  bool available = 7;
 }
 
 message SenderInfoResponse {

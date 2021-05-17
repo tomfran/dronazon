@@ -32,9 +32,10 @@ public class OrderQueue extends Thread{
 
     public void addOrder(Order o){
         orderQueue.add(o);
+        System.out.println("Order added to the queue");
     }
 
     public void run() {
-
+        System.out.println("orderqueue");
     }
 }
