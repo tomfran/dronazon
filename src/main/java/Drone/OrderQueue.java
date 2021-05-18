@@ -19,7 +19,7 @@ public class OrderQueue extends Thread{
     }
 
     public synchronized Order consume() {
-        System.out.println("entering consume");
+        //System.out.println("entering consume");
         while( queueLock || orderQueue.isEmpty()) {
             try {
                 wait();
@@ -33,7 +33,7 @@ public class OrderQueue extends Thread{
         Order o = orderQueue.getFirst();
         orderQueue.removeFirst();
         queueLock = false;
-        System.out.println("Order retrieved from the queue");
+        //System.out.println("Order retrieved from the queue");
         notify();
         return o;
     }
@@ -55,7 +55,7 @@ public class OrderQueue extends Thread{
     }
 
     public synchronized void produce(Order o){
-        System.out.println("entering produce");
+        //System.out.println("entering produce");
         while (queueLock) {
             try {
                 wait();
@@ -68,7 +68,7 @@ public class OrderQueue extends Thread{
         queueLock = true;
         orderQueue.add(o);
         queueLock = false;
-        System.out.println("Order added to the queue");
+        //System.out.println("Order added to the queue");
         notify();
     }
 

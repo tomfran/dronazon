@@ -23,6 +23,8 @@ public class InfoSenderImpl extends InfoSenderImplBase {
                 .setIsMaster(drone.isMaster())
                 .build();
 
+        System.out.println("\n New drone list: \n");
+        System.out.println(drone + "\n");
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }

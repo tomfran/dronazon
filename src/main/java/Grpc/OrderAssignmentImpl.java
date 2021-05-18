@@ -17,16 +17,7 @@ public class OrderAssignmentImpl extends OrderAssignmentImplBase {
     @Override
     public void assignOrder(OrderRequest request, StreamObserver<OrderResponse> responseObserver) {
         System.out.println("GRPC Order assignment received at drone " + drone.getId());
-        OrderResponse response = OrderResponse.newBuilder()
-                .setKm(100)
-                .setResidualBattery(10)
-                .setTimestamp(36721863)
-                .setNewPosition(DroneService.Coordinates.newBuilder()
-                        .setX(-1)
-                        .setY(-1)
-                        .build()
-                )
-                .build();
+        OrderResponse response = drone.deliver(request);
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }

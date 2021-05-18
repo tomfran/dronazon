@@ -21,7 +21,7 @@ public class OrderAssignment extends Thread {
         this.queue = queue;
     }
 
-    private double distance(int[]v1, int[]v2){
+    static double distance(int[]v1, int[]v2){
         return Math.sqrt(
                 Math.pow(v2[0] - v1[0], 2) +
                         Math.pow(v2[1] - v1[1], 2)
@@ -29,6 +29,7 @@ public class OrderAssignment extends Thread {
     }
 
     private Drone findClosest() {
+
         Drone closest = null;
         double dist = Double.MAX_VALUE;
 
@@ -69,12 +70,12 @@ public class OrderAssignment extends Thread {
         stub.assignOrder(req, new StreamObserver<DroneService.OrderResponse>() {
             @Override
             public void onNext(DroneService.OrderResponse value) {
-                try {
-                    Thread.sleep(20000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 System.out.println("Order assignment response by drone " + receiver.id);
+                System.out.println(value.getKm());
+                System.out.println(value.getResidualBattery());
+                System.out.println(value.getNewPosition());
+                System.out.println(value.getPollutionAverage());
+                System.out.println(value.getTimestamp());
             }
 
             @Override
@@ -100,11 +101,13 @@ public class OrderAssignment extends Thread {
 
     public void run() {
         drone.lockDronesList();
+        System.out.println("Order assignment");;
         Drone closest = findClosest();
         if (closest == null) {
             System.out.println("No drones available");
             //queue.retryOrder(order);
         }else{
+            System.out.println("Closest drone: " + closest.id);
             closest.isAvailable = false;
             sendOrder(closest);
         }

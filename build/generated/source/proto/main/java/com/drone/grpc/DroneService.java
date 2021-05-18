@@ -4453,10 +4453,10 @@ public final class DroneService {
     com.drone.grpc.DroneService.CoordinatesOrBuilder getNewPositionOrBuilder();
 
     /**
-     * <code>int32 km = 3;</code>
+     * <code>double km = 3;</code>
      * @return The km.
      */
-    int getKm();
+    double getKm();
 
     /**
      * <code>int32 pollutionAverage = 4;</code>
@@ -4533,9 +4533,9 @@ public final class DroneService {
 
               break;
             }
-            case 24: {
+            case 25: {
 
-              km_ = input.readInt32();
+              km_ = input.readDouble();
               break;
             }
             case 32: {
@@ -4614,12 +4614,12 @@ public final class DroneService {
     }
 
     public static final int KM_FIELD_NUMBER = 3;
-    private int km_;
+    private double km_;
     /**
-     * <code>int32 km = 3;</code>
+     * <code>double km = 3;</code>
      * @return The km.
      */
-    public int getKm() {
+    public double getKm() {
       return km_;
     }
 
@@ -4663,8 +4663,8 @@ public final class DroneService {
       if (newPosition_ != null) {
         output.writeMessage(2, getNewPosition());
       }
-      if (km_ != 0) {
-        output.writeInt32(3, km_);
+      if (km_ != 0D) {
+        output.writeDouble(3, km_);
       }
       if (pollutionAverage_ != 0) {
         output.writeInt32(4, pollutionAverage_);
@@ -4689,9 +4689,9 @@ public final class DroneService {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(2, getNewPosition());
       }
-      if (km_ != 0) {
+      if (km_ != 0D) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(3, km_);
+          .computeDoubleSize(3, km_);
       }
       if (pollutionAverage_ != 0) {
         size += com.google.protobuf.CodedOutputStream
@@ -4723,8 +4723,9 @@ public final class DroneService {
         if (!getNewPosition()
             .equals(other.getNewPosition())) return false;
       }
-      if (getKm()
-          != other.getKm()) return false;
+      if (java.lang.Double.doubleToLongBits(getKm())
+          != java.lang.Double.doubleToLongBits(
+              other.getKm())) return false;
       if (getPollutionAverage()
           != other.getPollutionAverage()) return false;
       if (getResidualBattery()
@@ -4748,7 +4749,8 @@ public final class DroneService {
         hash = (53 * hash) + getNewPosition().hashCode();
       }
       hash = (37 * hash) + KM_FIELD_NUMBER;
-      hash = (53 * hash) + getKm();
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          java.lang.Double.doubleToLongBits(getKm()));
       hash = (37 * hash) + POLLUTIONAVERAGE_FIELD_NUMBER;
       hash = (53 * hash) + getPollutionAverage();
       hash = (37 * hash) + RESIDUALBATTERY_FIELD_NUMBER;
@@ -4894,7 +4896,7 @@ public final class DroneService {
           newPosition_ = null;
           newPositionBuilder_ = null;
         }
-        km_ = 0;
+        km_ = 0D;
 
         pollutionAverage_ = 0;
 
@@ -4989,7 +4991,7 @@ public final class DroneService {
         if (other.hasNewPosition()) {
           mergeNewPosition(other.getNewPosition());
         }
-        if (other.getKm() != 0) {
+        if (other.getKm() != 0D) {
           setKm(other.getKm());
         }
         if (other.getPollutionAverage() != 0) {
@@ -5176,32 +5178,32 @@ public final class DroneService {
         return newPositionBuilder_;
       }
 
-      private int km_ ;
+      private double km_ ;
       /**
-       * <code>int32 km = 3;</code>
+       * <code>double km = 3;</code>
        * @return The km.
        */
-      public int getKm() {
+      public double getKm() {
         return km_;
       }
       /**
-       * <code>int32 km = 3;</code>
+       * <code>double km = 3;</code>
        * @param value The km to set.
        * @return This builder for chaining.
        */
-      public Builder setKm(int value) {
+      public Builder setKm(double value) {
         
         km_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>int32 km = 3;</code>
+       * <code>double km = 3;</code>
        * @return This builder for chaining.
        */
       public Builder clearKm() {
         
-        km_ = 0;
+        km_ = 0D;
         onChanged();
         return this;
       }
@@ -5378,7 +5380,7 @@ public final class DroneService {
       "(\n\003end\030\003 \001(\0132\033.com.drone.grpc.Coordinate" +
       "s\"\223\001\n\rOrderResponse\022\021\n\ttimestamp\030\001 \001(\003\0220" +
       "\n\013newPosition\030\002 \001(\0132\033.com.drone.grpc.Coo" +
-      "rdinates\022\n\n\002km\030\003 \001(\005\022\030\n\020pollutionAverage" +
+      "rdinates\022\n\n\002km\030\003 \001(\001\022\030\n\020pollutionAverage" +
       "\030\004 \001(\005\022\027\n\017residualBattery\030\005 \001(\0052T\n\nInfoG" +
       "etter\022F\n\007GetInfo\022\033.com.drone.grpc.InfoRe" +
       "quest\032\034.com.drone.grpc.InfoResponse\"\0002a\n" +

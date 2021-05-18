@@ -52,7 +52,7 @@ message OrderRequest {
 message OrderResponse {
   int64 timestamp = 1;
   Coordinates newPosition = 2;
-  int32 km = 3;
+  double km = 3;
   int32 pollutionAverage = 4;
   int32 residualBattery = 5;
 }

@@ -5,7 +5,11 @@ import Grpc.SendInfoClient;
 import Grpc.GrpcServer;
 import com.drone.grpc.DroneService;
 
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.Scanner;
 
 public class Drone {
 
@@ -296,10 +300,44 @@ public class Drone {
         return ret;
     }
 
+    public DroneService.OrderResponse deliver(DroneService.OrderRequest request) {
+        int [] newPosition = new int[]{request.getEnd().getX(), request.getEnd().getY()};
+        battery -= 15;
+
+        DroneService.OrderResponse response = DroneService.OrderResponse.newBuilder()
+                .setTimestamp(
+                        new java.sql.Timestamp(System.currentTimeMillis()).getTime()
+                )
+                .setNewPosition(
+                        DroneService.Coordinates.newBuilder()
+                                .setX(newPosition[0])
+                                .setY(newPosition[1])
+                                .build()
+                )
+                .setKm(OrderAssignment.distance(coordinates, newPosition))
+                .setPollutionAverage(10)
+                .setResidualBattery(battery)
+                .build();
+
+        coordinates = newPosition;
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("\nDelivery completed: \n\tNew position: " + newPosition[0] + " " + newPosition[1]);
+        System.out.println("\tResidual battery " + battery + "\n");
+        return response;
+    }
+
     public static void main(String[] args) throws InterruptedException {
 
-        Drone d1 = new Drone(Integer.parseInt(args[0]), args[1], Integer.parseInt(args[2]));
-        d1.run();
+        Scanner sc=new Scanner(System.in);
 
+        System.out.println("Insert drone ID and port");
+        Drone d1 = new Drone(sc.nextInt(), "localhost", sc.nextInt());
+        d1.run();
     }
+
+
 }
