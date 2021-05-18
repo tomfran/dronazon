@@ -235,6 +235,11 @@ public class Drone {
             monitorOrders.disconnect();
             System.out.println("Drone " + id + " stopped order monitor");
         }
+        if (orderQueue != null) {
+            orderQueue.interrupt();
+            System.out.println("Drone " + id + " stopped order queue");
+        }
+
         quitDrone.interrupt();
         System.out.println("Drone " + id + " stopped quit monitor");
         grpcServer.interrupt();
@@ -292,14 +297,9 @@ public class Drone {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        Drone d1 = new Drone(1, "localhost", 5000);
-        Drone d2 = new Drone(2, "localhost", 6000);
-        Drone d3 = new Drone(3, "localhost", 7000);
-        Drone d4 = new Drone(4, "localhost", 8000);
 
+        Drone d1 = new Drone(Integer.parseInt(args[0]), args[1], Integer.parseInt(args[2]));
         d1.run();
-        d2.run();
-        d3.run();
-        d4.run();
+
     }
 }
