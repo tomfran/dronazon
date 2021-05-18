@@ -39,18 +39,18 @@ public class Order {
         try {
             order = new JSONObject(json);
 
-            JSONArray startCoordinates = order.getJSONArray("startCoordinates");
-            JSONArray endCoordinates = order.getJSONArray("endCoordinates");
+            JSONObject startCoordinates = order.getJSONObject("startCoordinates");
+            JSONObject endCoordinates = order.getJSONObject("endCoordinates");
 
             return new Order(
                     order.getInt("id"),
                     new int[]{
-                            startCoordinates.getInt(0),
-                            startCoordinates.getInt(1)
+                            startCoordinates.getInt("x"),
+                            startCoordinates.getInt("y")
                     },
                     new int[]{
-                            endCoordinates.getInt(0),
-                            endCoordinates.getInt(1)
+                            endCoordinates.getInt("x"),
+                            endCoordinates.getInt("y")
                     });
 
         } catch (JSONException e) {

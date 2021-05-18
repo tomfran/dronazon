@@ -1,7 +1,7 @@
-package GrpcDrone;
+package Grpc;
 
 import Drone.Drone;
-import com.drone.grpc.DroneService.Coordinates;
+import com.drone.grpc.DroneService;
 import com.drone.grpc.DroneService.OrderRequest;
 import com.drone.grpc.DroneService.OrderResponse;
 import com.drone.grpc.OrderAssignmentGrpc.OrderAssignmentImplBase;
@@ -17,8 +17,17 @@ public class OrderAssignmentImpl extends OrderAssignmentImplBase {
     @Override
     public void assignOrder(OrderRequest request, StreamObserver<OrderResponse> responseObserver) {
         System.out.println("GRPC Order assignment received at drone " + drone.getId());
-        //OrderResponse response = drone.delivery(request);
-        //responseObserver.onNext(respone);
+        OrderResponse response = OrderResponse.newBuilder()
+                .setKm(100)
+                .setResidualBattery(10)
+                .setTimestamp(36721863)
+                .setNewPosition(DroneService.Coordinates.newBuilder()
+                        .setX(-1)
+                        .setY(-1)
+                        .build()
+                )
+                .build();
+        responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
 }

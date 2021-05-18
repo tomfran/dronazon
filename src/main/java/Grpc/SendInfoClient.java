@@ -1,30 +1,28 @@
-package GrpcDrone;
+package Grpc;
 
 import Drone.Drone;
+import com.drone.grpc.DroneService.SenderInfoRequest;
+import com.drone.grpc.DroneService.Coordinates;
+import com.drone.grpc.DroneService.SenderInfoResponse;
 
-
-import com.drone.grpc.InfoGetterGrpc;
-import com.drone.grpc.InfoGetterGrpc.InfoGetterStub;
-import com.drone.grpc.DroneService.InfoRequest;
-import com.drone.grpc.DroneService.InfoResponse;
+import com.drone.grpc.InfoSenderGrpc;
+import com.drone.grpc.InfoSenderGrpc.InfoSenderStub;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 
 import java.util.concurrent.TimeUnit;
 
-public class GrpcGetInfoClientDrone extends Thread {
+public class SendInfoClient extends Thread {
     private final Drone senderDrone;
     private final Drone receiverDrone;
-    private final int listIndex;
 
-    public GrpcGetInfoClientDrone(Drone senderDrone, Drone receiverDrone, int listIndex) {
+    public SendInfoClient(Drone senderDrone, Drone receiverDrone) {
         this.senderDrone = senderDrone;
         this.receiverDrone = receiverDrone;
-        this.listIndex = listIndex;
     }
 
-    public void start() {
+    public void start(){
         // build channel pointing receiver drone
         //System.out.println("Creating stub " + receiverDrone.getIp() + ":" + receiverDrone.getPort());
         final ManagedChannel channel =
@@ -32,13 +30,26 @@ public class GrpcGetInfoClientDrone extends Thread {
                         .usePlaintext().build();
 
         // create a non blocking stub
-        InfoGetterStub stub = InfoGetterGrpc.newStub(channel);
+        InfoSenderStub stub = InfoSenderGrpc.newStub(channel);
 
-        InfoRequest req = InfoRequest.newBuilder().build();
+        SenderInfoRequest req = SenderInfoRequest.newBuilder()
+                .setId(senderDrone.getId())
+                .setIp(senderDrone.getIp())
+                .setPort(senderDrone.getPort())
+                .setResidualBattery(senderDrone.getBattery())
+                .setIsMaster(senderDrone.isMaster())
+                .setPosition(
+                        Coordinates.newBuilder()
+                            .setX(senderDrone.getX())
+                            .setY(senderDrone.getY())
+                            .build()
+                )
+                .setAvailable(senderDrone.isAvailable())
+                .build();
 
-        stub.getInfo(req, new StreamObserver<InfoResponse>() {
+        stub.sendInfo(req, new StreamObserver<SenderInfoResponse>() {
             @Override
-            public void onNext(InfoResponse value) {
+            public void onNext(SenderInfoResponse value) {
                 /*
 
                 System.out.println("DRONE RESPONSE");
@@ -47,18 +58,17 @@ public class GrpcGetInfoClientDrone extends Thread {
                 System.out.println(value.getResidualBattery());
                 System.out.println(value.getIsMaster());
                  */
-                senderDrone.updateDrone(value, listIndex);
+                senderDrone.updateMasterDrone(value);
             }
 
             @Override
             public void onError(Throwable t) {
-                //System.out.println("GET INFO ERROR");
-                senderDrone.invalidateDrone(listIndex);
+                System.out.println("SEND INFO RESPONSE ERROR");
             }
 
             @Override
             public void onCompleted() {
-                //System.out.println("GET INFO COMPLETED");
+                System.out.println("SEND INFO COMPLETED");
                 channel.shutdown();
             }
         });
@@ -69,6 +79,7 @@ public class GrpcGetInfoClientDrone extends Thread {
             //System.out.println("WAS NOT ABLE TO AWAIT TERMINATION");
             e.printStackTrace();
         }
+
     }
 
 }

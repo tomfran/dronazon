@@ -1,9 +1,8 @@
 package Drone;
 
-import Dronazon.Order;
-import GrpcDrone.GrpcGetInfoClientDrone;
-import GrpcDrone.GrpcSendInfoClientDrone;
-import GrpcDrone.GrpcServerDrone;
+import Grpc.GetInfoClient;
+import Grpc.SendInfoClient;
+import Grpc.GrpcServer;
 import com.drone.grpc.DroneService;
 
 import java.util.ArrayList;
@@ -19,6 +18,9 @@ public class Drone {
     protected ArrayList<Drone> dronesList;
     protected RestMethods restMethods;
     protected boolean isAvailable;
+    // drones list LOCK as a lot of threads need
+    // to access to it concurrently
+    protected boolean listLock = false;
 
     // rest api base
     public static String restBaseAddress = "http://localhost:1337/drones/";
@@ -29,7 +31,7 @@ public class Drone {
     protected OrderQueue orderQueue;
 
     // threads
-    private GrpcServerDrone grpcServer;
+    private GrpcServer grpcServer;
     private QuitDrone quitDrone;
 
     public Drone(int id, String ip, int port) {
@@ -66,38 +68,52 @@ public class Drone {
         quitDrone.start();
 
         // start grpc server to respond
-        grpcServer = new GrpcServerDrone(this);
+        grpcServer = new GrpcServer(this);
         grpcServer.start();
 
         // send everyone my informations
         sendDroneInfo();
 
-        System.out.println(this);
-
         // becomeMaster, it is a separate function
         // as one might become it later
         if (isMaster)
             becomeMaster();
-
     }
 
     public void becomeMaster(){
-        // start the order monitor mqtt client
-        monitorOrders = new MonitorOrders(this);
-        //monitorOrders.start();
-
-        // start the order queue
-        orderQueue = new OrderQueue(this);
-        orderQueue.start();
-
         // request drones infos
         requestDronesInfo();
+        System.out.println("Info requested");
+        // start the order queue
+        orderQueue = new OrderQueue(this);
+        monitorOrders = new MonitorOrders(this, orderQueue);
 
+        orderQueue.start();
+        System.out.println("Queue started");
+        // start the order monitor mqtt client
+        monitorOrders.start();
+    }
+
+    public synchronized void lockDronesList(){
+        while(listLock) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                System.out.println("Drone with id " + id + " was not able to wait drone list lock");
+                e.printStackTrace();
+            }
+        }
+        listLock = true;
+    }
+
+    public synchronized void unlockDronesList(){
+        listLock = false;
+        notify();
     }
 
     public void requestDronesInfo() {
         // list of threads to then stop them
-        ArrayList<GrpcGetInfoClientDrone> threadList = new ArrayList<>();
+        ArrayList<GetInfoClient> threadList = new ArrayList<>();
 
         // create a thread for each drone in the list
         // and start requesting infos
@@ -106,14 +122,14 @@ public class Drone {
         int i = 0;
         for ( Drone d : dronesList ) {
             threadList.add(
-                    new GrpcGetInfoClientDrone(this, d, i)
+                    new GetInfoClient(this, d, i)
             );
 
             threadList.get(i).start();
             i++;
         }
 
-        for ( GrpcGetInfoClientDrone t : threadList) {
+        for ( GetInfoClient t : threadList) {
             try {
                 t.join();
             } catch (InterruptedException e) {
@@ -126,7 +142,7 @@ public class Drone {
 
     public void sendDroneInfo(){
         // list of threads to then stop them
-        ArrayList<GrpcSendInfoClientDrone> threadList = new ArrayList<>();
+        ArrayList<SendInfoClient> threadList = new ArrayList<>();
 
         /*
         create a thread for each drone in the list
@@ -139,14 +155,14 @@ public class Drone {
         int i = 0;
         for ( Drone d : dronesList ) {
             threadList.add(
-                    new GrpcSendInfoClientDrone(this, d)
+                    new SendInfoClient(this, d)
             );
 
             threadList.get(i).start();
             i++;
         }
 
-        for ( GrpcSendInfoClientDrone t : threadList) {
+        for ( SendInfoClient t : threadList) {
             try {
                 t.join();
             } catch (InterruptedException e) {
@@ -158,24 +174,12 @@ public class Drone {
 
     }
 
-    /*
-
-    public void assignOrder(Order o){
-
-        Drone closest = null;
-        double dist = Double.MAX_VALUE;
-        for ( Drone d : dronesList ) {
-            if (closest == null || distance(o.startCoordinates, d.coordinates) < dist)
-                closest = d;
-        }
-
-    }
-     */
-
     // add new drone to the list, called after receiving info from a new drone
     public void addNewDrone(DroneService.SenderInfoRequest value){
         // TODO if a simple drone receive this, he might now need to
         // save all this infos and stick to the simple id, port, ip constructor
+
+        lockDronesList();
         dronesList.add(new Drone(
                 value.getId(),
                 value.getIp(),
@@ -185,36 +189,44 @@ public class Drone {
                 value.getIsMaster(),
                 value.getAvailable()
         ));
+        unlockDronesList();
     }
 
     // called when the get info request does not go right,
     // I should start remaking the ring
     public void invalidateDrone(int listIndex) {
         // method used to invalidate a drone entry
+        lockDronesList();
         Drone d = dronesList.get(listIndex);
         d.coordinates[0] = -1;
         d.coordinates[1] = -1;
+        unlockDronesList();
     }
 
     // called after a inforesponse
     public synchronized void updateDrone(DroneService.InfoResponse value, int listIndex) {
         // concurrent access to the drone list, need sync
+        lockDronesList();
         Drone d = dronesList.get(listIndex);
         d.coordinates[0] = value.getPosition().getX();
         d.coordinates[1] = value.getPosition().getY();
         d.battery = value.getResidualBattery();
         d.isMaster = value.getIsMaster();
         d.isAvailable = value.getAvailable();
+        unlockDronesList();
     }
 
     // called when receiving response after a info send
     // need this field in case the master drone fails
     public synchronized void updateMasterDrone(DroneService.SenderInfoResponse value){
+        lockDronesList();
         int id = value.getId();
         boolean isMaster = value.getIsMaster();
-        for ( Drone d : dronesList )
+        for ( Drone d : dronesList ) {
             if (d.getId() == id)
                 d.isMaster = isMaster;
+        }
+        unlockDronesList();
     }
 
     public void stop() {
@@ -289,18 +301,5 @@ public class Drone {
         d2.run();
         d3.run();
         d4.run();
-
-        System.out.println("SLEEPING");
-        Thread.sleep(3000);
-        System.out.println("WOKE");
-
-        System.out.println(d2);
-
-
-        System.out.println("SLEEPING");
-        Thread.sleep(3000);
-        System.out.println("WOKE");
-        System.out.println(d4);
-
     }
 }

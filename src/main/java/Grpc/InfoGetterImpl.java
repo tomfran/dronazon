@@ -1,4 +1,4 @@
-package GrpcDrone;
+package Grpc;
 
 import Drone.Drone;
 import com.drone.grpc.InfoGetterGrpc.InfoGetterImplBase;
@@ -6,8 +6,6 @@ import com.drone.grpc.DroneService.InfoRequest;
 import com.drone.grpc.DroneService.InfoResponse;
 import com.drone.grpc.DroneService.Coordinates;
 import io.grpc.stub.StreamObserver;
-
-import java.sql.SQLOutput;
 
 public class InfoGetterImpl extends InfoGetterImplBase {
     private final Drone drone;

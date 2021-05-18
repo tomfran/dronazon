@@ -12,10 +12,12 @@ public class MonitorOrders extends Thread{
     private static String broker = "tcp://localhost:1883";
     private final String clientId;
     private static String topic = "dronazon/smartcity/orders";
+    private OrderQueue queue;
 
-    public MonitorOrders(Drone drone) {
+    public MonitorOrders(Drone drone, OrderQueue queue) {
         this.drone = drone;
         this.clientId = MqttClient.generateClientId();
+        this.queue = queue;
     }
 
     public void run() {
@@ -43,7 +45,7 @@ public class MonitorOrders extends Thread{
                     if (o.id == -1){
                         System.out.println("ERROR while unpacking order json");
                     } else {
-                        drone.orderQueue.addOrder(o);
+                        queue.produce(o);
                     }
                 }
 

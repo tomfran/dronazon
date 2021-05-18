@@ -1,4 +1,4 @@
-package GrpcDrone;
+package Grpc;
 
 import Drone.Drone;
 import io.grpc.Server;
@@ -6,10 +6,10 @@ import io.grpc.ServerBuilder;
 
 import java.io.IOException;
 
-public class GrpcServerDrone extends Thread{
+public class GrpcServer extends Thread{
     private Drone drone;
 
-    public GrpcServerDrone(Drone drone) {
+    public GrpcServer(Drone drone) {
         this.drone = drone;
     }
 
@@ -17,7 +17,7 @@ public class GrpcServerDrone extends Thread{
         Server server = ServerBuilder.forPort(drone.getPort())
                 .addService(new InfoGetterImpl(drone))
                 .addService(new InfoSenderImpl(drone))
-                //.addService(new OrderAssignmentImpl(drone))
+                .addService(new OrderAssignmentImpl(drone))
                 .build();
 
         try {

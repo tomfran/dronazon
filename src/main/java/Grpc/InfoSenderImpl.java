@@ -1,7 +1,6 @@
-package GrpcDrone;
+package Grpc;
 
 import Drone.Drone;
-import com.drone.grpc.DroneService;
 import com.drone.grpc.InfoSenderGrpc.InfoSenderImplBase;
 import com.drone.grpc.DroneService.SenderInfoRequest;
 import com.drone.grpc.DroneService.SenderInfoResponse;
