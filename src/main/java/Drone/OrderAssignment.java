@@ -34,9 +34,10 @@ public class OrderAssignment extends Thread {
         double dist = Double.MAX_VALUE;
 
 
-        for ( Drone d : drone.dronesList ) {
+        for ( Drone d : drone.dronesList.getDronesList() ) {
             double currentDistance = distance(order.startCoordinates, d.coordinates);
-            if (d.isAvailable && (closest == null || currentDistance < dist)) {
+            System.out.println(d.getId() + " " + d.isAvailable());
+            if (d.isAvailable() && (closest == null || currentDistance < dist)) {
                 dist = currentDistance;
                 closest = d;
             }
@@ -71,11 +72,14 @@ public class OrderAssignment extends Thread {
             @Override
             public void onNext(DroneService.OrderResponse value) {
                 System.out.println("Order assignment response by drone " + receiver.id);
+                queue.addStatistic(value);
+                /*
                 System.out.println(value.getKm());
                 System.out.println(value.getResidualBattery());
                 System.out.println(value.getNewPosition());
                 System.out.println(value.getPollutionAverage());
                 System.out.println(value.getTimestamp());
+                */
             }
 
             @Override
@@ -86,7 +90,7 @@ public class OrderAssignment extends Thread {
             @Override
             public void onCompleted() {
                 System.out.println("Order assignment completed by drone " + receiver.id);
-                receiver.isAvailable = true;
+                receiver.setAvailable(true);
                 channel.shutdown();
             }
         });
@@ -100,18 +104,18 @@ public class OrderAssignment extends Thread {
     }
 
     public void run() {
-        drone.lockDronesList();
-        System.out.println("Order assignment");;
+        System.out.println("Order assignment");
+        drone.getDronesList().lockDronesList();
         Drone closest = findClosest();
         if (closest == null) {
             System.out.println("No drones available");
-            //queue.retryOrder(order);
+            queue.retryOrder(order);
         }else{
             System.out.println("Closest drone: " + closest.id);
-            closest.isAvailable = false;
+            closest.setAvailable(false);
             sendOrder(closest);
         }
-        drone.unlockDronesList();
+        drone.getDronesList().unlockDronesList();
         queue.removeThread(this);
     }
 }

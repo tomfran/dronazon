@@ -1,5 +1,6 @@
 package Drone;
 
+import RestServer.beans.Statistic;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -9,6 +10,8 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class RestMethods {
     Drone drone;
+    // rest api base
+    public static String restBaseAddress = "http://localhost:1337/drones/";
 
     public RestMethods(Drone drone) {
         this.drone = drone;
@@ -19,9 +22,9 @@ public class RestMethods {
         try {
             Client client = Client.create();
             WebResource webResource = client
-                    .resource(Drone.restBaseAddress + "add");
+                    .resource(restBaseAddress + "add");
 
-            String payload = this.getPostPayload();
+            String payload = this.getInitializePostPayload();
 
             ClientResponse response = webResource.type("application/json")
                     .post(ClientResponse.class, payload);
@@ -31,7 +34,7 @@ public class RestMethods {
 
             if (status == 200) {
                 // no conflict, unpack the response and go on
-                if (unpackResponse(response.getEntity(String.class))) {
+                if (unpackInitializeResponse(response.getEntity(String.class))) {
                     System.out.println("ADD: Drone " + drone.id + " initialization completed");
                     return true;
                 }
@@ -48,7 +51,7 @@ public class RestMethods {
         return false;
     }
 
-    private String getPostPayload() throws JSONException {
+    private String getInitializePostPayload() throws JSONException {
         JSONObject payload = new JSONObject();
         payload.put("id", drone.id);
         payload.put("ip", drone.ip);
@@ -56,7 +59,7 @@ public class RestMethods {
         return payload.toString();
     }
 
-    private boolean unpackResponse(String response) {
+    private boolean unpackInitializeResponse(String response) {
 
         JSONObject input = null;
         try {
@@ -84,7 +87,7 @@ public class RestMethods {
                 String ip = current.getString("ip");
                 int port = current.getInt("port");
                 if (id != drone.id)
-                    drone.dronesList.add(new Drone(id, ip, port));
+                    drone.dronesList.dronesList.add(new Drone(id, ip, port));
             }
             drone.isMaster = false;
         } catch (JSONException e) {
@@ -93,13 +96,17 @@ public class RestMethods {
         return true;
     }
 
+    private void sendStatistic(Statistic s){
+
+    }
+
     public void quit() {
         System.out.println("Quitting drone " + drone.id);
         try {
             Client client = Client.create();
             // calling a DELETE host/remove/id removes the drone with the given id
             WebResource webResource = client
-                    .resource(Drone.restBaseAddress + "remove/" + drone.id);
+                    .resource(restBaseAddress + "remove/" + drone.id);
 
             ClientResponse response = webResource.type("application/json")
                     .delete(ClientResponse.class);

@@ -2,7 +2,6 @@ package Grpc;
 
 import Drone.Drone;
 
-
 import com.drone.grpc.InfoGetterGrpc;
 import com.drone.grpc.InfoGetterGrpc.InfoGetterStub;
 import com.drone.grpc.DroneService.InfoRequest;
@@ -47,13 +46,13 @@ public class GetInfoClient extends Thread {
                 System.out.println(value.getResidualBattery());
                 System.out.println(value.getIsMaster());
                  */
-                senderDrone.updateDrone(value, listIndex);
+                senderDrone.getDronesList().updateDrone(value, listIndex);
             }
 
             @Override
             public void onError(Throwable t) {
                 //System.out.println("GET INFO ERROR");
-                senderDrone.invalidateDrone(listIndex);
+                senderDrone.getDronesList().invalidateDrone(listIndex);
             }
 
             @Override

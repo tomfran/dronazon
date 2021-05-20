@@ -58,7 +58,7 @@ public class SendInfoClient extends Thread {
                 System.out.println(value.getResidualBattery());
                 System.out.println(value.getIsMaster());
                  */
-                senderDrone.updateMasterDrone(value);
+                senderDrone.getDronesList().updateMasterDrone(value);
             }
 
             @Override
