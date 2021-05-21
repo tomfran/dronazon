@@ -31,8 +31,7 @@ public class GrpcServer extends Thread{
         try {
             server.awaitTermination();
         } catch (InterruptedException e) {
-            System.out.println("Drone with id " + drone.getId() + " was not able to await termination of grpc server");
-            e.printStackTrace();
+            System.out.println("Drone " + drone.getId() + " stopped GRPC server");
         }
     }
 

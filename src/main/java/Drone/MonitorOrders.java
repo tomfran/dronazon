@@ -62,7 +62,7 @@ public class MonitorOrders extends Thread{
             client.subscribe(topic,qos);
             System.out.println(clientId + " Subscribed to topics : " + topic);
 
-        } catch (MqttException me ) {
+        } catch (MqttException me) {
             System.out.println("reason " + me.getReasonCode());
             System.out.println("msg " + me.getMessage());
             System.out.println("loc " + me.getLocalizedMessage());

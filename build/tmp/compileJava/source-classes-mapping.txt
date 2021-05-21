@@ -78,14 +78,12 @@ com/drone/grpc/OrderAssignmentGrpc.java
  com.drone.grpc.OrderAssignmentGrpc$OrderAssignmentStub
 RestServer/AdminClient.java
  RestServer.AdminClient
-Drone/BatteryMonitor.java
- Drone.BatteryMonitor
+RestServer/beans/Statistic.java
+ RestServer.beans.Statistic
 RestServer/beans/Statistics.java
  RestServer.beans.Statistics
 RestServer/services/StatsService.java
  RestServer.services.StatsService
-RestServer/beans/Statistic.java
- RestServer.beans.Statistic
 Drone/OrderAssignment.java
  Drone.OrderAssignment
  Drone.OrderAssignment$1

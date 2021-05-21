@@ -35,7 +35,8 @@ public class OrderQueue extends Thread{
             try {
                 wait();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                System.out.println("Drone " + drone.getId() + " stopped queue consume");
+                //e.printStackTrace();
             }
         }
 
@@ -71,6 +72,7 @@ public class OrderQueue extends Thread{
             try {
                 wait();
             } catch (InterruptedException e) {
+                System.out.println("Producer stopped");
                 e.printStackTrace();
             }
         }

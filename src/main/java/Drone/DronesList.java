@@ -1,5 +1,6 @@
 package Drone;
 
+import Dronazon.Order;
 import Grpc.GetInfoClient;
 import Grpc.SendInfoClient;
 import com.drone.grpc.DroneService;
@@ -18,23 +19,6 @@ public class DronesList {
         this.dronesList = new ArrayList<Drone>();
     }
 
-    public synchronized void lockDronesList(){
-        while(listLock) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                System.out.println("Drone with id " + drone.getId() + " was not able to wait drone list lock");
-                e.printStackTrace();
-            }
-        }
-        listLock = true;
-    }
-
-    public synchronized void unlockDronesList(){
-        listLock = false;
-        notify();
-    }
-
     public void requestDronesInfo() {
         // list of threads to then stop them
         ArrayList<GetInfoClient> threadList = new ArrayList<>();
@@ -44,7 +28,7 @@ public class DronesList {
         // after receiving the response each thread proceeds to star the updateDrone
         // procedure, to update the drone information in the droneslist
         int i = 0;
-        for ( Drone d : dronesList ) {
+        for ( Drone d : getDronesList() ) {
             threadList.add(
                     new GetInfoClient(drone, d, i)
             );
@@ -60,7 +44,6 @@ public class DronesList {
                 e.printStackTrace();
             }
         }
-
     }
 
     public void sendDroneInfo(){
@@ -76,7 +59,7 @@ public class DronesList {
          */
 
         int i = 0;
-        for ( Drone d : dronesList ) {
+        for ( Drone d : getDronesList() ) {
             threadList.add(
                     new SendInfoClient(drone, d)
             );
@@ -102,7 +85,6 @@ public class DronesList {
         // TODO if a simple drone receive this, he might now need to
         // save all this infos and stick to the simple id, port, ip constructor
 
-        lockDronesList();
         dronesList.add(new Drone(
                 value.getId(),
                 value.getIp(),
@@ -112,22 +94,19 @@ public class DronesList {
                 value.getIsMaster(),
                 value.getAvailable()
         ));
-        unlockDronesList();
     }
 
     // called when the get info request does not go right,
     // I should start remaking the ring
     public void invalidateDrone(int listIndex) {
         // method used to invalidate a drone entry
-        //lockDronesList();
         Drone d = getDronesList().get(listIndex);
         d.coordinates[0] = -1;
         d.coordinates[1] = -1;
-        //unlockDronesList();
     }
 
     // called after a inforesponse
-    public synchronized void updateDrone(DroneService.InfoResponse value, int listIndex) {
+    public void updateDrone(DroneService.InfoResponse value, int listIndex) {
         // concurrent access to the drone list, need sync
         ArrayList<Drone> copy = getDronesList();
         Drone d = copy.get(listIndex);
@@ -140,16 +119,44 @@ public class DronesList {
 
     // called when receiving response after a info send
     // need this field in case the master drone fails
-    public synchronized void updateMasterDrone(DroneService.SenderInfoResponse value){
-        //lockDronesList();
+    public void updateMasterDrone(DroneService.SenderInfoResponse value){
         int id = value.getId();
         boolean isMaster = value.getIsMaster();
         for ( Drone d : getDronesList() ) {
             if (d.getId() == id)
                 d.isMaster = isMaster;
         }
-        //unlockDronesList();
     }
+
+    static Double distance(int[]v1, int[]v2){
+        return Math.sqrt(
+                Math.pow(v2[0] - v1[0], 2) +
+                        Math.pow(v2[1] - v1[1], 2)
+        );
+    }
+
+    public synchronized Drone findClosest(Order o) {
+
+        Drone closest = null;
+        Double dist = Double.MAX_VALUE;
+        int maxBattery = 0;
+        ArrayList<Drone> list = drone.dronesList.getDronesList();
+        list.add(drone);
+        for ( Drone d : list ) {
+            Double currentDistance = distance(o.startCoordinates, d.coordinates);
+            if (d.isAvailable() && (closest == null || currentDistance.compareTo(dist) < 0 ||
+                    (currentDistance.compareTo(dist) == 0 && d.getBattery() > maxBattery))) {
+                dist = currentDistance;
+                maxBattery = d.getBattery();
+                closest = d;
+            }
+        }
+        if (closest != null)
+            closest.setAvailable(false);
+
+        return closest;
+    }
+
 
     public synchronized ArrayList<Drone> getDronesList() {
         return new ArrayList<Drone>(dronesList);

@@ -21,30 +21,6 @@ public class OrderAssignment extends Thread {
         this.queue = queue;
     }
 
-    static double distance(int[]v1, int[]v2){
-        return Math.sqrt(
-                Math.pow(v2[0] - v1[0], 2) +
-                        Math.pow(v2[1] - v1[1], 2)
-        );
-    }
-
-    private Drone findClosest() {
-
-        Drone closest = null;
-        double dist = Double.MAX_VALUE;
-
-
-        for ( Drone d : drone.dronesList.getDronesList() ) {
-            double currentDistance = distance(order.startCoordinates, d.coordinates);
-            System.out.println(d.getId() + " " + d.isAvailable());
-            if (d.isAvailable() && (closest == null || currentDistance < dist)) {
-                dist = currentDistance;
-                closest = d;
-            }
-        }
-        return closest;
-    }
-
     public void sendOrder(Drone receiver){
         final ManagedChannel channel =
                 ManagedChannelBuilder.forTarget(receiver.getIp() + ":" + receiver.getPort())
@@ -105,17 +81,14 @@ public class OrderAssignment extends Thread {
 
     public void run() {
         System.out.println("Order assignment");
-        drone.getDronesList().lockDronesList();
-        Drone closest = findClosest();
+        Drone closest = this.drone.getDronesList().findClosest(order);
         if (closest == null) {
             System.out.println("No drones available");
             queue.retryOrder(order);
         }else{
             System.out.println("Closest drone: " + closest.id);
-            closest.setAvailable(false);
             sendOrder(closest);
         }
-        drone.getDronesList().unlockDronesList();
         queue.removeThread(this);
     }
 }

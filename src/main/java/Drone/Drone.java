@@ -91,14 +91,16 @@ public class Drone {
 
     public void stop() {
         restMethods.quit();
-        if (monitorOrders != null) {
-            monitorOrders.disconnect();
-            System.out.println("Drone " + id + " stopped order monitor");
-        }
         if (orderQueue != null) {
             orderQueue.interrupt();
             System.out.println("Drone " + id + " stopped order queue");
         }
+
+        if (monitorOrders != null) {
+            monitorOrders.interrupt();
+            System.out.println("Drone " + id + " stopped order monitor");
+        }
+
 
         quitDrone.interrupt();
         System.out.println("Drone " + id + " stopped quit monitor");
@@ -122,8 +124,20 @@ public class Drone {
         return coordinates[1];
     }
 
-    public int getBattery() {
+    public synchronized int getBattery() {
         return battery;
+    }
+
+    public synchronized void decreaseBattery() {
+        battery -= 15;
+    }
+
+    public synchronized int[] getCoordinates(){
+        return coordinates;
+    }
+
+    public synchronized void setCoordinates(int[] cord){
+        coordinates = cord;
     }
 
     public boolean isMaster() {
@@ -164,7 +178,7 @@ public class Drone {
 
     public DroneService.OrderResponse deliver(DroneService.OrderRequest request) {
         int [] newPosition = new int[]{request.getEnd().getX(), request.getEnd().getY()};
-        battery -= 15;
+        decreaseBattery();
 
         DroneService.OrderResponse response = DroneService.OrderResponse.newBuilder()
                 .setTimestamp(
@@ -176,30 +190,31 @@ public class Drone {
                                 .setY(newPosition[1])
                                 .build()
                 )
-                .setKm(OrderAssignment.distance(coordinates, newPosition))
+                .setKm(DronesList.distance(getCoordinates(), newPosition))
                 .setPollutionAverage(10)
-                .setResidualBattery(battery)
+                .setResidualBattery(getBattery())
                 .build();
 
-        coordinates = newPosition;
+
+        setCoordinates(newPosition);
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         System.out.println("\nDelivery completed: \n\tNew position: " + newPosition[0] + " " + newPosition[1]);
-        System.out.println("\tResidual battery " + battery + "\n");
+        System.out.println("\tResidual battery " + getBattery() + "\n");
         return response;
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
 
         Scanner sc=new Scanner(System.in);
 
         System.out.println("Insert drone ID and port");
         Drone d1 = new Drone(sc.nextInt(), "localhost", sc.nextInt());
         d1.run();
+
+        System.out.println("finito ");
     }
-
-
 }
