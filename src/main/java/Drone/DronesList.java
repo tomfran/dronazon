@@ -76,8 +76,7 @@ public class DronesList {
             }
         }
 
-        System.out.println(this);
-
+        System.out.println(drone);
     }
 
     // add new drone to the list, called after receiving info from a new drone

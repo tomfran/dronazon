@@ -87,8 +87,8 @@ RestServer/services/StatsService.java
 Drone/OrderAssignment.java
  Drone.OrderAssignment
  Drone.OrderAssignment$1
-Grpc/InfoSenderImpl.java
- Grpc.InfoSenderImpl
+Drone/OrderQueue.java
+ Drone.OrderQueue
 Drone/MonitorOrders.java
  Drone.MonitorOrders
  Drone.MonitorOrders$1
@@ -106,11 +106,11 @@ Grpc/GetInfoClient.java
  Grpc.GetInfoClient$1
 Drone/Drone.java
  Drone.Drone
-Grpc/GrpcServer.java
- Grpc.GrpcServer
-Drone/RestMethods.java
- Drone.RestMethods
 Drone/DronesList.java
  Drone.DronesList
-Drone/OrderQueue.java
- Drone.OrderQueue
+Drone/RestMethods.java
+ Drone.RestMethods
+Grpc/InfoSenderImpl.java
+ Grpc.InfoSenderImpl
+Grpc/GrpcServer.java
+ Grpc.GrpcServer

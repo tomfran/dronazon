@@ -1,14 +1,15 @@
 package Drone;
 
-import Grpc.GetInfoClient;
-import Grpc.SendInfoClient;
 import Grpc.GrpcServer;
 import com.drone.grpc.DroneService;
+import javafx.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Scanner;
 
-public class Drone {
+public class Drone implements Comparable<Drone>{
 
     // drone fields
     protected int id;
@@ -19,6 +20,8 @@ public class Drone {
     protected DronesList dronesList;
     protected RestMethods restMethods;
     protected boolean isAvailable;
+    protected Drone successor;
+    protected Drone predecessor;
 
     // master drone fields and orders thread
     protected boolean isMaster;
@@ -38,6 +41,8 @@ public class Drone {
         this.coordinates = new int[2];
         this.restMethods = new RestMethods(this);
         this.isAvailable = true;
+        this.successor = null;
+        this.predecessor = null;
     }
 
     public Drone(int id, String ip, int port, int[] coordinates, int battery, boolean isMaster, boolean isAvailable) {
@@ -69,10 +74,13 @@ public class Drone {
         // send everyone my informations
         dronesList.sendDroneInfo();
 
+        // send successor and precedessor
+
         // becomeMaster, it is a separate function
         // as one might become it later
         if (isMaster)
             becomeMaster();
+
     }
 
     public void becomeMaster(){
@@ -106,6 +114,53 @@ public class Drone {
         System.out.println("Drone " + id + " stopped quit monitor");
         grpcServer.interrupt();
         System.out.println("Drone " + id + " stopped grpc monitor");
+    }
+
+    public void enterRing(){
+        ArrayList<Drone> list = dronesList.getDronesList();
+        list.add(this);
+        Collections.sort(list);
+
+        int i = list.indexOf(this);
+
+        predecessor = (i == 0)? list.get(list.size()-1) : list.get(i-1);
+        successor = (i == list.size()-1)? list.get(0) : list.get(i+1);
+    }
+
+    public DroneService.OrderResponse deliver(DroneService.OrderRequest request) {
+        int [] newPosition = new int[]{request.getEnd().getX(), request.getEnd().getY()};
+        decreaseBattery();
+
+        DroneService.OrderResponse response = DroneService.OrderResponse.newBuilder()
+                .setTimestamp(
+                        new java.sql.Timestamp(System.currentTimeMillis()).getTime()
+                )
+                .setNewPosition(
+                        DroneService.Coordinates.newBuilder()
+                                .setX(newPosition[0])
+                                .setY(newPosition[1])
+                                .build()
+                )
+                .setKm(DronesList.distance(getCoordinates(), newPosition))
+                .setPollutionAverage(10)
+                .setResidualBattery(getBattery())
+                .build();
+
+
+        setCoordinates(newPosition);
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("\nDelivery completed: \n\tNew position: " + newPosition[0] + " " + newPosition[1]);
+        System.out.println("\tResidual battery " + getBattery() + "\n");
+        return response;
+    }
+
+    @Override
+    public int compareTo(Drone o) {
+        return this.getId() - o.getId() ;
     }
 
     public int getId() {
@@ -152,7 +207,7 @@ public class Drone {
         this.isAvailable = b;
     }
 
-    public DronesList getDronesList() {return dronesList; }
+    public DronesList getDronesList() { return dronesList; }
 
     public int getPort() {
         return port;
@@ -173,38 +228,11 @@ public class Drone {
             ret += "\n" + d.getInfo() + ", \n\n";
 
         ret += "]";
-        return ret;
-    }
-
-    public DroneService.OrderResponse deliver(DroneService.OrderRequest request) {
-        int [] newPosition = new int[]{request.getEnd().getX(), request.getEnd().getY()};
-        decreaseBattery();
-
-        DroneService.OrderResponse response = DroneService.OrderResponse.newBuilder()
-                .setTimestamp(
-                        new java.sql.Timestamp(System.currentTimeMillis()).getTime()
-                )
-                .setNewPosition(
-                        DroneService.Coordinates.newBuilder()
-                                .setX(newPosition[0])
-                                .setY(newPosition[1])
-                                .build()
-                )
-                .setKm(DronesList.distance(getCoordinates(), newPosition))
-                .setPollutionAverage(10)
-                .setResidualBattery(getBattery())
-                .build();
-
-
-        setCoordinates(newPosition);
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if(predecessor != null && successor != null) {
+            ret += "\n Pred: " + predecessor.getInfo();
+            ret += "\n Succ: " + successor.getInfo();
         }
-        System.out.println("\nDelivery completed: \n\tNew position: " + newPosition[0] + " " + newPosition[1]);
-        System.out.println("\tResidual battery " + getBattery() + "\n");
-        return response;
+        return ret;
     }
 
     public static void main(String[] args) {
@@ -215,6 +243,5 @@ public class Drone {
         Drone d1 = new Drone(sc.nextInt(), "localhost", sc.nextInt());
         d1.run();
 
-        System.out.println("finito ");
     }
 }

@@ -86,13 +86,16 @@ public class RestMethods {
                 int id = current.getInt("id");
                 String ip = current.getString("ip");
                 int port = current.getInt("port");
-                if (id != drone.id)
-                    drone.dronesList.dronesList.add(new Drone(id, ip, port));
+                if (id != drone.id) {
+                    Drone d = new Drone(id, ip, port);
+                    drone.dronesList.dronesList.add(d);
+                }
             }
             drone.isMaster = false;
         } catch (JSONException e) {
             drone.isMaster = true;
         }
+        drone.enterRing();
         return true;
     }
 

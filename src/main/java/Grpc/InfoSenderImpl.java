@@ -18,6 +18,7 @@ public class InfoSenderImpl extends InfoSenderImplBase {
     public void sendInfo(SenderInfoRequest request, StreamObserver<SenderInfoResponse> responseObserver) {
         System.out.println("GRPC Send info received at drone " + drone.getId());
         drone.getDronesList().addNewDrone(request);
+        drone.enterRing();
         SenderInfoResponse response = SenderInfoResponse.newBuilder()
                 .setId(drone.getId())
                 .setIsMaster(drone.isMaster())
@@ -25,6 +26,7 @@ public class InfoSenderImpl extends InfoSenderImplBase {
 
         System.out.println("\n New drone list: \n");
         System.out.println(drone + "\n");
+
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }

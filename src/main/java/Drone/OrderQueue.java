@@ -4,6 +4,7 @@ import Dronazon.Order;
 import RestServer.beans.Statistic;
 import com.drone.grpc.DroneService;
 
+import java.sql.SQLOutput;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -12,21 +13,15 @@ public class OrderQueue extends Thread{
     private final Drone drone;
     private final LinkedList<Order> orderQueue;
     private final LinkedList<OrderAssignment> threadList;
-    private final Statistic globalStatistic;
-    private int statisticCount;
 
     private boolean queueLock = false;
     private boolean threadListLock = false;
 
-    private ArrayList<Statistic> statisticsList;
 
     public OrderQueue(Drone drone) {
         this.drone = drone;
         this.orderQueue = new LinkedList<>();
         this.threadList = new LinkedList<>();
-        this.statisticsList = new ArrayList<>();
-        this.globalStatistic = new Statistic();
-        this.statisticCount = 0;
     }
 
     public synchronized Order consume() {
@@ -118,20 +113,7 @@ public class OrderQueue extends Thread{
     }
 
     public synchronized void addStatistic(DroneService.OrderResponse value){
-        globalStatistic.setAvgKm(
-                (globalStatistic.getAvgKm() * statisticCount
-                        + value.getKm()) / (statisticCount + 1));
-
-        globalStatistic.setAvgBattery(
-                (globalStatistic.getAvgBattery() * statisticCount
-                        + value.getResidualBattery()) / (statisticCount+1));
-
-        globalStatistic.setAvgPollution(
-                (globalStatistic.getAvgPollution() * statisticCount
-                        + value.getPollutionAverage()) / (statisticCount+1));
-
-        globalStatistic.setTimestamp(new Timestamp(System.currentTimeMillis()));
-        System.out.println(globalStatistic);
+        System.out.println("!!!! To implement statistics");
     }
 
     public void run() {
