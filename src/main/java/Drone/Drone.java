@@ -2,10 +2,7 @@ package Drone;
 
 import Grpc.GrpcServer;
 import com.drone.grpc.DroneService;
-import javafx.util.Pair;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Scanner;
 
@@ -28,7 +25,7 @@ public class Drone implements Comparable<Drone>{
     private MonitorOrders monitorOrders;
     protected OrderQueue orderQueue;
 
-    // threads
+    // threads for quitting and grpc server
     private GrpcServer grpcServer;
     private QuitDrone quitDrone;
 
@@ -55,8 +52,11 @@ public class Drone implements Comparable<Drone>{
         this.isAvailable = isAvailable;
     }
 
+    /*
+    Start function, the drone initialize and send others
+    It's info, if required it becomes master
+     */
     public void run(){
-
         // make rest request
         if (!restMethods.initialize()){
             System.out.println("An error occurred initializing drone with these specs " + getInfo());
@@ -83,6 +83,10 @@ public class Drone implements Comparable<Drone>{
 
     }
 
+    /*
+    Calling this function a Drone becomes master, so it
+    starts to monitor orders and manage the queue
+     */
     public void becomeMaster(){
         // request drones infos
         dronesList.requestDronesInfo();
@@ -97,6 +101,10 @@ public class Drone implements Comparable<Drone>{
         monitorOrders.start();
     }
 
+    /*
+    Called after a quit command,
+    it basically stops everything
+     */
     public void stop() {
         restMethods.quit();
         if (orderQueue != null) {
@@ -116,6 +124,12 @@ public class Drone implements Comparable<Drone>{
         System.out.println("Drone " + id + " stopped grpc monitor");
     }
 
+    /*
+    Enter the ring overlay network,
+    The function computes the predecessor and successor,
+    to simplify implementation it's called
+    every time a drone enters the system
+     */
     public void enterRing(){
         ArrayList<Drone> list = dronesList.getDronesList();
         list.add(this);
@@ -127,6 +141,12 @@ public class Drone implements Comparable<Drone>{
         successor = (i == list.size()-1)? list.get(0) : list.get(i+1);
     }
 
+    /*
+    Delivery simulation, the Drone sleeps for 5 seconds,
+    then it sends the delivery response,
+
+    TODO add pollution measurements, and count Drone statistics
+     */
     public DroneService.OrderResponse deliver(DroneService.OrderRequest request) {
         int [] newPosition = new int[]{request.getEnd().getX(), request.getEnd().getY()};
         decreaseBattery();
@@ -158,6 +178,9 @@ public class Drone implements Comparable<Drone>{
         return response;
     }
 
+    /*
+    Used to sort the drone list in enter ring
+     */
     @Override
     public int compareTo(Drone o) {
         return this.getId() - o.getId() ;
@@ -179,6 +202,10 @@ public class Drone implements Comparable<Drone>{
         return coordinates[1];
     }
 
+    /*
+    Synchronized methods as in delivery search
+    the master access the fileds concurrently
+     */
     public synchronized int getBattery() {
         return battery;
     }
@@ -195,16 +222,16 @@ public class Drone implements Comparable<Drone>{
         coordinates = cord;
     }
 
-    public boolean isMaster() {
-        return isMaster;
-    }
-
-    public boolean isAvailable() {
+    public synchronized boolean isAvailable() {
         return isAvailable;
     }
 
     public synchronized void setAvailable(boolean b) {
         this.isAvailable = b;
+    }
+
+    public boolean isMaster() {
+        return isMaster;
     }
 
     public DronesList getDronesList() { return dronesList; }

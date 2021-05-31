@@ -14,6 +14,9 @@ public class QuitDrone extends Thread{
         this.inFromUser = new BufferedReader(new InputStreamReader(System.in));
     }
 
+    /*
+    Monitor quit command
+     */
     public void run(){
         String message = "";
         do {

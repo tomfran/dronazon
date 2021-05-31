@@ -17,6 +17,9 @@ public class RestMethods {
         this.drone = drone;
     }
 
+    /*
+    Make initial API request, initialize all the drone fields
+     */
     public boolean initialize() {
         System.out.println("Initial information request");
         try {
@@ -51,6 +54,9 @@ public class RestMethods {
         return false;
     }
 
+    /*
+    Get the request payload to initialize
+     */
     private String getInitializePostPayload() throws JSONException {
         JSONObject payload = new JSONObject();
         payload.put("id", drone.id);
@@ -59,6 +65,10 @@ public class RestMethods {
         return payload.toString();
     }
 
+    /*
+    Unpack the initialize respose,
+    update the drone list
+     */
     private boolean unpackInitializeResponse(String response) {
 
         JSONObject input = null;
@@ -103,6 +113,9 @@ public class RestMethods {
 
     }
 
+    /*
+    Send quit request to the API
+     */
     public void quit() {
         System.out.println("Quitting drone " + drone.id);
         try {

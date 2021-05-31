@@ -2,9 +2,7 @@ package Drone;
 
 import Dronazon.Order;
 import org.eclipse.paho.client.mqttv3.*;
-
 import java.sql.Timestamp;
-import java.util.Scanner;
 
 public class MonitorOrders extends Thread{
     private Drone drone;
@@ -20,6 +18,10 @@ public class MonitorOrders extends Thread{
         this.queue = queue;
     }
 
+    /*
+    Monitor MQTT topic,
+    produce on the queue when receiving one
+     */
     public void run() {
 
         int qos = 2;
@@ -73,6 +75,10 @@ public class MonitorOrders extends Thread{
 
     }
 
+    /*
+    Stop the MQTT client
+    TODO STOP QUEUE PRODUCE
+     */
     public void disconnect() {
         try {
             client.disconnect();

@@ -1,12 +1,7 @@
 package Drone;
 
 import Dronazon.Order;
-import RestServer.beans.Statistic;
 import com.drone.grpc.DroneService;
-
-import java.sql.SQLOutput;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class OrderQueue extends Thread{
@@ -24,6 +19,9 @@ public class OrderQueue extends Thread{
         this.threadList = new LinkedList<>();
     }
 
+    /*
+    Queue consume
+     */
     public synchronized Order consume() {
         //System.out.println("entering consume");
         while( queueLock || orderQueue.isEmpty()) {
@@ -45,6 +43,9 @@ public class OrderQueue extends Thread{
         return o;
     }
 
+    /*
+    Re-add an order to the top of the queue
+     */
     public synchronized void retryOrder(Order o){
         while (queueLock) {
             try {
@@ -80,6 +81,9 @@ public class OrderQueue extends Thread{
         notify();
     }
 
+    /*
+    Remove delivery assignment thread from the thread list
+     */
     public synchronized void removeThread(OrderAssignment t){
         while(threadListLock){
             try {

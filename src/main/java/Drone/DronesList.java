@@ -4,36 +4,32 @@ import Dronazon.Order;
 import Grpc.GetInfoClient;
 import Grpc.SendInfoClient;
 import com.drone.grpc.DroneService;
-
 import java.util.ArrayList;
 
 public class DronesList {
     protected Drone drone;
     protected ArrayList<Drone> dronesList;
-    // drones list LOCK as a lot of threads need
-    // to access to it concurrently
-    protected boolean listLock = false;
 
     public DronesList(Drone drone) {
         this.drone = drone;
         this.dronesList = new ArrayList<Drone>();
     }
 
+    /*
+    Create a thread for each drone and start requesting infos,
+    it's done when a Drone becomes Master
+    after receiving the response each thread proceeds to star the updateDrone
+    procedure, to update the drone information in the droneslist
+     */
     public void requestDronesInfo() {
         // list of threads to then stop them
         ArrayList<GetInfoClient> threadList = new ArrayList<>();
 
-        // create a thread for each drone in the list
-        // and start requesting infos
-        // after receiving the response each thread proceeds to star the updateDrone
-        // procedure, to update the drone information in the droneslist
         int i = 0;
         for ( Drone d : getDronesList() ) {
-            threadList.add(
-                    new GetInfoClient(drone, d, i)
-            );
-
-            threadList.get(i).start();
+            GetInfoClient c = new GetInfoClient(drone, d, i);
+            threadList.add(c);
+            c.start();
             i++;
         }
 
@@ -46,26 +42,21 @@ public class DronesList {
         }
     }
 
+    /*
+    Create a thread for each drone in the list
+    and start sending infos
+    after receiving the response each thread proceeds to star the updateMaster
+    to find out who's the master drone, it will come in handy in case
+    the master fails
+     */
     public void sendDroneInfo(){
         // list of threads to then stop them
         ArrayList<SendInfoClient> threadList = new ArrayList<>();
 
-        /*
-        create a thread for each drone in the list
-        and start sending infos
-        after receiving the response each thread proceeds to star the updateMaster
-        to find out who's the master drone, it will come in handy in case
-        the master fails
-         */
-
-        int i = 0;
         for ( Drone d : getDronesList() ) {
-            threadList.add(
-                    new SendInfoClient(drone, d)
-            );
-
-            threadList.get(i).start();
-            i++;
+            SendInfoClient c = new SendInfoClient(drone, d);
+            threadList.add(c);
+            c.start();
         }
 
         for ( SendInfoClient t : threadList) {
@@ -79,11 +70,11 @@ public class DronesList {
         System.out.println(drone);
     }
 
-    // add new drone to the list, called after receiving info from a new drone
+    /*
+    Add a new Drone to the list
+    TODO simple drone does not need all of this info
+     */
     public synchronized void addNewDrone(DroneService.SenderInfoRequest value){
-        // TODO if a simple drone receive this, he might now need to
-        // save all this infos and stick to the simple id, port, ip constructor
-
         dronesList.add(new Drone(
                 value.getId(),
                 value.getIp(),
@@ -95,8 +86,9 @@ public class DronesList {
         ));
     }
 
-    // called when the get info request does not go right,
-    // I should start remaking the ring
+    /*
+    Called when an info request fails
+     */
     public void invalidateDrone(int listIndex) {
         // method used to invalidate a drone entry
         Drone d = getDronesList().get(listIndex);
@@ -104,7 +96,9 @@ public class DronesList {
         d.coordinates[1] = -1;
     }
 
-    // called after a inforesponse
+    /*
+    Update drone info after a master request
+     */
     public void updateDrone(DroneService.InfoResponse value, int listIndex) {
         // concurrent access to the drone list, need sync
         ArrayList<Drone> copy = getDronesList();
@@ -116,8 +110,11 @@ public class DronesList {
         d.isAvailable = value.getAvailable();
     }
 
-    // called when receiving response after a info send
-    // need this field in case the master drone fails
+
+    /*
+    Called when sending info to others,
+    it update the master
+     */
     public void updateMasterDrone(DroneService.SenderInfoResponse value){
         int id = value.getId();
         boolean isMaster = value.getIsMaster();
@@ -127,6 +124,9 @@ public class DronesList {
         }
     }
 
+    /*
+    Distance function to find closest drone
+     */
     static Double distance(int[]v1, int[]v2){
         return Math.sqrt(
                 Math.pow(v2[0] - v1[0], 2) +
@@ -134,6 +134,10 @@ public class DronesList {
         );
     }
 
+    /*
+    Find the closest Drone,
+    synchronized as multiple concurrent deliveries are possible
+     */
     public synchronized Drone findClosest(Order o) {
 
         Drone closest = null;
@@ -156,7 +160,9 @@ public class DronesList {
         return closest;
     }
 
-
+    /*
+    Getter that returns a copy so I can unlock the list
+     */
     public synchronized ArrayList<Drone> getDronesList() {
         return new ArrayList<Drone>(dronesList);
     }

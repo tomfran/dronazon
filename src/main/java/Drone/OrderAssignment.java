@@ -7,7 +7,6 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
 
-import java.sql.SQLOutput;
 import java.util.concurrent.TimeUnit;
 
 public class OrderAssignment extends Thread {
@@ -21,6 +20,9 @@ public class OrderAssignment extends Thread {
         this.queue = queue;
     }
 
+    /*
+    Send order to another Drone
+     */
     public void sendOrder(Drone receiver){
         final ManagedChannel channel =
                 ManagedChannelBuilder.forTarget(receiver.getIp() + ":" + receiver.getPort())
@@ -79,6 +81,12 @@ public class OrderAssignment extends Thread {
 
     }
 
+    /*
+    Try to find an available drone, if not available readd
+    the order to the queue
+
+    TODO FIX STDOUT SPAM
+     */
     public void run() {
         System.out.println("Order assignment");
         Drone closest = this.drone.getDronesList().findClosest(order);
