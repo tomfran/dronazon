@@ -18,6 +18,7 @@ public class GrpcServer extends Thread{
                 .addService(new InfoGetterImpl(drone))
                 .addService(new InfoSenderImpl(drone))
                 .addService(new OrderAssignmentImpl(drone))
+                .addService(new PingImpl(drone))
                 .build();
 
         try {

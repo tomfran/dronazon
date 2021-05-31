@@ -64,6 +64,7 @@ public class SendInfoClient extends Thread {
             @Override
             public void onError(Throwable t) {
                 System.out.println("SEND INFO RESPONSE ERROR");
+                channel.shutdown();
             }
 
             @Override

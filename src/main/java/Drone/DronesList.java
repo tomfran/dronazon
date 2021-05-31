@@ -79,7 +79,7 @@ public class DronesList {
                 value.getId(),
                 value.getIp(),
                 value.getPort(),
-                new int[]{value.getPosition().getX(), value.getPosition().getY()},
+                new Integer[]{value.getPosition().getX(), value.getPosition().getY()},
                 value.getResidualBattery(),
                 value.getIsMaster(),
                 value.getAvailable()
@@ -97,6 +97,15 @@ public class DronesList {
     }
 
     /*
+    Remove a drone from the list
+    called when master get a response error
+     */
+    public synchronized void remove(Drone d){
+        dronesList.remove(d);
+    }
+
+
+    /*
     Update drone info after a master request
      */
     public void updateDrone(DroneService.InfoResponse value, int listIndex) {
@@ -109,7 +118,6 @@ public class DronesList {
         d.isMaster = value.getIsMaster();
         d.isAvailable = value.getAvailable();
     }
-
 
     /*
     Called when sending info to others,
@@ -127,7 +135,7 @@ public class DronesList {
     /*
     Distance function to find closest drone
      */
-    static Double distance(int[]v1, int[]v2){
+    static Double distance(int[]v1, Integer[] v2){
         return Math.sqrt(
                 Math.pow(v2[0] - v1[0], 2) +
                         Math.pow(v2[1] - v1[1], 2)

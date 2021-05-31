@@ -62,7 +62,8 @@ public class OrderAssignment extends Thread {
 
             @Override
             public void onError(Throwable t) {
-                System.out.println("Order assignment response error");
+                drone.getDronesList().remove(receiver);
+                System.out.println("Order assignment response error, removing the drone");
             }
 
             @Override
@@ -82,7 +83,7 @@ public class OrderAssignment extends Thread {
     }
 
     /*
-    Try to find an available drone, if not available readd
+    Try to find an available drone, if not available read
     the order to the queue
 
     TODO FIX STDOUT SPAM

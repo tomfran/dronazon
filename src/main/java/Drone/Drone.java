@@ -12,11 +12,11 @@ public class Drone implements Comparable<Drone>{
     protected int id;
     protected String ip;
     protected int port;
-    protected int[] coordinates;
-    protected int battery;
+    protected Integer[] coordinates;
+    protected Integer battery;
     protected DronesList dronesList;
     protected RestMethods restMethods;
-    protected boolean isAvailable;
+    protected Boolean isAvailable;
     protected Drone successor;
     protected Drone predecessor;
 
@@ -27,6 +27,7 @@ public class Drone implements Comparable<Drone>{
 
     // threads for quitting and grpc server
     private GrpcServer grpcServer;
+    private PingService pingService;
     private QuitDrone quitDrone;
 
     public Drone(int id, String ip, int port) {
@@ -35,14 +36,14 @@ public class Drone implements Comparable<Drone>{
         this.port = port;
         this.battery = 100;
         this.dronesList = new DronesList(this);
-        this.coordinates = new int[2];
+        this.coordinates = new Integer[2];
         this.restMethods = new RestMethods(this);
         this.isAvailable = true;
         this.successor = null;
         this.predecessor = null;
     }
 
-    public Drone(int id, String ip, int port, int[] coordinates, int battery, boolean isMaster, boolean isAvailable) {
+    public Drone(int id, String ip, int port, Integer[] coordinates, int battery, boolean isMaster, boolean isAvailable) {
         this.id = id;
         this.ip = ip;
         this.port = port;
@@ -74,13 +75,14 @@ public class Drone implements Comparable<Drone>{
         // send everyone my informations
         dronesList.sendDroneInfo();
 
-        // send successor and precedessor
 
         // becomeMaster, it is a separate function
         // as one might become it later
         if (isMaster)
             becomeMaster();
 
+        pingService = new PingService(this);
+        pingService.start();
     }
 
     /*
@@ -106,6 +108,9 @@ public class Drone implements Comparable<Drone>{
     it basically stops everything
      */
     public void stop() {
+        pingService.interrupt();
+        System.out.println("Drone stopped ping service");
+
         restMethods.quit();
         if (orderQueue != null) {
             orderQueue.interrupt();
@@ -116,7 +121,6 @@ public class Drone implements Comparable<Drone>{
             monitorOrders.interrupt();
             System.out.println("Drone " + id + " stopped order monitor");
         }
-
 
         quitDrone.interrupt();
         System.out.println("Drone " + id + " stopped quit monitor");
@@ -148,7 +152,7 @@ public class Drone implements Comparable<Drone>{
     TODO add pollution measurements, and count Drone statistics
      */
     public DroneService.OrderResponse deliver(DroneService.OrderRequest request) {
-        int [] newPosition = new int[]{request.getEnd().getX(), request.getEnd().getY()};
+        Integer[] newPosition = new Integer[]{request.getEnd().getX(), request.getEnd().getY()};
         decreaseBattery();
 
         DroneService.OrderResponse response = DroneService.OrderResponse.newBuilder()
@@ -194,11 +198,11 @@ public class Drone implements Comparable<Drone>{
         return ip;
     }
 
-    public int getX() {
+    public Integer getX() {
         return coordinates[0];
     }
 
-    public int getY() {
+    public Integer getY() {
         return coordinates[1];
     }
 
@@ -206,28 +210,47 @@ public class Drone implements Comparable<Drone>{
     Synchronized methods as in delivery search
     the master access the fileds concurrently
      */
-    public synchronized int getBattery() {
-        return battery;
+    public Integer getBattery() {
+        int ret;
+        synchronized (battery){
+            ret = battery;
+        }
+        return ret;
     }
 
-    public synchronized void decreaseBattery() {
-        battery -= 15;
+    public void decreaseBattery() {
+        synchronized (battery){
+            battery -= 15;
+        }
     }
 
-    public synchronized int[] getCoordinates(){
-        return coordinates;
+    public int[] getCoordinates(){
+        int[] ret = {-1, -1};
+        synchronized (coordinates) {
+            ret[0] = coordinates[0];
+            ret[1] = coordinates[1];
+        }
+        return ret;
     }
 
-    public synchronized void setCoordinates(int[] cord){
-        coordinates = cord;
+    public void setCoordinates(Integer[] cord){
+        synchronized (coordinates){
+            coordinates = cord;
+        }
     }
 
-    public synchronized boolean isAvailable() {
-        return isAvailable;
+    public boolean isAvailable() {
+        boolean ret;
+        synchronized (isAvailable){
+            ret = (boolean) isAvailable;
+        }
+        return ret;
     }
 
-    public synchronized void setAvailable(boolean b) {
-        this.isAvailable = b;
+    public void setAvailable(boolean b) {
+        synchronized (isAvailable){
+            isAvailable = b;
+        }
     }
 
     public boolean isMaster() {
@@ -241,25 +264,22 @@ public class Drone implements Comparable<Drone>{
     }
 
     public String getInfo(){
-        return (isMaster? "MASTER" : "SIMPLE") + " DRONE" + " Id: " + id +
-                "\nIp and port: " + this.ip + ":" + port +
-                "\nCoordinates: (" + this.getX() + ", " + this.getY() + ")" +
-                "\nBattery: " + this.battery +
-                "\nAvailable: " + this.isAvailable;
+        return (isMaster? "MASTER" : "SIMPLE") + " DRONE" + " \nId: " + id +
+                "\nIp and port: " + this.ip + ":" + port;
     }
 
     public String toString(){
-        String ret = getInfo() + "\nDrones list: [\n";
+        String ret =  "================\n" + getInfo() + "\nDrones list: [\n";
 
         for (Drone d : dronesList.getDronesList())
-            ret += "\n" + d.getInfo() + ", \n\n";
+            ret += "\n" + d.getInfo() + ", \n";
 
-        ret += "]";
+        ret += "\n]";
         if(predecessor != null && successor != null) {
-            ret += "\n Pred: " + predecessor.getInfo();
-            ret += "\n Succ: " + successor.getInfo();
+            ret += "\n\nPred: " + predecessor.getId();
+            ret += "\nSucc: " + successor.getId();
         }
-        return ret;
+        return ret + "\n================\n";
     }
 
     public static void main(String[] args) {

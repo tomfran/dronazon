@@ -56,3 +56,11 @@ message OrderResponse {
   int32 pollutionAverage = 4;
   int32 residualBattery = 5;
 }
+
+service Ping {
+  rpc Alive (PingRequest) returns (PingResponse) {}
+}
+
+message PingRequest {}
+
+message PingResponse {}
