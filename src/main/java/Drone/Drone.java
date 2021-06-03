@@ -25,10 +25,11 @@ public class Drone implements Comparable<Drone>{
     private MonitorOrders monitorOrders;
     protected OrderQueue orderQueue;
 
-    // threads for quitting and grpc server
+    // threads for quitting, display info and grpc server
     private GrpcServer grpcServer;
     private PingService pingService;
     private QuitDrone quitDrone;
+    private PrintDroneInfo printDroneInfo;
 
     public Drone(int id, String ip, int port) {
         this.id = id;
@@ -72,7 +73,7 @@ public class Drone implements Comparable<Drone>{
         grpcServer = new GrpcServer(this);
         grpcServer.start();
 
-        // send everyone my informations
+        // send everyone my info
         dronesList.sendDroneInfo();
 
 
@@ -83,6 +84,9 @@ public class Drone implements Comparable<Drone>{
 
         pingService = new PingService(this);
         pingService.start();
+
+        printDroneInfo = new PrintDroneInfo(this);
+        printDroneInfo.start();
     }
 
     /*
@@ -90,17 +94,24 @@ public class Drone implements Comparable<Drone>{
     starts to monitor orders and manage the queue
      */
     public void becomeMaster(){
+        System.out.println("Becoming the new master");
+
+        /*
+
         // request drones infos
         dronesList.requestDronesInfo();
-        System.out.println("Info requested");
+        System.out.println("Other drones info requested");
         // start the order queue
         orderQueue = new OrderQueue(this);
         monitorOrders = new MonitorOrders(this, orderQueue);
-
         orderQueue.start();
-        System.out.println("Queue started");
+        System.out.println("Order queue started");
         // start the order monitor mqtt client
         monitorOrders.start();
+        System.out.println("MQTT client started");
+
+         */
+
     }
 
     /*
@@ -108,24 +119,20 @@ public class Drone implements Comparable<Drone>{
     it basically stops everything
      */
     public void stop() {
-        pingService.interrupt();
-        System.out.println("Drone stopped ping service");
 
         restMethods.quit();
-        if (orderQueue != null) {
-            orderQueue.interrupt();
-            System.out.println("Drone " + id + " stopped order queue");
-        }
-
-        if (monitorOrders != null) {
-            monitorOrders.interrupt();
-            System.out.println("Drone " + id + " stopped order monitor");
-        }
-
-        quitDrone.interrupt();
-        System.out.println("Drone " + id + " stopped quit monitor");
         grpcServer.interrupt();
-        System.out.println("Drone " + id + " stopped grpc monitor");
+
+        if (isMaster()) {
+            monitorOrders.interrupt();
+            monitorOrders.disconnect();
+        }
+
+        if (isMaster()) {
+            orderQueue.interrupt();
+        }
+
+        System.exit(0);
     }
 
     /*
@@ -208,7 +215,7 @@ public class Drone implements Comparable<Drone>{
 
     /*
     Synchronized methods as in delivery search
-    the master access the fileds concurrently
+    the master access the fields concurrently
      */
     public Integer getBattery() {
         int ret;
@@ -264,22 +271,21 @@ public class Drone implements Comparable<Drone>{
     }
 
     public String getInfo(){
-        return (isMaster? "MASTER" : "SIMPLE") + " DRONE" + " \nId: " + id +
-                "\nIp and port: " + this.ip + ":" + port;
+        return (isMaster()? "MASTER\n" : "") + "Id: " + getId() +
+                "\nIp and port: " + getIp() + ":" + getPort();
     }
 
     public String toString(){
-        String ret =  "================\n" + getInfo() + "\nDrones list: [\n";
+        String ret =  "======== DRONE INFO ========\n" + getInfo();
+        ret += "\nBattery level: " + getBattery();
 
-        for (Drone d : dronesList.getDronesList())
+        ret += "\n\nOther known drones: [\n";
+
+        for (Drone d : getDronesList().getDronesList())
             ret += "\n" + d.getInfo() + ", \n";
 
         ret += "\n]";
-        if(predecessor != null && successor != null) {
-            ret += "\n\nPred: " + predecessor.getId();
-            ret += "\nSucc: " + successor.getId();
-        }
-        return ret + "\n================\n";
+        return ret + "\n============================\n";
     }
 
     public static void main(String[] args) {

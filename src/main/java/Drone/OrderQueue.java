@@ -22,15 +22,10 @@ public class OrderQueue extends Thread{
     /*
     Queue consume
      */
-    public synchronized Order consume() {
+    public synchronized Order consume() throws InterruptedException {
         //System.out.println("entering consume");
         while( queueLock || orderQueue.isEmpty()) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                System.out.println("Drone " + drone.getId() + " stopped queue consume");
-                //e.printStackTrace();
-            }
+            wait();
         }
 
         // critical region
@@ -58,7 +53,7 @@ public class OrderQueue extends Thread{
         queueLock = true;
         orderQueue.addFirst(o);
         queueLock = false;
-        System.out.println("Order reinserted");
+        //System.out.println("Order reinserted");
         notify();
     }
 
@@ -121,9 +116,13 @@ public class OrderQueue extends Thread{
     }
 
     public void run() {
-        while (true) {
-            Order next = consume();
-            addThread(new OrderAssignment(drone, next, this));
+        try {
+            while (true) {
+                Order next = consume();
+                addThread(new OrderAssignment(drone, next, this));
+            }
+        } catch (InterruptedException e){
+            System.out.println("Interrupted received at orderqueue");
         }
     }
 }

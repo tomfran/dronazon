@@ -16,9 +16,13 @@ public class OrderAssignmentImpl extends OrderAssignmentImplBase {
 
     @Override
     public void assignOrder(OrderRequest request, StreamObserver<OrderResponse> responseObserver) {
-        System.out.println("GRPC Order assignment received at drone " + drone.getId());
+        System.out.println("Order assignment received, order id : " + request.getId());
         OrderResponse response = drone.deliver(request);
         responseObserver.onNext(response);
         responseObserver.onCompleted();
+        if (response.getResidualBattery() < 15){
+            System.out.println("Low battery warning, exiting the network");
+            drone.stop();
+        }
     }
 }

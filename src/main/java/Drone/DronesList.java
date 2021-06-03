@@ -155,7 +155,7 @@ public class DronesList {
         list.add(drone);
         for ( Drone d : list ) {
             Double currentDistance = distance(o.startCoordinates, d.coordinates);
-            if (d.isAvailable() && (closest == null || currentDistance.compareTo(dist) < 0 ||
+            if ((d.isAvailable() && d.getBattery() > 15) && (closest == null || currentDistance.compareTo(dist) < 0 ||
                     (currentDistance.compareTo(dist) == 0 && d.getBattery() > maxBattery))) {
                 dist = currentDistance;
                 maxBattery = d.getBattery();

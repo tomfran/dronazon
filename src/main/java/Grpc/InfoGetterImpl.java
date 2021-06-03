@@ -16,7 +16,7 @@ public class InfoGetterImpl extends InfoGetterImplBase {
 
     @Override
     public void getInfo(InfoRequest request, StreamObserver<InfoResponse> responseObserver) {
-        System.out.println("GRPC received at drone " + drone.getId());
+        //System.out.println("GRPC received at drone " + drone.getId());
 
         Coordinates cord = Coordinates.newBuilder()
                 .setX(drone.getX())

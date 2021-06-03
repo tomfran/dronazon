@@ -68,7 +68,7 @@ public class OrderAssignment extends Thread {
 
             @Override
             public void onCompleted() {
-                System.out.println("Order assignment completed by drone " + receiver.id);
+                //System.out.println("Order assignment completed by drone " + receiver.id);
                 receiver.setAvailable(true);
                 channel.shutdown();
             }
@@ -85,17 +85,15 @@ public class OrderAssignment extends Thread {
     /*
     Try to find an available drone, if not available read
     the order to the queue
-
-    TODO FIX STDOUT SPAM
      */
     public void run() {
-        System.out.println("Order assignment");
+        //System.out.println("Order assignment");
         Drone closest = this.drone.getDronesList().findClosest(order);
         if (closest == null) {
-            System.out.println("No drones available");
+            //System.out.println("No drones available");
             queue.retryOrder(order);
         }else{
-            System.out.println("Closest drone: " + closest.id);
+            //System.out.println("Closest drone: " + closest.id);
             sendOrder(closest);
         }
         queue.removeThread(this);

@@ -37,12 +37,12 @@ public class AliveClient extends Thread{
         stub.alive(req, new StreamObserver<DroneService.PingResponse>() {
             @Override
             public void onNext(DroneService.PingResponse value) {
-                System.out.println("Ping Response received from drone " + receiverDrone.getId());
+                //System.out.println("Ping Response received from drone " + receiverDrone.getId());
             }
 
             @Override
             public void onError(Throwable t) {
-                System.out.println("Drone with id " + receiverDrone.getId() + " is dead.");
+                System.out.println("Drone with id " + receiverDrone.getId() + " is dead");
                 senderDrone.getDronesList().remove(receiverDrone);
                 /*
                 if (receiverDrone.isMaster())

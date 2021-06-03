@@ -105,7 +105,7 @@ public class RestMethods {
         } catch (JSONException e) {
             drone.isMaster = true;
         }
-        drone.enterRing();
+
         return true;
     }
 

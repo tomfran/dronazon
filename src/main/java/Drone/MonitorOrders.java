@@ -81,6 +81,7 @@ public class MonitorOrders extends Thread{
      */
     public void disconnect() {
         try {
+            System.out.println("Disconnecting mqtt client");
             client.disconnect();
         } catch (MqttException me ) {
             System.out.println("reason " + me.getReasonCode());

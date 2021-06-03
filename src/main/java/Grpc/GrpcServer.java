@@ -8,13 +8,14 @@ import java.io.IOException;
 
 public class GrpcServer extends Thread{
     private Drone drone;
+    private Server server;
 
     public GrpcServer(Drone drone) {
         this.drone = drone;
     }
 
     public void run(){
-        Server server = ServerBuilder.forPort(drone.getPort())
+        server = ServerBuilder.forPort(drone.getPort())
                 .addService(new InfoGetterImpl(drone))
                 .addService(new InfoSenderImpl(drone))
                 .addService(new OrderAssignmentImpl(drone))
@@ -32,6 +33,7 @@ public class GrpcServer extends Thread{
         try {
             server.awaitTermination();
         } catch (InterruptedException e) {
+            server.shutdown();
             System.out.println("Drone " + drone.getId() + " stopped GRPC server");
         }
     }

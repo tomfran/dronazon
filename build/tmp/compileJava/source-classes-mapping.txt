@@ -135,6 +135,9 @@ Drone/Drone.java
  Drone.Drone
 Grpc/GrpcServer.java
  Grpc.GrpcServer
+Drone/PrintDroneInfo.java
+ Drone.PrintDroneInfo
+ Drone.PrintDroneInfo$1
 Drone/RestMethods.java
  Drone.RestMethods
 Drone/DronesList.java
