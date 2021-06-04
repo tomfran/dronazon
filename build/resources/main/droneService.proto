@@ -10,7 +10,9 @@ message Coordinates {
   int32 y = 2;
 }
 
-message InfoRequest {}
+message InfoRequest {
+  int32 id = 1;
+}
 
 message InfoResponse {
   int32 id = 1;
@@ -64,3 +66,15 @@ service Ping {
 message PingRequest {}
 
 message PingResponse {}
+
+service Election {
+  rpc elect (ElectionRequest) returns (ElectionResponse) {}
+}
+
+message ElectionRequest {
+  int32 id = 1;
+  int32 battery = 2;
+  bool elected = 3;
+}
+
+message ElectionResponse {}

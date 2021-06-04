@@ -64,6 +64,8 @@ public class OrderAssignment extends Thread {
             public void onError(Throwable t) {
                 drone.getDronesList().remove(receiver);
                 System.out.println("Order assignment response error, removing the drone");
+                queue.retryOrder(order);
+                channel.shutdown();
             }
 
             @Override

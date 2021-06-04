@@ -31,6 +31,7 @@ public class InfoGetterImpl extends InfoGetterImplBase {
                 .setAvailable(drone.isAvailable())
                 .build();
 
+        drone.setParticipant(false);
         responseObserver.onNext(response);
         responseObserver.onCompleted();
 

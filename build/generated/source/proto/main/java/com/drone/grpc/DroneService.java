@@ -571,6 +571,12 @@ public final class DroneService {
   public interface InfoRequestOrBuilder extends
       // @@protoc_insertion_point(interface_extends:com.drone.grpc.InfoRequest)
       com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>int32 id = 1;</code>
+     * @return The id.
+     */
+    int getId();
   }
   /**
    * Protobuf type {@code com.drone.grpc.InfoRequest}
@@ -617,6 +623,11 @@ public final class DroneService {
             case 0:
               done = true;
               break;
+            case 8: {
+
+              id_ = input.readInt32();
+              break;
+            }
             default: {
               if (!parseUnknownField(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -649,6 +660,16 @@ public final class DroneService {
               com.drone.grpc.DroneService.InfoRequest.class, com.drone.grpc.DroneService.InfoRequest.Builder.class);
     }
 
+    public static final int ID_FIELD_NUMBER = 1;
+    private int id_;
+    /**
+     * <code>int32 id = 1;</code>
+     * @return The id.
+     */
+    public int getId() {
+      return id_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -663,6 +684,9 @@ public final class DroneService {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      if (id_ != 0) {
+        output.writeInt32(1, id_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -672,6 +696,10 @@ public final class DroneService {
       if (size != -1) return size;
 
       size = 0;
+      if (id_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(1, id_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -687,6 +715,8 @@ public final class DroneService {
       }
       com.drone.grpc.DroneService.InfoRequest other = (com.drone.grpc.DroneService.InfoRequest) obj;
 
+      if (getId()
+          != other.getId()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -698,6 +728,8 @@ public final class DroneService {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + ID_FIELD_NUMBER;
+      hash = (53 * hash) + getId();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -831,6 +863,8 @@ public final class DroneService {
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        id_ = 0;
+
         return this;
       }
 
@@ -857,6 +891,7 @@ public final class DroneService {
       @java.lang.Override
       public com.drone.grpc.DroneService.InfoRequest buildPartial() {
         com.drone.grpc.DroneService.InfoRequest result = new com.drone.grpc.DroneService.InfoRequest(this);
+        result.id_ = id_;
         onBuilt();
         return result;
       }
@@ -905,6 +940,9 @@ public final class DroneService {
 
       public Builder mergeFrom(com.drone.grpc.DroneService.InfoRequest other) {
         if (other == com.drone.grpc.DroneService.InfoRequest.getDefaultInstance()) return this;
+        if (other.getId() != 0) {
+          setId(other.getId());
+        }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -931,6 +969,36 @@ public final class DroneService {
             mergeFrom(parsedMessage);
           }
         }
+        return this;
+      }
+
+      private int id_ ;
+      /**
+       * <code>int32 id = 1;</code>
+       * @return The id.
+       */
+      public int getId() {
+        return id_;
+      }
+      /**
+       * <code>int32 id = 1;</code>
+       * @param value The id to set.
+       * @return This builder for chaining.
+       */
+      public Builder setId(int value) {
+        
+        id_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 id = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearId() {
+        
+        id_ = 0;
+        onChanged();
         return this;
       }
       @java.lang.Override
@@ -6156,6 +6224,1047 @@ public final class DroneService {
 
   }
 
+  public interface ElectionRequestOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.drone.grpc.ElectionRequest)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>int32 id = 1;</code>
+     * @return The id.
+     */
+    int getId();
+
+    /**
+     * <code>int32 battery = 2;</code>
+     * @return The battery.
+     */
+    int getBattery();
+
+    /**
+     * <code>bool elected = 3;</code>
+     * @return The elected.
+     */
+    boolean getElected();
+  }
+  /**
+   * Protobuf type {@code com.drone.grpc.ElectionRequest}
+   */
+  public  static final class ElectionRequest extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.drone.grpc.ElectionRequest)
+      ElectionRequestOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use ElectionRequest.newBuilder() to construct.
+    private ElectionRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ElectionRequest() {
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new ElectionRequest();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ElectionRequest(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+
+              id_ = input.readInt32();
+              break;
+            }
+            case 16: {
+
+              battery_ = input.readInt32();
+              break;
+            }
+            case 24: {
+
+              elected_ = input.readBool();
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.drone.grpc.DroneService.internal_static_com_drone_grpc_ElectionRequest_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.drone.grpc.DroneService.internal_static_com_drone_grpc_ElectionRequest_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.drone.grpc.DroneService.ElectionRequest.class, com.drone.grpc.DroneService.ElectionRequest.Builder.class);
+    }
+
+    public static final int ID_FIELD_NUMBER = 1;
+    private int id_;
+    /**
+     * <code>int32 id = 1;</code>
+     * @return The id.
+     */
+    public int getId() {
+      return id_;
+    }
+
+    public static final int BATTERY_FIELD_NUMBER = 2;
+    private int battery_;
+    /**
+     * <code>int32 battery = 2;</code>
+     * @return The battery.
+     */
+    public int getBattery() {
+      return battery_;
+    }
+
+    public static final int ELECTED_FIELD_NUMBER = 3;
+    private boolean elected_;
+    /**
+     * <code>bool elected = 3;</code>
+     * @return The elected.
+     */
+    public boolean getElected() {
+      return elected_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (id_ != 0) {
+        output.writeInt32(1, id_);
+      }
+      if (battery_ != 0) {
+        output.writeInt32(2, battery_);
+      }
+      if (elected_ != false) {
+        output.writeBool(3, elected_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (id_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(1, id_);
+      }
+      if (battery_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, battery_);
+      }
+      if (elected_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(3, elected_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.drone.grpc.DroneService.ElectionRequest)) {
+        return super.equals(obj);
+      }
+      com.drone.grpc.DroneService.ElectionRequest other = (com.drone.grpc.DroneService.ElectionRequest) obj;
+
+      if (getId()
+          != other.getId()) return false;
+      if (getBattery()
+          != other.getBattery()) return false;
+      if (getElected()
+          != other.getElected()) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + ID_FIELD_NUMBER;
+      hash = (53 * hash) + getId();
+      hash = (37 * hash) + BATTERY_FIELD_NUMBER;
+      hash = (53 * hash) + getBattery();
+      hash = (37 * hash) + ELECTED_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getElected());
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.drone.grpc.DroneService.ElectionRequest parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.drone.grpc.DroneService.ElectionRequest parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.drone.grpc.DroneService.ElectionRequest parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.drone.grpc.DroneService.ElectionRequest parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.drone.grpc.DroneService.ElectionRequest parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.drone.grpc.DroneService.ElectionRequest parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.drone.grpc.DroneService.ElectionRequest parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.drone.grpc.DroneService.ElectionRequest parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.drone.grpc.DroneService.ElectionRequest parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.drone.grpc.DroneService.ElectionRequest parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.drone.grpc.DroneService.ElectionRequest parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.drone.grpc.DroneService.ElectionRequest parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.drone.grpc.DroneService.ElectionRequest prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.drone.grpc.ElectionRequest}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.drone.grpc.ElectionRequest)
+        com.drone.grpc.DroneService.ElectionRequestOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.drone.grpc.DroneService.internal_static_com_drone_grpc_ElectionRequest_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.drone.grpc.DroneService.internal_static_com_drone_grpc_ElectionRequest_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.drone.grpc.DroneService.ElectionRequest.class, com.drone.grpc.DroneService.ElectionRequest.Builder.class);
+      }
+
+      // Construct using com.drone.grpc.DroneService.ElectionRequest.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        id_ = 0;
+
+        battery_ = 0;
+
+        elected_ = false;
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.drone.grpc.DroneService.internal_static_com_drone_grpc_ElectionRequest_descriptor;
+      }
+
+      @java.lang.Override
+      public com.drone.grpc.DroneService.ElectionRequest getDefaultInstanceForType() {
+        return com.drone.grpc.DroneService.ElectionRequest.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.drone.grpc.DroneService.ElectionRequest build() {
+        com.drone.grpc.DroneService.ElectionRequest result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.drone.grpc.DroneService.ElectionRequest buildPartial() {
+        com.drone.grpc.DroneService.ElectionRequest result = new com.drone.grpc.DroneService.ElectionRequest(this);
+        result.id_ = id_;
+        result.battery_ = battery_;
+        result.elected_ = elected_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.drone.grpc.DroneService.ElectionRequest) {
+          return mergeFrom((com.drone.grpc.DroneService.ElectionRequest)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.drone.grpc.DroneService.ElectionRequest other) {
+        if (other == com.drone.grpc.DroneService.ElectionRequest.getDefaultInstance()) return this;
+        if (other.getId() != 0) {
+          setId(other.getId());
+        }
+        if (other.getBattery() != 0) {
+          setBattery(other.getBattery());
+        }
+        if (other.getElected() != false) {
+          setElected(other.getElected());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.drone.grpc.DroneService.ElectionRequest parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.drone.grpc.DroneService.ElectionRequest) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private int id_ ;
+      /**
+       * <code>int32 id = 1;</code>
+       * @return The id.
+       */
+      public int getId() {
+        return id_;
+      }
+      /**
+       * <code>int32 id = 1;</code>
+       * @param value The id to set.
+       * @return This builder for chaining.
+       */
+      public Builder setId(int value) {
+        
+        id_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 id = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearId() {
+        
+        id_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private int battery_ ;
+      /**
+       * <code>int32 battery = 2;</code>
+       * @return The battery.
+       */
+      public int getBattery() {
+        return battery_;
+      }
+      /**
+       * <code>int32 battery = 2;</code>
+       * @param value The battery to set.
+       * @return This builder for chaining.
+       */
+      public Builder setBattery(int value) {
+        
+        battery_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 battery = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearBattery() {
+        
+        battery_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private boolean elected_ ;
+      /**
+       * <code>bool elected = 3;</code>
+       * @return The elected.
+       */
+      public boolean getElected() {
+        return elected_;
+      }
+      /**
+       * <code>bool elected = 3;</code>
+       * @param value The elected to set.
+       * @return This builder for chaining.
+       */
+      public Builder setElected(boolean value) {
+        
+        elected_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool elected = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearElected() {
+        
+        elected_ = false;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.drone.grpc.ElectionRequest)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.drone.grpc.ElectionRequest)
+    private static final com.drone.grpc.DroneService.ElectionRequest DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.drone.grpc.DroneService.ElectionRequest();
+    }
+
+    public static com.drone.grpc.DroneService.ElectionRequest getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ElectionRequest>
+        PARSER = new com.google.protobuf.AbstractParser<ElectionRequest>() {
+      @java.lang.Override
+      public ElectionRequest parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ElectionRequest(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ElectionRequest> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ElectionRequest> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.drone.grpc.DroneService.ElectionRequest getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface ElectionResponseOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.drone.grpc.ElectionResponse)
+      com.google.protobuf.MessageOrBuilder {
+  }
+  /**
+   * Protobuf type {@code com.drone.grpc.ElectionResponse}
+   */
+  public  static final class ElectionResponse extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.drone.grpc.ElectionResponse)
+      ElectionResponseOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use ElectionResponse.newBuilder() to construct.
+    private ElectionResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ElectionResponse() {
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new ElectionResponse();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ElectionResponse(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.drone.grpc.DroneService.internal_static_com_drone_grpc_ElectionResponse_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.drone.grpc.DroneService.internal_static_com_drone_grpc_ElectionResponse_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.drone.grpc.DroneService.ElectionResponse.class, com.drone.grpc.DroneService.ElectionResponse.Builder.class);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.drone.grpc.DroneService.ElectionResponse)) {
+        return super.equals(obj);
+      }
+      com.drone.grpc.DroneService.ElectionResponse other = (com.drone.grpc.DroneService.ElectionResponse) obj;
+
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.drone.grpc.DroneService.ElectionResponse parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.drone.grpc.DroneService.ElectionResponse parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.drone.grpc.DroneService.ElectionResponse parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.drone.grpc.DroneService.ElectionResponse parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.drone.grpc.DroneService.ElectionResponse parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.drone.grpc.DroneService.ElectionResponse parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.drone.grpc.DroneService.ElectionResponse parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.drone.grpc.DroneService.ElectionResponse parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.drone.grpc.DroneService.ElectionResponse parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.drone.grpc.DroneService.ElectionResponse parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.drone.grpc.DroneService.ElectionResponse parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.drone.grpc.DroneService.ElectionResponse parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.drone.grpc.DroneService.ElectionResponse prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.drone.grpc.ElectionResponse}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.drone.grpc.ElectionResponse)
+        com.drone.grpc.DroneService.ElectionResponseOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.drone.grpc.DroneService.internal_static_com_drone_grpc_ElectionResponse_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.drone.grpc.DroneService.internal_static_com_drone_grpc_ElectionResponse_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.drone.grpc.DroneService.ElectionResponse.class, com.drone.grpc.DroneService.ElectionResponse.Builder.class);
+      }
+
+      // Construct using com.drone.grpc.DroneService.ElectionResponse.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.drone.grpc.DroneService.internal_static_com_drone_grpc_ElectionResponse_descriptor;
+      }
+
+      @java.lang.Override
+      public com.drone.grpc.DroneService.ElectionResponse getDefaultInstanceForType() {
+        return com.drone.grpc.DroneService.ElectionResponse.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.drone.grpc.DroneService.ElectionResponse build() {
+        com.drone.grpc.DroneService.ElectionResponse result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.drone.grpc.DroneService.ElectionResponse buildPartial() {
+        com.drone.grpc.DroneService.ElectionResponse result = new com.drone.grpc.DroneService.ElectionResponse(this);
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.drone.grpc.DroneService.ElectionResponse) {
+          return mergeFrom((com.drone.grpc.DroneService.ElectionResponse)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.drone.grpc.DroneService.ElectionResponse other) {
+        if (other == com.drone.grpc.DroneService.ElectionResponse.getDefaultInstance()) return this;
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.drone.grpc.DroneService.ElectionResponse parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.drone.grpc.DroneService.ElectionResponse) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.drone.grpc.ElectionResponse)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.drone.grpc.ElectionResponse)
+    private static final com.drone.grpc.DroneService.ElectionResponse DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.drone.grpc.DroneService.ElectionResponse();
+    }
+
+    public static com.drone.grpc.DroneService.ElectionResponse getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ElectionResponse>
+        PARSER = new com.google.protobuf.AbstractParser<ElectionResponse>() {
+      @java.lang.Override
+      public ElectionResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ElectionResponse(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ElectionResponse> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ElectionResponse> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.drone.grpc.DroneService.ElectionResponse getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_drone_grpc_Coordinates_descriptor;
   private static final 
@@ -6201,6 +7310,16 @@ public final class DroneService {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_drone_grpc_PingResponse_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_drone_grpc_ElectionRequest_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_drone_grpc_ElectionRequest_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_drone_grpc_ElectionResponse_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_drone_grpc_ElectionResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -6211,33 +7330,38 @@ public final class DroneService {
   static {
     java.lang.String[] descriptorData = {
       "\n\022droneService.proto\022\016com.drone.grpc\"#\n\013" +
-      "Coordinates\022\t\n\001x\030\001 \001(\005\022\t\n\001y\030\002 \001(\005\"\r\n\013Inf" +
-      "oRequest\"\207\001\n\014InfoResponse\022\n\n\002id\030\001 \001(\005\022\027\n" +
-      "\017residualBattery\030\002 \001(\005\022\020\n\010isMaster\030\003 \001(\010" +
-      "\022-\n\010position\030\004 \001(\0132\033.com.drone.grpc.Coor" +
-      "dinates\022\021\n\tavailable\030\005 \001(\010\"\246\001\n\021SenderInf" +
-      "oRequest\022\n\n\002id\030\001 \001(\005\022\n\n\002ip\030\002 \001(\t\022\014\n\004port" +
-      "\030\003 \001(\005\022\027\n\017residualBattery\030\004 \001(\005\022\020\n\010isMas" +
-      "ter\030\005 \001(\010\022-\n\010position\030\006 \001(\0132\033.com.drone." +
-      "grpc.Coordinates\022\021\n\tavailable\030\007 \001(\010\"2\n\022S" +
-      "enderInfoResponse\022\n\n\002id\030\001 \001(\005\022\020\n\010isMaste" +
-      "r\030\002 \001(\010\"p\n\014OrderRequest\022\n\n\002id\030\001 \001(\005\022*\n\005s" +
-      "tart\030\002 \001(\0132\033.com.drone.grpc.Coordinates\022" +
-      "(\n\003end\030\003 \001(\0132\033.com.drone.grpc.Coordinate" +
-      "s\"\223\001\n\rOrderResponse\022\021\n\ttimestamp\030\001 \001(\003\0220" +
-      "\n\013newPosition\030\002 \001(\0132\033.com.drone.grpc.Coo" +
-      "rdinates\022\n\n\002km\030\003 \001(\001\022\030\n\020pollutionAverage" +
-      "\030\004 \001(\005\022\027\n\017residualBattery\030\005 \001(\005\"\r\n\013PingR" +
-      "equest\"\016\n\014PingResponse2T\n\nInfoGetter\022F\n\007" +
-      "GetInfo\022\033.com.drone.grpc.InfoRequest\032\034.c" +
-      "om.drone.grpc.InfoResponse\"\0002a\n\nInfoSend" +
-      "er\022S\n\010SendInfo\022!.com.drone.grpc.SenderIn" +
-      "foRequest\032\".com.drone.grpc.SenderInfoRes" +
-      "ponse\"\0002_\n\017OrderAssignment\022L\n\013AssignOrde" +
-      "r\022\034.com.drone.grpc.OrderRequest\032\035.com.dr" +
-      "one.grpc.OrderResponse\"\0002L\n\004Ping\022D\n\005Aliv" +
-      "e\022\033.com.drone.grpc.PingRequest\032\034.com.dro" +
-      "ne.grpc.PingResponse\"\000b\006proto3"
+      "Coordinates\022\t\n\001x\030\001 \001(\005\022\t\n\001y\030\002 \001(\005\"\031\n\013Inf" +
+      "oRequest\022\n\n\002id\030\001 \001(\005\"\207\001\n\014InfoResponse\022\n\n" +
+      "\002id\030\001 \001(\005\022\027\n\017residualBattery\030\002 \001(\005\022\020\n\010is" +
+      "Master\030\003 \001(\010\022-\n\010position\030\004 \001(\0132\033.com.dro" +
+      "ne.grpc.Coordinates\022\021\n\tavailable\030\005 \001(\010\"\246" +
+      "\001\n\021SenderInfoRequest\022\n\n\002id\030\001 \001(\005\022\n\n\002ip\030\002" +
+      " \001(\t\022\014\n\004port\030\003 \001(\005\022\027\n\017residualBattery\030\004 " +
+      "\001(\005\022\020\n\010isMaster\030\005 \001(\010\022-\n\010position\030\006 \001(\0132" +
+      "\033.com.drone.grpc.Coordinates\022\021\n\tavailabl" +
+      "e\030\007 \001(\010\"2\n\022SenderInfoResponse\022\n\n\002id\030\001 \001(" +
+      "\005\022\020\n\010isMaster\030\002 \001(\010\"p\n\014OrderRequest\022\n\n\002i" +
+      "d\030\001 \001(\005\022*\n\005start\030\002 \001(\0132\033.com.drone.grpc." +
+      "Coordinates\022(\n\003end\030\003 \001(\0132\033.com.drone.grp" +
+      "c.Coordinates\"\223\001\n\rOrderResponse\022\021\n\ttimes" +
+      "tamp\030\001 \001(\003\0220\n\013newPosition\030\002 \001(\0132\033.com.dr" +
+      "one.grpc.Coordinates\022\n\n\002km\030\003 \001(\001\022\030\n\020poll" +
+      "utionAverage\030\004 \001(\005\022\027\n\017residualBattery\030\005 " +
+      "\001(\005\"\r\n\013PingRequest\"\016\n\014PingResponse\"?\n\017El" +
+      "ectionRequest\022\n\n\002id\030\001 \001(\005\022\017\n\007battery\030\002 \001" +
+      "(\005\022\017\n\007elected\030\003 \001(\010\"\022\n\020ElectionResponse2" +
+      "T\n\nInfoGetter\022F\n\007GetInfo\022\033.com.drone.grp" +
+      "c.InfoRequest\032\034.com.drone.grpc.InfoRespo" +
+      "nse\"\0002a\n\nInfoSender\022S\n\010SendInfo\022!.com.dr" +
+      "one.grpc.SenderInfoRequest\032\".com.drone.g" +
+      "rpc.SenderInfoResponse\"\0002_\n\017OrderAssignm" +
+      "ent\022L\n\013AssignOrder\022\034.com.drone.grpc.Orde" +
+      "rRequest\032\035.com.drone.grpc.OrderResponse\"" +
+      "\0002L\n\004Ping\022D\n\005Alive\022\033.com.drone.grpc.Ping" +
+      "Request\032\034.com.drone.grpc.PingResponse\"\0002" +
+      "X\n\010Election\022L\n\005elect\022\037.com.drone.grpc.El" +
+      "ectionRequest\032 .com.drone.grpc.ElectionR" +
+      "esponse\"\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -6254,7 +7378,7 @@ public final class DroneService {
     internal_static_com_drone_grpc_InfoRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_drone_grpc_InfoRequest_descriptor,
-        new java.lang.String[] { });
+        new java.lang.String[] { "Id", });
     internal_static_com_drone_grpc_InfoResponse_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_com_drone_grpc_InfoResponse_fieldAccessorTable = new
@@ -6296,6 +7420,18 @@ public final class DroneService {
     internal_static_com_drone_grpc_PingResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_drone_grpc_PingResponse_descriptor,
+        new java.lang.String[] { });
+    internal_static_com_drone_grpc_ElectionRequest_descriptor =
+      getDescriptor().getMessageTypes().get(9);
+    internal_static_com_drone_grpc_ElectionRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_drone_grpc_ElectionRequest_descriptor,
+        new java.lang.String[] { "Id", "Battery", "Elected", });
+    internal_static_com_drone_grpc_ElectionResponse_descriptor =
+      getDescriptor().getMessageTypes().get(10);
+    internal_static_com_drone_grpc_ElectionResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_drone_grpc_ElectionResponse_descriptor,
         new java.lang.String[] { });
   }
 

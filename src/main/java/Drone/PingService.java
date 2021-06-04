@@ -35,6 +35,6 @@ public class PingService extends Thread{
                 }
             };
         };
-        t.scheduleAtFixedRate(tt,new Date(),10000);
+        t.scheduleAtFixedRate(tt,new Date(),2000);
     }
 }

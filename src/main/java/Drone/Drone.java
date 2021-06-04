@@ -1,5 +1,6 @@
 package Drone;
 
+import Grpc.ElectClient;
 import Grpc.GrpcServer;
 import com.drone.grpc.DroneService;
 import java.util.ArrayList;
@@ -12,16 +13,28 @@ public class Drone implements Comparable<Drone>{
     protected int id;
     protected String ip;
     protected int port;
-    protected Integer[] coordinates;
-    protected Integer battery;
     protected DronesList dronesList;
     protected RestMethods restMethods;
-    protected Boolean isAvailable;
+
+    protected int[] coordinates;
+    private final Object coordinatesLock;
+
+    protected int battery;
+    private final Object batteryLock;
+
+    protected boolean isAvailable;
+    private final Object isAvailableLock;
+
+    protected boolean isParticipant;
+    private final Object participantLock;
+
     protected Drone successor;
     protected Drone predecessor;
 
     // master drone fields and orders thread
     protected boolean isMaster;
+    private final Object masterLock;
+
     private MonitorOrders monitorOrders;
     protected OrderQueue orderQueue;
 
@@ -37,14 +50,20 @@ public class Drone implements Comparable<Drone>{
         this.port = port;
         this.battery = 100;
         this.dronesList = new DronesList(this);
-        this.coordinates = new Integer[2];
+        this.coordinates = new int[2];
         this.restMethods = new RestMethods(this);
         this.isAvailable = true;
         this.successor = null;
         this.predecessor = null;
+        batteryLock = new Object();
+        coordinatesLock = new Object();
+        isAvailableLock = new Object();
+        participantLock = new Object();
+        masterLock = new Object();
+        isParticipant = false;
     }
 
-    public Drone(int id, String ip, int port, Integer[] coordinates, int battery, boolean isMaster, boolean isAvailable) {
+    public Drone(int id, String ip, int port, int[] coordinates, int battery, boolean isMaster, boolean isAvailable) {
         this.id = id;
         this.ip = ip;
         this.port = port;
@@ -52,6 +71,11 @@ public class Drone implements Comparable<Drone>{
         this.battery = battery;
         this.isMaster = isMaster;
         this.isAvailable = isAvailable;
+        batteryLock = new Object();
+        coordinatesLock = new Object();
+        isAvailableLock = new Object();
+        participantLock = new Object();
+        masterLock = new Object();
     }
 
     /*
@@ -93,11 +117,10 @@ public class Drone implements Comparable<Drone>{
     Calling this function a Drone becomes master, so it
     starts to monitor orders and manage the queue
      */
-    public void becomeMaster(){
+    public synchronized void becomeMaster(){
+        setParticipant(false);
+        setMaster(true);
         System.out.println("Becoming the new master");
-
-        /*
-
         // request drones infos
         dronesList.requestDronesInfo();
         System.out.println("Other drones info requested");
@@ -109,8 +132,6 @@ public class Drone implements Comparable<Drone>{
         // start the order monitor mqtt client
         monitorOrders.start();
         System.out.println("MQTT client started");
-
-         */
 
     }
 
@@ -150,6 +171,36 @@ public class Drone implements Comparable<Drone>{
 
         predecessor = (i == 0)? list.get(list.size()-1) : list.get(i-1);
         successor = (i == list.size()-1)? list.get(0) : list.get(i+1);
+        /*
+        System.out.println("PRED AND SUCC");
+        System.out.println(predecessor.getId());
+        System.out.println(successor.getId());
+         */
+    }
+
+    public synchronized void forwardElection(DroneService.ElectionRequest electionRequest){
+        if (!isMaster()) {
+            //System.out.println("Forwarding election");
+            ElectClient c = new ElectClient(this, electionRequest);
+            c.start();
+        } else {
+            //System.out.println("Already master");
+        }
+    }
+
+    /*
+    Start the election in case of a missed ping response
+    by the master
+     */
+    public synchronized void startElection(){
+        if (!isParticipant()) {
+            setParticipant(true);
+            forwardElection(DroneService.ElectionRequest.newBuilder()
+                    .setId(getId())
+                    .setBattery(getBattery())
+                    .setElected(false)
+                    .build());
+        }
     }
 
     /*
@@ -159,7 +210,7 @@ public class Drone implements Comparable<Drone>{
     TODO add pollution measurements, and count Drone statistics
      */
     public DroneService.OrderResponse deliver(DroneService.OrderRequest request) {
-        Integer[] newPosition = new Integer[]{request.getEnd().getX(), request.getEnd().getY()};
+        int[] newPosition = new int[]{request.getEnd().getX(), request.getEnd().getY()};
         decreaseBattery();
 
         DroneService.OrderResponse response = DroneService.OrderResponse.newBuilder()
@@ -180,7 +231,7 @@ public class Drone implements Comparable<Drone>{
 
         setCoordinates(newPosition);
         try {
-            Thread.sleep(5000);
+            Thread.sleep(10000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -205,63 +256,94 @@ public class Drone implements Comparable<Drone>{
         return ip;
     }
 
-    public Integer getX() {
-        return coordinates[0];
-    }
-
-    public Integer getY() {
-        return coordinates[1];
-    }
-
     /*
     Synchronized methods as in delivery search
     the master access the fields concurrently
      */
-    public Integer getBattery() {
+    public int getBattery() {
         int ret;
-        synchronized (battery){
+        synchronized (batteryLock){
             ret = battery;
         }
         return ret;
     }
 
     public void decreaseBattery() {
-        synchronized (battery){
+        synchronized (batteryLock){
             battery -= 15;
         }
     }
 
     public int[] getCoordinates(){
-        int[] ret = {-1, -1};
-        synchronized (coordinates) {
-            ret[0] = coordinates[0];
-            ret[1] = coordinates[1];
+        int[] ret;
+        synchronized (coordinatesLock) {
+            ret = coordinates;
         }
         return ret;
     }
 
-    public void setCoordinates(Integer[] cord){
-        synchronized (coordinates){
+    public void setCoordinates(int[] cord){
+        synchronized (coordinatesLock) {
             coordinates = cord;
         }
     }
 
+    public int getX() {
+        int ret;
+        synchronized (coordinatesLock) {
+            ret = coordinates[0];
+        }
+        return ret;
+    }
+
+    public int getY() {
+        int ret;
+        synchronized (coordinatesLock) {
+            ret = coordinates[1];
+        }
+        return ret;
+    }
+
     public boolean isAvailable() {
         boolean ret;
-        synchronized (isAvailable){
+        synchronized (isAvailableLock){
             ret = (boolean) isAvailable;
         }
         return ret;
     }
 
     public void setAvailable(boolean b) {
-        synchronized (isAvailable){
+        synchronized (isAvailableLock){
             isAvailable = b;
         }
     }
 
+    public void setParticipant(boolean b) {
+        synchronized (participantLock) {
+            isParticipant = b;
+        }
+    }
+
+    public boolean isParticipant() {
+        boolean ret;
+        synchronized (participantLock) {
+            ret = isParticipant;
+        }
+        return ret;
+    }
+
     public boolean isMaster() {
-        return isMaster;
+        boolean ret;
+        synchronized (masterLock) {
+            ret = isMaster;
+        }
+        return ret;
+    }
+
+    public void setMaster(boolean b) {
+        synchronized (masterLock) {
+            isMaster = b;
+        }
     }
 
     public DronesList getDronesList() { return dronesList; }
@@ -286,6 +368,10 @@ public class Drone implements Comparable<Drone>{
 
         ret += "\n]";
         return ret + "\n============================\n";
+    }
+
+    public Drone getSuccessor(){
+        return successor;
     }
 
     public static void main(String[] args) {

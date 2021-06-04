@@ -44,10 +44,11 @@ public class AliveClient extends Thread{
             public void onError(Throwable t) {
                 System.out.println("Drone with id " + receiverDrone.getId() + " is dead");
                 senderDrone.getDronesList().remove(receiverDrone);
-                /*
-                if (receiverDrone.isMaster())
+
+                if (receiverDrone.isMaster()) {
+                    System.out.println("Starting election");
                     senderDrone.startElection();
-                 */
+                }
 
                 channel.shutdown();
             }

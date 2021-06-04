@@ -79,7 +79,7 @@ public class DronesList {
                 value.getId(),
                 value.getIp(),
                 value.getPort(),
-                new Integer[]{value.getPosition().getX(), value.getPosition().getY()},
+                new int[]{value.getPosition().getX(), value.getPosition().getY()},
                 value.getResidualBattery(),
                 value.getIsMaster(),
                 value.getAvailable()
@@ -89,7 +89,7 @@ public class DronesList {
     /*
     Called when an info request fails
      */
-    public void invalidateDrone(int listIndex) {
+    public synchronized void invalidateDrone(int listIndex) {
         // method used to invalidate a drone entry
         Drone d = getDronesList().get(listIndex);
         d.coordinates[0] = -1;
@@ -123,19 +123,29 @@ public class DronesList {
     Called when sending info to others,
     it update the master
      */
-    public void updateMasterDrone(DroneService.SenderInfoResponse value){
+    public synchronized void updateMasterDrone(DroneService.SenderInfoResponse value){
         int id = value.getId();
         boolean isMaster = value.getIsMaster();
-        for ( Drone d : getDronesList() ) {
+        for ( Drone d : dronesList ) {
             if (d.getId() == id)
                 d.isMaster = isMaster;
         }
     }
 
+
+    public synchronized void setNewMaster(int id){
+        System.out.println("SEtting the new master, " + id);
+        for ( Drone d : dronesList ) {
+            if (d.getId() == id)
+                d.isMaster = true;
+        }
+
+    }
+
     /*
     Distance function to find closest drone
      */
-    static Double distance(int[]v1, Integer[] v2){
+    static Double distance(int[]v1, int[] v2){
         return Math.sqrt(
                 Math.pow(v2[0] - v1[0], 2) +
                         Math.pow(v2[1] - v1[1], 2)
@@ -151,10 +161,17 @@ public class DronesList {
         Drone closest = null;
         Double dist = Double.MAX_VALUE;
         int maxBattery = 0;
-        ArrayList<Drone> list = drone.dronesList.getDronesList();
-        list.add(drone);
+
+        if (drone.isAvailable()){
+            closest = drone;
+            dist = distance(o.startCoordinates, drone.getCoordinates());
+            maxBattery = drone.getBattery();
+        }
+
+        ArrayList<Drone> list = getDronesList();
+
         for ( Drone d : list ) {
-            Double currentDistance = distance(o.startCoordinates, d.coordinates);
+            Double currentDistance = distance(o.startCoordinates, d.getCoordinates());
             if ((d.isAvailable() && d.getBattery() > 15) && (closest == null || currentDistance.compareTo(dist) < 0 ||
                     (currentDistance.compareTo(dist) == 0 && d.getBattery() > maxBattery))) {
                 dist = currentDistance;

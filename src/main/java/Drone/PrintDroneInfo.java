@@ -19,6 +19,6 @@ public class PrintDroneInfo extends Thread{
                 System.out.println(drone);
             };
         };
-        t.scheduleAtFixedRate(tt,new Date(),10000);
+        t.scheduleAtFixedRate(tt,new Date(),20000);
     }
 }
