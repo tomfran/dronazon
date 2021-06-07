@@ -15,7 +15,6 @@ public class ElectionImpl extends ElectionImplBase {
 
     @Override
     public void elect(ElectionRequest request, StreamObserver<ElectionResponse> responseObserver) {
-
         boolean master = false;
         // if this drone is being elected
         if (request.getElected() && request.getId() == drone.getId()){
@@ -31,8 +30,9 @@ public class ElectionImpl extends ElectionImplBase {
             }
         }
 
-        if (master)
+        if (master) {
             drone.becomeMaster();
+        }
 
         System.out.println("Responding to previous drone");
         responseObserver.onNext(ElectionResponse.newBuilder().build());
@@ -50,7 +50,7 @@ public class ElectionImpl extends ElectionImplBase {
         int chosenId, battery;
         boolean elected = false;
 
-        if( request.getId() == drone.getId()){
+        if( request.getId() == drone.getId() || drone.isMaster()){
             chosenId = drone.getId();
             battery = drone.getBattery();
             elected = true;
@@ -70,9 +70,9 @@ public class ElectionImpl extends ElectionImplBase {
         }
 
         System.out.println("Election message to send: ");
-        System.out.println("id: " + chosenId);
-        System.out.println("battery: " + battery);
-        System.out.println("elected: " + elected);
+        System.out.println("\tid: " + chosenId);
+        System.out.println("\tbattery: " + battery);
+        System.out.println("\telected: " + elected);
 
 
         return ElectionRequest.newBuilder()

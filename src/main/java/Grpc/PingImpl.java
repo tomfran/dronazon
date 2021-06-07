@@ -17,7 +17,7 @@ public class PingImpl  extends PingImplBase{
     @Override
     public void alive(PingRequest request, StreamObserver<PingResponse> responseObserver) {
         //System.out.println("Ping received");
-        PingResponse response = PingResponse.newBuilder().build();
+        PingResponse response = PingResponse.newBuilder().setIsMaster(drone.isMaster()).build();
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }

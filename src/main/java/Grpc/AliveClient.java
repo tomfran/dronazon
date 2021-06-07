@@ -18,13 +18,12 @@ public class AliveClient extends Thread{
         this.senderDrone = senderDrone;
         this.receiverDrone = receiverDrone;
     }
-
     /*
-    Send a ping to the receiver drone,
-    if an error occurs the receiver drone
-    is remove from the list, also, if he was the
-    master an election is started
-     */
+        Send a ping to the receiver drone,
+        if an error occurs the receiver drone
+        is remove from the list, also, if he was the
+        master an election is started
+         */
     public void start() {
         final ManagedChannel channel =
                 ManagedChannelBuilder.forTarget(receiverDrone.getIp() + ":" + receiverDrone.getPort())

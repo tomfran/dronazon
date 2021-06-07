@@ -46,13 +46,12 @@ public class ElectClient extends Thread{
             stub.elect(request, new StreamObserver<DroneService.ElectionResponse>() {
                 @Override
                 public void onNext(DroneService.ElectionResponse value) {
-                    System.out.println("Election response by drone " + receiverDrone.getId());
+                    //System.out.println("Election response by drone " + receiverDrone.getId());
                 }
 
                 @Override
                 public void onError(Throwable t) {
                     System.out.println("Error election communication by " + receiverDrone.getId());
-                    t.printStackTrace();
                     senderDrone.forwardElection(request);
                     channel.shutdown();
                 }

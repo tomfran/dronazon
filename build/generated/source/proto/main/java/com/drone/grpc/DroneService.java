@@ -5809,6 +5809,12 @@ public final class DroneService {
   public interface PingResponseOrBuilder extends
       // @@protoc_insertion_point(interface_extends:com.drone.grpc.PingResponse)
       com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>bool isMaster = 1;</code>
+     * @return The isMaster.
+     */
+    boolean getIsMaster();
   }
   /**
    * Protobuf type {@code com.drone.grpc.PingResponse}
@@ -5855,6 +5861,11 @@ public final class DroneService {
             case 0:
               done = true;
               break;
+            case 8: {
+
+              isMaster_ = input.readBool();
+              break;
+            }
             default: {
               if (!parseUnknownField(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -5887,6 +5898,16 @@ public final class DroneService {
               com.drone.grpc.DroneService.PingResponse.class, com.drone.grpc.DroneService.PingResponse.Builder.class);
     }
 
+    public static final int ISMASTER_FIELD_NUMBER = 1;
+    private boolean isMaster_;
+    /**
+     * <code>bool isMaster = 1;</code>
+     * @return The isMaster.
+     */
+    public boolean getIsMaster() {
+      return isMaster_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -5901,6 +5922,9 @@ public final class DroneService {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      if (isMaster_ != false) {
+        output.writeBool(1, isMaster_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -5910,6 +5934,10 @@ public final class DroneService {
       if (size != -1) return size;
 
       size = 0;
+      if (isMaster_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(1, isMaster_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -5925,6 +5953,8 @@ public final class DroneService {
       }
       com.drone.grpc.DroneService.PingResponse other = (com.drone.grpc.DroneService.PingResponse) obj;
 
+      if (getIsMaster()
+          != other.getIsMaster()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -5936,6 +5966,9 @@ public final class DroneService {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + ISMASTER_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getIsMaster());
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -6069,6 +6102,8 @@ public final class DroneService {
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        isMaster_ = false;
+
         return this;
       }
 
@@ -6095,6 +6130,7 @@ public final class DroneService {
       @java.lang.Override
       public com.drone.grpc.DroneService.PingResponse buildPartial() {
         com.drone.grpc.DroneService.PingResponse result = new com.drone.grpc.DroneService.PingResponse(this);
+        result.isMaster_ = isMaster_;
         onBuilt();
         return result;
       }
@@ -6143,6 +6179,9 @@ public final class DroneService {
 
       public Builder mergeFrom(com.drone.grpc.DroneService.PingResponse other) {
         if (other == com.drone.grpc.DroneService.PingResponse.getDefaultInstance()) return this;
+        if (other.getIsMaster() != false) {
+          setIsMaster(other.getIsMaster());
+        }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -6169,6 +6208,36 @@ public final class DroneService {
             mergeFrom(parsedMessage);
           }
         }
+        return this;
+      }
+
+      private boolean isMaster_ ;
+      /**
+       * <code>bool isMaster = 1;</code>
+       * @return The isMaster.
+       */
+      public boolean getIsMaster() {
+        return isMaster_;
+      }
+      /**
+       * <code>bool isMaster = 1;</code>
+       * @param value The isMaster to set.
+       * @return This builder for chaining.
+       */
+      public Builder setIsMaster(boolean value) {
+        
+        isMaster_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool isMaster = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearIsMaster() {
+        
+        isMaster_ = false;
+        onChanged();
         return this;
       }
       @java.lang.Override
@@ -7347,21 +7416,21 @@ public final class DroneService {
       "tamp\030\001 \001(\003\0220\n\013newPosition\030\002 \001(\0132\033.com.dr" +
       "one.grpc.Coordinates\022\n\n\002km\030\003 \001(\001\022\030\n\020poll" +
       "utionAverage\030\004 \001(\005\022\027\n\017residualBattery\030\005 " +
-      "\001(\005\"\r\n\013PingRequest\"\016\n\014PingResponse\"?\n\017El" +
-      "ectionRequest\022\n\n\002id\030\001 \001(\005\022\017\n\007battery\030\002 \001" +
-      "(\005\022\017\n\007elected\030\003 \001(\010\"\022\n\020ElectionResponse2" +
-      "T\n\nInfoGetter\022F\n\007GetInfo\022\033.com.drone.grp" +
-      "c.InfoRequest\032\034.com.drone.grpc.InfoRespo" +
-      "nse\"\0002a\n\nInfoSender\022S\n\010SendInfo\022!.com.dr" +
-      "one.grpc.SenderInfoRequest\032\".com.drone.g" +
-      "rpc.SenderInfoResponse\"\0002_\n\017OrderAssignm" +
-      "ent\022L\n\013AssignOrder\022\034.com.drone.grpc.Orde" +
-      "rRequest\032\035.com.drone.grpc.OrderResponse\"" +
-      "\0002L\n\004Ping\022D\n\005Alive\022\033.com.drone.grpc.Ping" +
-      "Request\032\034.com.drone.grpc.PingResponse\"\0002" +
-      "X\n\010Election\022L\n\005elect\022\037.com.drone.grpc.El" +
-      "ectionRequest\032 .com.drone.grpc.ElectionR" +
-      "esponse\"\000b\006proto3"
+      "\001(\005\"\r\n\013PingRequest\" \n\014PingResponse\022\020\n\010is" +
+      "Master\030\001 \001(\010\"?\n\017ElectionRequest\022\n\n\002id\030\001 " +
+      "\001(\005\022\017\n\007battery\030\002 \001(\005\022\017\n\007elected\030\003 \001(\010\"\022\n" +
+      "\020ElectionResponse2T\n\nInfoGetter\022F\n\007GetIn" +
+      "fo\022\033.com.drone.grpc.InfoRequest\032\034.com.dr" +
+      "one.grpc.InfoResponse\"\0002a\n\nInfoSender\022S\n" +
+      "\010SendInfo\022!.com.drone.grpc.SenderInfoReq" +
+      "uest\032\".com.drone.grpc.SenderInfoResponse" +
+      "\"\0002_\n\017OrderAssignment\022L\n\013AssignOrder\022\034.c" +
+      "om.drone.grpc.OrderRequest\032\035.com.drone.g" +
+      "rpc.OrderResponse\"\0002L\n\004Ping\022D\n\005Alive\022\033.c" +
+      "om.drone.grpc.PingRequest\032\034.com.drone.gr" +
+      "pc.PingResponse\"\0002X\n\010Election\022L\n\005elect\022\037" +
+      ".com.drone.grpc.ElectionRequest\032 .com.dr" +
+      "one.grpc.ElectionResponse\"\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -7420,7 +7489,7 @@ public final class DroneService {
     internal_static_com_drone_grpc_PingResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_drone_grpc_PingResponse_descriptor,
-        new java.lang.String[] { });
+        new java.lang.String[] { "IsMaster", });
     internal_static_com_drone_grpc_ElectionRequest_descriptor =
       getDescriptor().getMessageTypes().get(9);
     internal_static_com_drone_grpc_ElectionRequest_fieldAccessorTable = new

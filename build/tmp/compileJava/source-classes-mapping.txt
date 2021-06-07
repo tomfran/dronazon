@@ -1,5 +1,14 @@
-RestServer/beans/Drones.java
- RestServer.beans.Drones
+com/drone/grpc/InfoSenderGrpc.java
+ com.drone.grpc.InfoSenderGrpc
+ com.drone.grpc.InfoSenderGrpc$1
+ com.drone.grpc.InfoSenderGrpc$InfoSenderBaseDescriptorSupplier
+ com.drone.grpc.InfoSenderGrpc$InfoSenderBlockingStub
+ com.drone.grpc.InfoSenderGrpc$InfoSenderFileDescriptorSupplier
+ com.drone.grpc.InfoSenderGrpc$InfoSenderFutureStub
+ com.drone.grpc.InfoSenderGrpc$InfoSenderImplBase
+ com.drone.grpc.InfoSenderGrpc$InfoSenderMethodDescriptorSupplier
+ com.drone.grpc.InfoSenderGrpc$InfoSenderStub
+ com.drone.grpc.InfoSenderGrpc$MethodHandlers
 Dronazon/Order.java
  Dronazon.Order
 RestServer/beans/Drone.java
@@ -34,17 +43,6 @@ com/drone/grpc/ElectionGrpc.java
  com.drone.grpc.ElectionGrpc$MethodHandlers
 RestServer/beans/Statistic.java
  RestServer.beans.Statistic
-com/drone/grpc/InfoSenderGrpc.java
- com.drone.grpc.InfoSenderGrpc
- com.drone.grpc.InfoSenderGrpc$1
- com.drone.grpc.InfoSenderGrpc$InfoSenderBaseDescriptorSupplier
- com.drone.grpc.InfoSenderGrpc$InfoSenderBlockingStub
- com.drone.grpc.InfoSenderGrpc$InfoSenderFileDescriptorSupplier
- com.drone.grpc.InfoSenderGrpc$InfoSenderFutureStub
- com.drone.grpc.InfoSenderGrpc$InfoSenderImplBase
- com.drone.grpc.InfoSenderGrpc$InfoSenderMethodDescriptorSupplier
- com.drone.grpc.InfoSenderGrpc$InfoSenderStub
- com.drone.grpc.InfoSenderGrpc$MethodHandlers
 com/drone/grpc/DroneService.java
  com.drone.grpc.DroneService
  com.drone.grpc.DroneService$1
@@ -92,6 +90,8 @@ com/drone/grpc/DroneService.java
  com.drone.grpc.DroneService$SenderInfoResponse$1
  com.drone.grpc.DroneService$SenderInfoResponse$Builder
  com.drone.grpc.DroneService$SenderInfoResponseOrBuilder
+RestServer/beans/Drones.java
+ RestServer.beans.Drones
 com/drone/grpc/InfoGetterGrpc.java
  com.drone.grpc.InfoGetterGrpc
  com.drone.grpc.InfoGetterGrpc$1

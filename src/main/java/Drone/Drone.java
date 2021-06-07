@@ -29,7 +29,6 @@ public class Drone implements Comparable<Drone>{
     private final Object participantLock;
 
     protected Drone successor;
-    protected Drone predecessor;
 
     // master drone fields and orders thread
     protected boolean isMaster;
@@ -54,7 +53,6 @@ public class Drone implements Comparable<Drone>{
         this.restMethods = new RestMethods(this);
         this.isAvailable = true;
         this.successor = null;
-        this.predecessor = null;
         batteryLock = new Object();
         coordinatesLock = new Object();
         isAvailableLock = new Object();
@@ -141,15 +139,21 @@ public class Drone implements Comparable<Drone>{
      */
     public void stop() {
 
+        while(isParticipant()){
+            System.out.println("Election in progress, can't wait now");
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
         restMethods.quit();
         grpcServer.interrupt();
 
         if (isMaster()) {
             monitorOrders.interrupt();
             monitorOrders.disconnect();
-        }
-
-        if (isMaster()) {
             orderQueue.interrupt();
         }
 
@@ -169,13 +173,7 @@ public class Drone implements Comparable<Drone>{
 
         int i = list.indexOf(this);
 
-        predecessor = (i == 0)? list.get(list.size()-1) : list.get(i-1);
         successor = (i == list.size()-1)? list.get(0) : list.get(i+1);
-        /*
-        System.out.println("PRED AND SUCC");
-        System.out.println(predecessor.getId());
-        System.out.println(successor.getId());
-         */
     }
 
     public synchronized void forwardElection(DroneService.ElectionRequest electionRequest){
@@ -183,9 +181,10 @@ public class Drone implements Comparable<Drone>{
             //System.out.println("Forwarding election");
             ElectClient c = new ElectClient(this, electionRequest);
             c.start();
-        } else {
-            //System.out.println("Already master");
         }
+        //else {
+            //System.out.println("Already master");
+        //}
     }
 
     /*
