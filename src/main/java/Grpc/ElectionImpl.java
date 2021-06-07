@@ -15,15 +15,21 @@ public class ElectionImpl extends ElectionImplBase {
 
     @Override
     public void elect(ElectionRequest request, StreamObserver<ElectionResponse> responseObserver) {
+        System.out.println("\nElection message received:");
+        System.out.println("\t- id: " + request.getId());
+        System.out.println("\t- battery: " + request.getBattery());
+        System.out.println("\t- elected: " + request.getElected());
         boolean master = false;
         // if this drone is being elected
         if (request.getElected() && request.getId() == drone.getId()){
+            System.out.println("\nELECTION FINISHED: I'm the fucking lizard king");
             master  = true;
         } else {
-            if (drone.isParticipant() && request.getId() < drone.getId()){
-                System.out.println("Election already in process, ignoring the message " +
+            // if the requesting drone has less battery and I am participant I ignore the message
+            if (drone.isParticipant() && request.getBattery() < drone.getBattery()){
+                System.out.println("MULTIPLE ELECTIONS: ignoring the message " +
                         "by " + request.getId());
-            } else {
+            } else {;
                 drone.enterRing();
                 drone.forwardElection(buildResponse(request));
                 // forward election
@@ -34,7 +40,7 @@ public class ElectionImpl extends ElectionImplBase {
             drone.becomeMaster();
         }
 
-        System.out.println("Responding to previous drone");
+        //System.out.println("ELECTION: sending response");
         responseObserver.onNext(ElectionResponse.newBuilder().build());
         responseObserver.onCompleted();
     }
@@ -69,10 +75,10 @@ public class ElectionImpl extends ElectionImplBase {
             drone.setParticipant(true);
         }
 
-        System.out.println("Election message to send: ");
-        System.out.println("\tid: " + chosenId);
-        System.out.println("\tbattery: " + battery);
-        System.out.println("\telected: " + elected);
+        System.out.println("\nElection message to send: ");
+        System.out.println("\t- id: " + chosenId);
+        System.out.println("\t- battery: " + battery);
+        System.out.println("\t- elected: " + elected);
 
 
         return ElectionRequest.newBuilder()

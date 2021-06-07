@@ -41,11 +41,11 @@ public class AliveClient extends Thread{
 
             @Override
             public void onError(Throwable t) {
-                System.out.println("Drone with id " + receiverDrone.getId() + " is dead");
+                System.out.println("PING ERROR: drone " + receiverDrone.getId() + " is offline");
                 senderDrone.getDronesList().remove(receiverDrone);
 
                 if (receiverDrone.isMaster()) {
-                    System.out.println("Starting election");
+                    System.out.println("MASTER DOWN: starting election");
                     senderDrone.startElection();
                 }
 

@@ -32,6 +32,7 @@ public class InfoGetterImpl extends InfoGetterImplBase {
                 .build();
 
         drone.setParticipant(false);
+        drone.getDronesList().setNewMaster(request.getId());
         responseObserver.onNext(response);
         responseObserver.onCompleted();
 

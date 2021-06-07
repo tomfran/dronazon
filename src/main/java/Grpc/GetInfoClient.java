@@ -33,7 +33,8 @@ public class GetInfoClient extends Thread {
         // create a non blocking stub
         InfoGetterStub stub = InfoGetterGrpc.newStub(channel);
 
-        InfoRequest req = InfoRequest.newBuilder().build();
+        InfoRequest req = InfoRequest.newBuilder()
+                .setId(senderDrone.getId()).build();
 
         stub.getInfo(req, new StreamObserver<InfoResponse>() {
             @Override

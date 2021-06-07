@@ -45,7 +45,7 @@ public class Dronazon {
 
             Random rd = new Random();
 
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < 1000; i++) {
                 Order o = generateRandomOrder(rd, i);
                 String payload = o.getJson();
                 MqttMessage message = new MqttMessage(payload.getBytes());

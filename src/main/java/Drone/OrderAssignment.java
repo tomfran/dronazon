@@ -24,6 +24,8 @@ public class OrderAssignment extends Thread {
     Send order to another Drone
      */
     public void sendOrder(Drone receiver){
+        System.out.println("\nSENDING ORDER:\n\t- order id: " + order.id + "\n\t- drone id: " + receiver.getId() + "\n");
+
         final ManagedChannel channel =
                 ManagedChannelBuilder.forTarget(receiver.getIp() + ":" + receiver.getPort())
                         .usePlaintext().build();
@@ -49,7 +51,8 @@ public class OrderAssignment extends Thread {
         stub.assignOrder(req, new StreamObserver<DroneService.OrderResponse>() {
             @Override
             public void onNext(DroneService.OrderResponse value) {
-                System.out.println("Order assignment response by drone " + receiver.id);
+                System.out.println("\nORDER COMPLETED:\n\t- order id: " + order.id
+                        + "\n\t- drone id: " + receiver.getId() + "\n");
                 queue.addStatistic(value);
                 /*
                 System.out.println(value.getKm());
@@ -63,7 +66,7 @@ public class OrderAssignment extends Thread {
             @Override
             public void onError(Throwable t) {
                 drone.getDronesList().remove(receiver);
-                System.out.println("Order assignment response error, removing the drone");
+                System.out.println("ORDER ASSIGNMENT ERROR, removing drone " + receiver.getId());
                 queue.retryOrder(order);
                 channel.shutdown();
             }

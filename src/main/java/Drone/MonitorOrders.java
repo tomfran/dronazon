@@ -3,6 +3,7 @@ package Drone;
 import Dronazon.Order;
 import org.eclipse.paho.client.mqttv3.*;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 public class MonitorOrders extends Thread{
     private Drone drone;
@@ -32,9 +33,9 @@ public class MonitorOrders extends Thread{
             connOpts.setCleanSession(true);
 
             // Connect the client
-            System.out.println(clientId + " Connecting Broker " + broker);
+            //System.out.println(clientId + " Connecting Broker " + broker);
             client.connect(connOpts);
-            System.out.println(clientId + " Connected - Thread PID: " + Thread.currentThread().getId());
+            //System.out.println(clientId + " Connected - Thread PID: " + Thread.currentThread().getId());
 
             // Callback
             client.setCallback(new MqttCallback() {
@@ -52,7 +53,8 @@ public class MonitorOrders extends Thread{
                 }
 
                 public void connectionLost(Throwable cause) {
-                    System.out.println(clientId + " Connectionlost! cause:" + cause.getMessage()+ "-  Thread PID: " + Thread.currentThread().getId());
+                    System.out.println(clientId + " Connection lost! cause:" + cause.getMessage()+ "-  Thread PID: " + Thread.currentThread().getId());
+                    System.out.println(Arrays.toString(cause.getStackTrace()));
                 }
 
                 public void deliveryComplete(IMqttDeliveryToken token) {
@@ -60,9 +62,9 @@ public class MonitorOrders extends Thread{
                 }
 
             });
-            System.out.println(clientId + " Subscribing ... - Thread PID: " + Thread.currentThread().getId());
+            System.out.println("MQTT CLIENT: \n\t- Subscribing ... - Thread PID: " + Thread.currentThread().getId());
             client.subscribe(topic,qos);
-            System.out.println(clientId + " Subscribed to topics : " + topic);
+            System.out.println("\t- Subscribed to topics : " + topic);
 
         } catch (MqttException me) {
             System.out.println("reason " + me.getReasonCode());

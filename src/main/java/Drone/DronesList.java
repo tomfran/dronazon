@@ -134,7 +134,7 @@ public class DronesList {
 
 
     public synchronized void setNewMaster(int id){
-        System.out.println("SEtting the new master, " + id);
+        System.out.println("Setting the new master: " + id);
         for ( Drone d : dronesList ) {
             if (d.getId() == id)
                 d.isMaster = true;
@@ -162,13 +162,8 @@ public class DronesList {
         Double dist = Double.MAX_VALUE;
         int maxBattery = 0;
 
-        if (drone.isAvailable()){
-            closest = drone;
-            dist = distance(o.startCoordinates, drone.getCoordinates());
-            maxBattery = drone.getBattery();
-        }
-
         ArrayList<Drone> list = getDronesList();
+        list.add(drone);
 
         for ( Drone d : list ) {
             Double currentDistance = distance(o.startCoordinates, d.getCoordinates());

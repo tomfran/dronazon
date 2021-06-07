@@ -9,32 +9,37 @@ public class OrderQueue extends Thread{
     private final LinkedList<Order> orderQueue;
     private final LinkedList<OrderAssignment> threadList;
 
-    private boolean queueLock = false;
-    private boolean threadListLock = false;
+    protected final Object queueLock;
+    private final Object threadLock;
 
+    private boolean exit = false;
+    private final Object exitLock;
 
     public OrderQueue(Drone drone) {
         this.drone = drone;
         this.orderQueue = new LinkedList<>();
         this.threadList = new LinkedList<>();
+        queueLock = new Object();
+        threadLock = new Object();
+        exitLock = new Object();
     }
 
     /*
     Queue consume
      */
-    public synchronized Order consume() throws InterruptedException {
-        //System.out.println("entering consume");
-        while( queueLock || orderQueue.isEmpty()) {
-            wait();
-        }
+    public Order consume() throws InterruptedException {
+        if(!getExit()) {
+            boolean empty = true;
 
-        // critical region
-        queueLock = true;
+            while (empty) {
+                synchronized (queueLock) {
+                    queueLock.wait();
+                    empty = orderQueue.isEmpty();
+                }
+            }
+        }
         Order o = orderQueue.getFirst();
         orderQueue.removeFirst();
-        queueLock = false;
-        //System.out.println("Order retrieved from the queue");
-        notify();
         return o;
     }
 
@@ -42,87 +47,89 @@ public class OrderQueue extends Thread{
     Re-add an order to the top of the queue
      */
     public synchronized void retryOrder(Order o){
-        while (queueLock) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        synchronized (queueLock){
+            orderQueue.addFirst(o);
         }
-
-        queueLock = true;
-        orderQueue.addFirst(o);
-        queueLock = false;
-        //System.out.println("Order reinserted");
-        notify();
+        notifyAll();
     }
 
-    public synchronized void produce(Order o){
-        //System.out.println("entering produce");
-        while (queueLock) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                System.out.println("Producer stopped");
-                e.printStackTrace();
-            }
+    public void produce(Order o){
+        synchronized (queueLock){
+            orderQueue.add(o);
+            queueLock.notify();
         }
-
-        // critical region
-        queueLock = true;
-        orderQueue.add(o);
-        queueLock = false;
-        //System.out.println("Order added to the queue");
-        notify();
     }
 
     /*
     Remove delivery assignment thread from the thread list
      */
-    public synchronized void removeThread(OrderAssignment t){
-        while(threadListLock){
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+    public void removeThread(OrderAssignment t){
+        synchronized (threadLock) {
+            threadList.remove(t);
+            t.interrupt();
+            threadLock.notify();
         }
-        // critical region
-        threadListLock = true;
-        threadList.remove(t);
-        t.interrupt();
-        threadListLock = false;
-        notify();
     }
 
-    public synchronized void addThread(OrderAssignment t){
-        while(threadListLock){
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+    public void addThread(OrderAssignment t){
+        synchronized (threadLock){
+            threadList.add(t);
+            t.start();
         }
-        // critical region
-        threadListLock = true;
-        threadList.add(t);
-        t.start();
-        threadListLock = false;
-        notify();
     }
 
     public synchronized void addStatistic(DroneService.OrderResponse value){
-        System.out.println("!!!! To implement statistics");
+        //System.out.println("!!!! To implement statistics");
+    }
+
+    public boolean getExit() {
+        boolean ret;
+        synchronized (exitLock){
+            ret = exit;
+        }
+        return ret;
+    }
+
+    public void setExit(boolean b) {
+        synchronized (exitLock){
+            exit = b;
+        }
+    }
+
+    public boolean isEmpty(){
+        boolean ret;
+        synchronized (queueLock) {
+            ret = orderQueue.isEmpty();
+        }
+        return ret;
     }
 
     public void run() {
         try {
-            while (true) {
+            while (!getExit() || !isEmpty()) {
                 Order next = consume();
                 addThread(new OrderAssignment(drone, next, this));
             }
+            synchronized (threadLock){
+                while(!threadList.isEmpty()){
+                    threadLock.wait();
+                }
+            }
+            synchronized (queueLock) {
+                queueLock.notifyAll();
+            }
         } catch (InterruptedException e){
-            System.out.println("Interrupted received at orderqueue");
+            System.out.println("Interrupted received at order queue");
         }
+    }
+
+    public String toString(){
+        String ret = "\nOrders left to be assigned:";
+        synchronized (orderQueue) {
+            for (Order o : orderQueue) {
+                ret += "\n\t- " + o.id;
+            }
+        }
+        return ret + "\n\n";
     }
 }

@@ -51,7 +51,7 @@ public class ElectClient extends Thread{
 
                 @Override
                 public void onError(Throwable t) {
-                    System.out.println("Error election communication by " + receiverDrone.getId());
+                    System.out.println("\nELECTION ERROR: caused by " + receiverDrone.getId());
                     senderDrone.forwardElection(request);
                     channel.shutdown();
                 }

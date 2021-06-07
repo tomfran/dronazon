@@ -5,6 +5,7 @@ import Grpc.GrpcServer;
 import com.drone.grpc.DroneService;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Drone implements Comparable<Drone>{
@@ -108,7 +109,7 @@ public class Drone implements Comparable<Drone>{
         pingService.start();
 
         printDroneInfo = new PrintDroneInfo(this);
-        printDroneInfo.start();
+        //printDroneInfo.start();
     }
 
     /*
@@ -118,19 +119,18 @@ public class Drone implements Comparable<Drone>{
     public synchronized void becomeMaster(){
         setParticipant(false);
         setMaster(true);
-        System.out.println("Becoming the new master");
+        System.out.println("\nBECOMING THE NEW MASTER:");
         // request drones infos
         dronesList.requestDronesInfo();
-        System.out.println("Other drones info requested");
+        System.out.println("\t- Other drones info requested");
         // start the order queue
         orderQueue = new OrderQueue(this);
         monitorOrders = new MonitorOrders(this, orderQueue);
         orderQueue.start();
-        System.out.println("Order queue started");
+        System.out.println("\t- Order queue started");
         // start the order monitor mqtt client
         monitorOrders.start();
-        System.out.println("MQTT client started");
-
+        System.out.println("\t- MQTT client started\n\n");
     }
 
     /*
@@ -138,26 +138,52 @@ public class Drone implements Comparable<Drone>{
     it basically stops everything
      */
     public void stop() {
+        System.out.println("\n\nQUIT RECEIVED:");
+        if (isMaster())
+            monitorOrders.disconnect();
 
         while(isParticipant()){
-            System.out.println("Election in progress, can't wait now");
+            System.out.println("\t- Election in progress, can't quit now...");
             try {
-                Thread.sleep(5000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
 
-        restMethods.quit();
-        grpcServer.interrupt();
-
-        if (isMaster()) {
-            monitorOrders.interrupt();
-            monitorOrders.disconnect();
-            orderQueue.interrupt();
+        while(!isAvailable()){
+            System.out.println("\t- Delivery in progress, can't quit now...");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
+        if (isMaster()){
+            orderQueue.setExit(true);
+            if(!orderQueue.isEmpty()) {
+                System.out.println(orderQueue);
+                try {
+                    synchronized (orderQueue.queueLock) {
+                        orderQueue.queueLock.notifyAll();
+                        orderQueue.queueLock.wait();
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            System.out.println("\t- All orders have been assigned\n" +
+                    "\t- Sending statistics to the REST API...");
+            //restMethods.sendStatistics();
+        }
+
+        grpcServer.interrupt();
+        System.out.println("\t- GRPC server interrupted");
+        restMethods.quit();
+        System.out.println("\t- REST API delete sent");
         System.exit(0);
+
     }
 
     /*
@@ -209,6 +235,7 @@ public class Drone implements Comparable<Drone>{
     TODO add pollution measurements, and count Drone statistics
      */
     public DroneService.OrderResponse deliver(DroneService.OrderRequest request) {
+        setAvailable(false);
         int[] newPosition = new int[]{request.getEnd().getX(), request.getEnd().getY()};
         decreaseBattery();
 
@@ -230,12 +257,13 @@ public class Drone implements Comparable<Drone>{
 
         setCoordinates(newPosition);
         try {
-            Thread.sleep(10000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("\nDelivery completed: \n\tNew position: " + newPosition[0] + " " + newPosition[1]);
-        System.out.println("\tResidual battery " + getBattery() + "\n");
+        System.out.println("\nDELIVERY COMPLETED: \n\t- New position: [" + newPosition[0] + ", " + newPosition[1] + "]");
+        System.out.println("\t- Residual battery: " + getBattery() + "%\n");
+        setAvailable(true);
         return response;
     }
 
@@ -352,18 +380,18 @@ public class Drone implements Comparable<Drone>{
     }
 
     public String getInfo(){
-        return (isMaster()? "MASTER\n" : "") + "Id: " + getId() +
-                "\nIp and port: " + getIp() + ":" + getPort();
+        return (isMaster()? "MASTER" : "WORKER") + "\n\t- Id: " + getId() +
+                "\n\t- Address: " + getIp() + ":" + getPort();
     }
 
     public String toString(){
-        String ret =  "======== DRONE INFO ========\n" + getInfo();
-        ret += "\nBattery level: " + getBattery();
+        String ret =  "\n======== DRONE INFO ========\n\n" + getInfo();
+        ret += "\n\t- Battery level: " + getBattery() + "%";
 
         ret += "\n\nOther known drones: [\n";
 
         for (Drone d : getDronesList().getDronesList())
-            ret += "\n" + d.getInfo() + ", \n";
+            ret += "\n- " + d.getInfo() + ", \n";
 
         ret += "\n]";
         return ret + "\n============================\n";
@@ -375,11 +403,15 @@ public class Drone implements Comparable<Drone>{
 
     public static void main(String[] args) {
 
+        /*
         Scanner sc=new Scanner(System.in);
 
         System.out.println("Insert drone ID and port");
-        Drone d1 = new Drone(sc.nextInt(), "localhost", sc.nextInt());
-        d1.run();
+        Drone d = new Drone(sc.nextInt(), "localhost", sc.nextInt());
+        */
 
+        Random rd = new Random();
+        Drone d = new Drone(rd.nextInt(1000), "localhost", 10000 + rd.nextInt(30000));
+        d.run();
     }
 }

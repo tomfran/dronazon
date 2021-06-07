@@ -25,9 +25,9 @@ public class GrpcServer extends Thread{
 
         try {
             server.start();
-            System.out.println("Drone " + drone.getId() + " started GRPC server");
+            System.out.println("GRPC server started");
         } catch (IOException e) {
-            System.out.println("Drone with id " + drone.getId() + " was not able to start grpc server");
+            System.out.println("ERROR WHILE STARTING GRPC SERVER");
             e.printStackTrace();
         }
 
@@ -35,7 +35,7 @@ public class GrpcServer extends Thread{
             server.awaitTermination();
         } catch (InterruptedException e) {
             server.shutdown();
-            System.out.println("Drone " + drone.getId() + " stopped GRPC server");
+            System.out.println("GRPC server stopped ");
         }
     }
 

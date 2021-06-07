@@ -21,7 +21,7 @@ public class RestMethods {
     Make initial API request, initialize all the drone fields
      */
     public boolean initialize() {
-        System.out.println("Initial information request");
+        System.out.println("REST API INITIALIZATION: ");
         try {
             Client client = Client.create();
             WebResource webResource = client
@@ -38,15 +38,15 @@ public class RestMethods {
             if (status == 200) {
                 // no conflict, unpack the response and go on
                 if (unpackInitializeResponse(response.getEntity(String.class))) {
-                    System.out.println("ADD: Drone " + drone.id + " initialization completed");
+                    System.out.println("\t- Drone " + drone.id + " initialization completed");
                     return true;
                 }
             } else if (status == 409) {
                 // if rest api gives a conflict response
-                System.out.println("ADD: The given ID " + drone.id + " is already in the system, retry.");
+                System.out.println("\t- The given ID " + drone.id + " is already in the system, retry.");
             } else {
                 // unhandled
-                System.out.println("ADD: Unhandled case: response.getStatus() = " + status);
+                System.out.println("\t- Unhandled case: response.getStatus() = " + status);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -132,13 +132,13 @@ public class RestMethods {
 
             if (status == 200) {
                 // id found
-                System.out.println("REMOVE: Drone " + drone.id + " removed from REST api");
+                //System.out.println("Drone " + drone.id + " removed from REST api");
             } else if (status == 404) {
                 // if rest api gives a conflict response
-                System.out.println("REMOVE: Drone " + drone.id + " was not found on rest api");
+                //System.out.println("Drone " + drone.id + " was not found on rest api");
             } else {
                 // unhandled
-                System.out.println("REMOVE: Unhandled case: response.getStatus() = " + status);
+                //System.out.println("Unhandled case: response.getStatus() = " + status);
             }
         } catch (Exception e) {
             e.printStackTrace();
