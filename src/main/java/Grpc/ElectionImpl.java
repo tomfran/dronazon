@@ -22,7 +22,7 @@ public class ElectionImpl extends ElectionImplBase {
         boolean master = false;
         // if this drone is being elected
         if (request.getElected() && request.getId() == drone.getId()){
-            System.out.println("\nELECTION FINISHED: I'm the fucking lizard king");
+            System.out.println("\nELECTION FINISHED: I'm the new master");
             master  = true;
         } else {
             // if the requesting drone has less battery and I am participant I ignore the message

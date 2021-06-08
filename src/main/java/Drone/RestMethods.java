@@ -11,7 +11,8 @@ import org.codehaus.jettison.json.JSONObject;
 public class RestMethods {
     Drone drone;
     // rest api base
-    public static String restBaseAddress = "http://localhost:1337/drones/";
+    public static String restBaseAddressDrones = "http://localhost:1337/drones/";
+    public static String restBaseAddressStatistics = "http://localhost:1337/statistics/";
 
     public RestMethods(Drone drone) {
         this.drone = drone;
@@ -25,7 +26,7 @@ public class RestMethods {
         try {
             Client client = Client.create();
             WebResource webResource = client
-                    .resource(restBaseAddress + "add");
+                    .resource(restBaseAddressDrones + "add");
 
             String payload = this.getInitializePostPayload();
 
@@ -109,8 +110,39 @@ public class RestMethods {
         return true;
     }
 
-    private void sendStatistic(Statistic s){
+    private String getStatisticPayload(Statistic s) throws JSONException {
+        JSONObject payload = new JSONObject();
+        payload.put("avgKm", s.getAvgKm());
+        payload.put("avgDelivery", s.getAvgDelivery());
+        payload.put("avgBattery", s.getAvgBattery());
+        payload.put("timestamp", s.getTimestamp());
+        payload.put("avgPollution", s.getAvgPollution());
+        return payload.toString();
+    }
 
+    public void sendStatistic(Statistic s){
+        try {
+            Client client = Client.create();
+            WebResource webResource = client
+                    .resource(restBaseAddressStatistics + "add");
+
+            String payload = this.getStatisticPayload(s);
+
+            ClientResponse response = webResource.type("application/json")
+                    .post(ClientResponse.class, payload);
+
+            // if the id is not present in the system
+            int status = response.getStatus();
+
+            if (status == 200) {
+                System.out.println("STATISTIC SENT TO THE REST API");
+                System.out.println(payload);
+            } else {
+                System.out.println("ERROR SENDING STATISTIC: status code " + status);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /*
@@ -122,7 +154,7 @@ public class RestMethods {
             Client client = Client.create();
             // calling a DELETE host/remove/id removes the drone with the given id
             WebResource webResource = client
-                    .resource(restBaseAddress + "remove/" + drone.id);
+                    .resource(restBaseAddressDrones + "remove/" + drone.id);
 
             ClientResponse response = webResource.type("application/json")
                     .delete(ClientResponse.class);
@@ -132,13 +164,10 @@ public class RestMethods {
 
             if (status == 200) {
                 // id found
-                //System.out.println("Drone " + drone.id + " removed from REST api");
+                System.out.println("Drone " + drone.id + " removed from REST api");
             } else if (status == 404) {
                 // if rest api gives a conflict response
-                //System.out.println("Drone " + drone.id + " was not found on rest api");
-            } else {
-                // unhandled
-                //System.out.println("Unhandled case: response.getStatus() = " + status);
+                System.out.println("Drone " + drone.id + " was not found on rest api");
             }
         } catch (Exception e) {
             e.printStackTrace();

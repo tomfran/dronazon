@@ -32,21 +32,21 @@ public class Statistics {
         statsList.add(s);
     }
 
-    public synchronized List<Statistic> getLastStats(int n){
+    public synchronized ArrayList<Statistic> getLastStats(int n){
         ArrayList<Statistic> last = getStatsList();
         int end = last.size();
-        int start = end - n - 1;
-        return last.subList(start, end);
+        int start = Math.max(end - n, 0);
+        return new ArrayList<>(last.subList(start, end));
     }
 
-    public synchronized double avgDelivery(Timestamp t1, Timestamp t2){
+    public synchronized double avgDelivery(long t1, long t2){
         ArrayList<Statistic> stats = getStatsList();
 
         double sum = 0;
         int tot = 0;
-        for (int i = 0; stats.get(i).getTimestamp().compareTo(t2) <= 0; i++) {
+        for (int i = 0; stats.get(i).getTimestamp() < t2; i++) {
             Statistic s = stats.get(i);
-            if (s.getTimestamp().compareTo(t1) >= 0) {
+            if (s.getTimestamp() > t1) {
                 sum += 1;
                 tot += s.getAvgDelivery();
             }
@@ -54,14 +54,14 @@ public class Statistics {
         return (tot > 0)? sum / tot : 0;
     }
 
-    public synchronized double avgKm(Timestamp t1, Timestamp t2){
+    public synchronized double avgKm(long t1, long t2){
         ArrayList<Statistic> stats = getStatsList();
 
         double sum = 0;
         int tot = 0;
-        for (int i = 0; stats.get(i).getTimestamp().compareTo(t2) <= 0; i++) {
+        for (int i = 0; stats.get(i).getTimestamp() < t2; i++) {
             Statistic s = stats.get(i);
-            if (s.getTimestamp().compareTo(t1) >= 0) {
+            if (s.getTimestamp() > t1) {
                 sum += 1;
                 tot += s.getAvgKm();
             }

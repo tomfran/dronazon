@@ -34,10 +34,18 @@ public class StatsService {
         return Response.ok(l).build();
     }
 
+    @Path("get/{n}")
+    @GET
+    @Produces({"application/json", "application/xml"})
+    public Response getLastStats(@PathParam("n") int n){
+        ArrayList<Statistic> l = Statistics.getInstance().getLastStats(n);
+        return Response.ok(l).build();
+    }
+
     @Path("get/km/{t1}-{t2}")
     @GET
     @Produces({"application/json", "application/xml"})
-    public Response getAvgKm(@PathParam("t1") Timestamp t1, @PathParam("t2") Timestamp t2){
+    public Response getAvgKm(@PathParam("t1") long t1, @PathParam("t2") long t2){
         double avg = Statistics.getInstance().avgKm(t1, t2);
         return Response.ok(avg).build();
     }
@@ -45,7 +53,7 @@ public class StatsService {
     @Path("get/delivery/{t1}-{t2}")
     @GET
     @Produces({"application/json", "application/xml"})
-    public Response getAvgDelivery(@PathParam("t1") Timestamp t1, @PathParam("t2") Timestamp t2){
+    public Response getAvgDelivery(@PathParam("t1") long t1, @PathParam("t2") long t2){
         double avg = Statistics.getInstance().avgDelivery(t1, t2);
         return Response.ok(avg).build();
     }

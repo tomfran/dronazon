@@ -2,7 +2,11 @@ package Drone;
 
 import Grpc.ElectClient;
 import Grpc.GrpcServer;
+import Simulators.Measurement;
+import Simulators.PollutionSensor;
 import com.drone.grpc.DroneService;
+
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -10,7 +14,9 @@ import java.util.Scanner;
 
 public class Drone implements Comparable<Drone>{
 
-    // drone fields
+    /*
+    Drone fields and required locks
+     */
     protected int id;
     protected String ip;
     protected int port;
@@ -31,34 +37,49 @@ public class Drone implements Comparable<Drone>{
 
     protected Drone successor;
 
-    // master drone fields and orders thread
+    protected double totKm;
+    private final Object totKmLock;
+    protected int totDeliveries;
+    private final Object totDeliveriesLock;
+
+    /*
+    Master fields, and required locks
+     */
     protected boolean isMaster;
     private final Object masterLock;
 
     private MonitorOrders monitorOrders;
     protected OrderQueue orderQueue;
+    protected StatisticsMonitor statisticsMonitor;
 
-    // threads for quitting, display info and grpc server
+    /*
+    GRPC server, ping, quit, print and pollution threads.
+     */
     private GrpcServer grpcServer;
     private PingService pingService;
     private QuitDrone quitDrone;
     private PrintDroneInfo printDroneInfo;
+    private PollutionSensor pollutionSensor;
 
     public Drone(int id, String ip, int port) {
         this.id = id;
         this.ip = ip;
         this.port = port;
-        this.battery = 100;
-        this.dronesList = new DronesList(this);
-        this.coordinates = new int[2];
-        this.restMethods = new RestMethods(this);
-        this.isAvailable = true;
-        this.successor = null;
+        battery = 100;
+        dronesList = new DronesList(this);
+        coordinates = new int[2];
+        restMethods = new RestMethods(this);
+        isAvailable = true;
+        successor = null;
+        totKm = 0;
+        totDeliveries = 0;
         batteryLock = new Object();
         coordinatesLock = new Object();
         isAvailableLock = new Object();
         participantLock = new Object();
         masterLock = new Object();
+        totDeliveriesLock = new Object();
+        totKmLock = new Object();
         isParticipant = false;
     }
 
@@ -75,11 +96,13 @@ public class Drone implements Comparable<Drone>{
         isAvailableLock = new Object();
         participantLock = new Object();
         masterLock = new Object();
+        totDeliveriesLock = new Object();
+        totKmLock = new Object();
     }
 
     /*
     Start function, the drone initialize and send others
-    It's info, if required it becomes master
+    it's info, if required it becomes master
      */
     public void run(){
         // make rest request
@@ -109,7 +132,10 @@ public class Drone implements Comparable<Drone>{
         pingService.start();
 
         printDroneInfo = new PrintDroneInfo(this);
-        //printDroneInfo.start();
+        printDroneInfo.start();
+
+        pollutionSensor = new PollutionSensor(this);
+        pollutionSensor.start();
     }
 
     /*
@@ -131,17 +157,27 @@ public class Drone implements Comparable<Drone>{
         // start the order monitor mqtt client
         monitorOrders.start();
         System.out.println("\t- MQTT client started\n\n");
+        statisticsMonitor = new StatisticsMonitor(this);
+        statisticsMonitor.start();
     }
 
     /*
-    Called after a quit command,
-    it basically stops everything
+    Called after a quit command, ti stops everything making sure
+    an election nor a delivery is in progress, when a drone is
+    master it also empty the order queue and send the stats to the REST API.
      */
     public void stop() {
         System.out.println("\n\nQUIT RECEIVED:");
+
+        /*
+        Disconnect mqtt client to not receive new orders
+         */
         if (isMaster())
             monitorOrders.disconnect();
 
+        /*
+        Wait if there is an election in progress
+         */
         while(isParticipant()){
             System.out.println("\t- Election in progress, can't quit now...");
             try {
@@ -151,6 +187,9 @@ public class Drone implements Comparable<Drone>{
             }
         }
 
+        /*
+        A delivery is in progress, need to wait
+         */
         while(!isAvailable()){
             System.out.println("\t- Delivery in progress, can't quit now...");
             try {
@@ -161,7 +200,14 @@ public class Drone implements Comparable<Drone>{
         }
 
         if (isMaster()){
+            // this make sure to run orderqueue until it's empty
             orderQueue.setExit(true);
+            /*
+            if orders are still in the queue, notifyAll, as
+            there might be a produce that's stuck.
+            Then wait on the queue, there will be a notify when all the
+            current deliveries are finished
+             */
             if(!orderQueue.isEmpty()) {
                 System.out.println(orderQueue);
                 try {
@@ -175,7 +221,15 @@ public class Drone implements Comparable<Drone>{
             }
             System.out.println("\t- All orders have been assigned\n" +
                     "\t- Sending statistics to the REST API...");
-            //restMethods.sendStatistics();
+
+            synchronized (statisticsMonitor.statisticLock) {
+                try {
+                    statisticsMonitor.statisticLock.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            System.out.println("\t- STATS SENT");
         }
 
         grpcServer.interrupt();
@@ -231,40 +285,49 @@ public class Drone implements Comparable<Drone>{
     /*
     Delivery simulation, the Drone sleeps for 5 seconds,
     then it sends the delivery response,
-
-    TODO add pollution measurements, and count Drone statistics
      */
     public DroneService.OrderResponse deliver(DroneService.OrderRequest request) {
         setAvailable(false);
-        int[] newPosition = new int[]{request.getEnd().getX(), request.getEnd().getY()};
+        int[] orderStartPosition = new int[]{request.getEnd().getX(), request.getEnd().getY()};
+        int[] orderEndPosition = new int[]{request.getEnd().getX(), request.getEnd().getY()};
         decreaseBattery();
-
-        DroneService.OrderResponse response = DroneService.OrderResponse.newBuilder()
-                .setTimestamp(
-                        new java.sql.Timestamp(System.currentTimeMillis()).getTime()
-                )
-                .setNewPosition(
-                        DroneService.Coordinates.newBuilder()
-                                .setX(newPosition[0])
-                                .setY(newPosition[1])
-                                .build()
-                )
-                .setKm(DronesList.distance(getCoordinates(), newPosition))
-                .setPollutionAverage(10)
-                .setResidualBattery(getBattery())
-                .build();
-
-
-        setCoordinates(newPosition);
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("\nDELIVERY COMPLETED: \n\t- New position: [" + newPosition[0] + ", " + newPosition[1] + "]");
+
+        double deliveryKm = DronesList.distance(getCoordinates(), orderStartPosition) +
+                DronesList.distance(orderStartPosition, orderEndPosition);
+
+        DroneService.OrderResponse.Builder response = DroneService.OrderResponse.newBuilder()
+                .setId(getId())
+                .setTimestamp(
+                        new Timestamp(System.currentTimeMillis()).getTime()
+                )
+                .setNewPosition(
+                        DroneService.Coordinates.newBuilder()
+                                .setX(orderEndPosition[0])
+                                .setY(orderEndPosition[1])
+                                .build()
+                )
+                .setKm(deliveryKm)
+                .setResidualBattery(getBattery());
+
+        for (Measurement m : pollutionSensor.getDeliveryPollution()) {
+            response.addMeasurements(DroneService.Measurement.newBuilder()
+                    .setAvg(m.getValue()).build());
+        }
+
+        setCoordinates(orderEndPosition);
+        incrementTotKm(deliveryKm);
+        incrementTotDeliveries();
+
+        System.out.println("\nDELIVERY COMPLETED: \n\t- New position: [" + orderEndPosition[0] + ", " + orderEndPosition[1] + "]");
         System.out.println("\t- Residual battery: " + getBattery() + "%\n");
         setAvailable(true);
-        return response;
+
+        return response.build();
     }
 
     /*
@@ -379,6 +442,35 @@ public class Drone implements Comparable<Drone>{
         return port;
     }
 
+    public void incrementTotKm(double d) {
+        synchronized (totKmLock) {
+            totKm += d;
+        }
+    }
+
+    public double getTotKm() {
+        double ret;
+        synchronized (totKmLock) {
+            ret = totKm;
+        }
+        return ret;
+    }
+
+    public void incrementTotDeliveries(){
+        synchronized (totDeliveriesLock) {
+            totDeliveries += 1;
+        }
+    }
+
+    public int getTotDeliveries(){
+        int ret;
+        synchronized (totDeliveriesLock) {
+            ret = totDeliveries;
+        }
+        return ret;
+    }
+
+
     public String getInfo(){
         return (isMaster()? "MASTER" : "WORKER") + "\n\t- Id: " + getId() +
                 "\n\t- Address: " + getIp() + ":" + getPort();
@@ -387,13 +479,17 @@ public class Drone implements Comparable<Drone>{
     public String toString(){
         String ret =  "\n======== DRONE INFO ========\n\n" + getInfo();
         ret += "\n\t- Battery level: " + getBattery() + "%";
+        ret += "\n\t- Total km: " + getTotKm();
+        ret += "\n\t- Total deliveries: " + getTotDeliveries();
 
+        /*
         ret += "\n\nOther known drones: [\n";
 
         for (Drone d : getDronesList().getDronesList())
             ret += "\n- " + d.getInfo() + ", \n";
 
         ret += "\n]";
+        */
         return ret + "\n============================\n";
     }
 

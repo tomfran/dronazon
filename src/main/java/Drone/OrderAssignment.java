@@ -53,14 +53,7 @@ public class OrderAssignment extends Thread {
             public void onNext(DroneService.OrderResponse value) {
                 System.out.println("\nORDER COMPLETED:\n\t- order id: " + order.id
                         + "\n\t- drone id: " + receiver.getId() + "\n");
-                queue.addStatistic(value);
-                /*
-                System.out.println(value.getKm());
-                System.out.println(value.getResidualBattery());
-                System.out.println(value.getNewPosition());
-                System.out.println(value.getPollutionAverage());
-                System.out.println(value.getTimestamp());
-                */
+                drone.statisticsMonitor.addStatistic(value);
             }
 
             @Override

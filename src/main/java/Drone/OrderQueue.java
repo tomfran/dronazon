@@ -49,10 +49,13 @@ public class OrderQueue extends Thread{
     public synchronized void retryOrder(Order o){
         synchronized (queueLock){
             orderQueue.addFirst(o);
+            queueLock.notifyAll();
         }
-        notifyAll();
     }
 
+    /*
+    Add a new order to the queue, this will notify the consumer
+     */
     public void produce(Order o){
         synchronized (queueLock){
             orderQueue.add(o);
@@ -71,6 +74,9 @@ public class OrderQueue extends Thread{
         }
     }
 
+    /*
+    Add a thread to the thread list and start it
+     */
     public void addThread(OrderAssignment t){
         synchronized (threadLock){
             threadList.add(t);
@@ -78,10 +84,9 @@ public class OrderQueue extends Thread{
         }
     }
 
-    public synchronized void addStatistic(DroneService.OrderResponse value){
-        //System.out.println("!!!! To implement statistics");
-    }
-
+    /*
+    Getter and setter to manage quit command received at master
+     */
     public boolean getExit() {
         boolean ret;
         synchronized (exitLock){
@@ -106,15 +111,24 @@ public class OrderQueue extends Thread{
 
     public void run() {
         try {
+            // if I set exit, when the queue is empty I quit
             while (!getExit() || !isEmpty()) {
                 Order next = consume();
                 addThread(new OrderAssignment(drone, next, this));
             }
+            /*
+            A notify is called when a thread is removed from the list,
+            if the thread list is empty I can quit
+             */
             synchronized (threadLock){
                 while(!threadList.isEmpty()){
                     threadLock.wait();
                 }
             }
+            /*
+            This will wake up the master waiting in the stop method()
+            He can then proceed to quit
+             */
             synchronized (queueLock) {
                 queueLock.notifyAll();
             }

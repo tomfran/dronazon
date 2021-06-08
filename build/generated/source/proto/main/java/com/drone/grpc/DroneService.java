@@ -4495,69 +4495,36 @@ public final class DroneService {
 
   }
 
-  public interface OrderResponseOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:com.drone.grpc.OrderResponse)
+  public interface MeasurementOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.drone.grpc.Measurement)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>int64 timestamp = 1;</code>
-     * @return The timestamp.
+     * <code>double avg = 1;</code>
+     * @return The avg.
      */
-    long getTimestamp();
-
-    /**
-     * <code>.com.drone.grpc.Coordinates newPosition = 2;</code>
-     * @return Whether the newPosition field is set.
-     */
-    boolean hasNewPosition();
-    /**
-     * <code>.com.drone.grpc.Coordinates newPosition = 2;</code>
-     * @return The newPosition.
-     */
-    com.drone.grpc.DroneService.Coordinates getNewPosition();
-    /**
-     * <code>.com.drone.grpc.Coordinates newPosition = 2;</code>
-     */
-    com.drone.grpc.DroneService.CoordinatesOrBuilder getNewPositionOrBuilder();
-
-    /**
-     * <code>double km = 3;</code>
-     * @return The km.
-     */
-    double getKm();
-
-    /**
-     * <code>int32 pollutionAverage = 4;</code>
-     * @return The pollutionAverage.
-     */
-    int getPollutionAverage();
-
-    /**
-     * <code>int32 residualBattery = 5;</code>
-     * @return The residualBattery.
-     */
-    int getResidualBattery();
+    double getAvg();
   }
   /**
-   * Protobuf type {@code com.drone.grpc.OrderResponse}
+   * Protobuf type {@code com.drone.grpc.Measurement}
    */
-  public  static final class OrderResponse extends
+  public  static final class Measurement extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:com.drone.grpc.OrderResponse)
-      OrderResponseOrBuilder {
+      // @@protoc_insertion_point(message_implements:com.drone.grpc.Measurement)
+      MeasurementOrBuilder {
   private static final long serialVersionUID = 0L;
-    // Use OrderResponse.newBuilder() to construct.
-    private OrderResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // Use Measurement.newBuilder() to construct.
+    private Measurement(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private OrderResponse() {
+    private Measurement() {
     }
 
     @java.lang.Override
     @SuppressWarnings({"unused"})
     protected java.lang.Object newInstance(
         UnusedPrivateParameter unused) {
-      return new OrderResponse();
+      return new Measurement();
     }
 
     @java.lang.Override
@@ -4565,7 +4532,7 @@ public final class DroneService {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private OrderResponse(
+    private Measurement(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -4583,37 +4550,9 @@ public final class DroneService {
             case 0:
               done = true;
               break;
-            case 8: {
+            case 9: {
 
-              timestamp_ = input.readInt64();
-              break;
-            }
-            case 18: {
-              com.drone.grpc.DroneService.Coordinates.Builder subBuilder = null;
-              if (newPosition_ != null) {
-                subBuilder = newPosition_.toBuilder();
-              }
-              newPosition_ = input.readMessage(com.drone.grpc.DroneService.Coordinates.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(newPosition_);
-                newPosition_ = subBuilder.buildPartial();
-              }
-
-              break;
-            }
-            case 25: {
-
-              km_ = input.readDouble();
-              break;
-            }
-            case 32: {
-
-              pollutionAverage_ = input.readInt32();
-              break;
-            }
-            case 40: {
-
-              residualBattery_ = input.readInt32();
+              avg_ = input.readDouble();
               break;
             }
             default: {
@@ -4637,6 +4576,593 @@ public final class DroneService {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
+      return com.drone.grpc.DroneService.internal_static_com_drone_grpc_Measurement_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.drone.grpc.DroneService.internal_static_com_drone_grpc_Measurement_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.drone.grpc.DroneService.Measurement.class, com.drone.grpc.DroneService.Measurement.Builder.class);
+    }
+
+    public static final int AVG_FIELD_NUMBER = 1;
+    private double avg_;
+    /**
+     * <code>double avg = 1;</code>
+     * @return The avg.
+     */
+    public double getAvg() {
+      return avg_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (avg_ != 0D) {
+        output.writeDouble(1, avg_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (avg_ != 0D) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeDoubleSize(1, avg_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.drone.grpc.DroneService.Measurement)) {
+        return super.equals(obj);
+      }
+      com.drone.grpc.DroneService.Measurement other = (com.drone.grpc.DroneService.Measurement) obj;
+
+      if (java.lang.Double.doubleToLongBits(getAvg())
+          != java.lang.Double.doubleToLongBits(
+              other.getAvg())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + AVG_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          java.lang.Double.doubleToLongBits(getAvg()));
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.drone.grpc.DroneService.Measurement parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.drone.grpc.DroneService.Measurement parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.drone.grpc.DroneService.Measurement parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.drone.grpc.DroneService.Measurement parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.drone.grpc.DroneService.Measurement parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.drone.grpc.DroneService.Measurement parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.drone.grpc.DroneService.Measurement parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.drone.grpc.DroneService.Measurement parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.drone.grpc.DroneService.Measurement parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.drone.grpc.DroneService.Measurement parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.drone.grpc.DroneService.Measurement parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.drone.grpc.DroneService.Measurement parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.drone.grpc.DroneService.Measurement prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code com.drone.grpc.Measurement}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.drone.grpc.Measurement)
+        com.drone.grpc.DroneService.MeasurementOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.drone.grpc.DroneService.internal_static_com_drone_grpc_Measurement_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.drone.grpc.DroneService.internal_static_com_drone_grpc_Measurement_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.drone.grpc.DroneService.Measurement.class, com.drone.grpc.DroneService.Measurement.Builder.class);
+      }
+
+      // Construct using com.drone.grpc.DroneService.Measurement.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        avg_ = 0D;
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.drone.grpc.DroneService.internal_static_com_drone_grpc_Measurement_descriptor;
+      }
+
+      @java.lang.Override
+      public com.drone.grpc.DroneService.Measurement getDefaultInstanceForType() {
+        return com.drone.grpc.DroneService.Measurement.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.drone.grpc.DroneService.Measurement build() {
+        com.drone.grpc.DroneService.Measurement result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.drone.grpc.DroneService.Measurement buildPartial() {
+        com.drone.grpc.DroneService.Measurement result = new com.drone.grpc.DroneService.Measurement(this);
+        result.avg_ = avg_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.drone.grpc.DroneService.Measurement) {
+          return mergeFrom((com.drone.grpc.DroneService.Measurement)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.drone.grpc.DroneService.Measurement other) {
+        if (other == com.drone.grpc.DroneService.Measurement.getDefaultInstance()) return this;
+        if (other.getAvg() != 0D) {
+          setAvg(other.getAvg());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.drone.grpc.DroneService.Measurement parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.drone.grpc.DroneService.Measurement) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private double avg_ ;
+      /**
+       * <code>double avg = 1;</code>
+       * @return The avg.
+       */
+      public double getAvg() {
+        return avg_;
+      }
+      /**
+       * <code>double avg = 1;</code>
+       * @param value The avg to set.
+       * @return This builder for chaining.
+       */
+      public Builder setAvg(double value) {
+        
+        avg_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>double avg = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearAvg() {
+        
+        avg_ = 0D;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.drone.grpc.Measurement)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.drone.grpc.Measurement)
+    private static final com.drone.grpc.DroneService.Measurement DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.drone.grpc.DroneService.Measurement();
+    }
+
+    public static com.drone.grpc.DroneService.Measurement getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<Measurement>
+        PARSER = new com.google.protobuf.AbstractParser<Measurement>() {
+      @java.lang.Override
+      public Measurement parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Measurement(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<Measurement> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Measurement> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.drone.grpc.DroneService.Measurement getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface OrderResponseOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.drone.grpc.OrderResponse)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>int32 id = 1;</code>
+     * @return The id.
+     */
+    int getId();
+
+    /**
+     * <code>int64 timestamp = 2;</code>
+     * @return The timestamp.
+     */
+    long getTimestamp();
+
+    /**
+     * <code>.com.drone.grpc.Coordinates newPosition = 3;</code>
+     * @return Whether the newPosition field is set.
+     */
+    boolean hasNewPosition();
+    /**
+     * <code>.com.drone.grpc.Coordinates newPosition = 3;</code>
+     * @return The newPosition.
+     */
+    com.drone.grpc.DroneService.Coordinates getNewPosition();
+    /**
+     * <code>.com.drone.grpc.Coordinates newPosition = 3;</code>
+     */
+    com.drone.grpc.DroneService.CoordinatesOrBuilder getNewPositionOrBuilder();
+
+    /**
+     * <code>double km = 4;</code>
+     * @return The km.
+     */
+    double getKm();
+
+    /**
+     * <code>repeated .com.drone.grpc.Measurement measurements = 5;</code>
+     */
+    java.util.List<com.drone.grpc.DroneService.Measurement> 
+        getMeasurementsList();
+    /**
+     * <code>repeated .com.drone.grpc.Measurement measurements = 5;</code>
+     */
+    com.drone.grpc.DroneService.Measurement getMeasurements(int index);
+    /**
+     * <code>repeated .com.drone.grpc.Measurement measurements = 5;</code>
+     */
+    int getMeasurementsCount();
+    /**
+     * <code>repeated .com.drone.grpc.Measurement measurements = 5;</code>
+     */
+    java.util.List<? extends com.drone.grpc.DroneService.MeasurementOrBuilder> 
+        getMeasurementsOrBuilderList();
+    /**
+     * <code>repeated .com.drone.grpc.Measurement measurements = 5;</code>
+     */
+    com.drone.grpc.DroneService.MeasurementOrBuilder getMeasurementsOrBuilder(
+        int index);
+
+    /**
+     * <code>int32 residualBattery = 6;</code>
+     * @return The residualBattery.
+     */
+    int getResidualBattery();
+  }
+  /**
+   * Protobuf type {@code com.drone.grpc.OrderResponse}
+   */
+  public  static final class OrderResponse extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.drone.grpc.OrderResponse)
+      OrderResponseOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use OrderResponse.newBuilder() to construct.
+    private OrderResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private OrderResponse() {
+      measurements_ = java.util.Collections.emptyList();
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new OrderResponse();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private OrderResponse(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+
+              id_ = input.readInt32();
+              break;
+            }
+            case 16: {
+
+              timestamp_ = input.readInt64();
+              break;
+            }
+            case 26: {
+              com.drone.grpc.DroneService.Coordinates.Builder subBuilder = null;
+              if (newPosition_ != null) {
+                subBuilder = newPosition_.toBuilder();
+              }
+              newPosition_ = input.readMessage(com.drone.grpc.DroneService.Coordinates.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(newPosition_);
+                newPosition_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+            case 33: {
+
+              km_ = input.readDouble();
+              break;
+            }
+            case 42: {
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                measurements_ = new java.util.ArrayList<com.drone.grpc.DroneService.Measurement>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              measurements_.add(
+                  input.readMessage(com.drone.grpc.DroneService.Measurement.parser(), extensionRegistry));
+              break;
+            }
+            case 48: {
+
+              residualBattery_ = input.readInt32();
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
+          measurements_ = java.util.Collections.unmodifiableList(measurements_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
       return com.drone.grpc.DroneService.internal_static_com_drone_grpc_OrderResponse_descriptor;
     }
 
@@ -4648,63 +5174,98 @@ public final class DroneService {
               com.drone.grpc.DroneService.OrderResponse.class, com.drone.grpc.DroneService.OrderResponse.Builder.class);
     }
 
-    public static final int TIMESTAMP_FIELD_NUMBER = 1;
+    public static final int ID_FIELD_NUMBER = 1;
+    private int id_;
+    /**
+     * <code>int32 id = 1;</code>
+     * @return The id.
+     */
+    public int getId() {
+      return id_;
+    }
+
+    public static final int TIMESTAMP_FIELD_NUMBER = 2;
     private long timestamp_;
     /**
-     * <code>int64 timestamp = 1;</code>
+     * <code>int64 timestamp = 2;</code>
      * @return The timestamp.
      */
     public long getTimestamp() {
       return timestamp_;
     }
 
-    public static final int NEWPOSITION_FIELD_NUMBER = 2;
+    public static final int NEWPOSITION_FIELD_NUMBER = 3;
     private com.drone.grpc.DroneService.Coordinates newPosition_;
     /**
-     * <code>.com.drone.grpc.Coordinates newPosition = 2;</code>
+     * <code>.com.drone.grpc.Coordinates newPosition = 3;</code>
      * @return Whether the newPosition field is set.
      */
     public boolean hasNewPosition() {
       return newPosition_ != null;
     }
     /**
-     * <code>.com.drone.grpc.Coordinates newPosition = 2;</code>
+     * <code>.com.drone.grpc.Coordinates newPosition = 3;</code>
      * @return The newPosition.
      */
     public com.drone.grpc.DroneService.Coordinates getNewPosition() {
       return newPosition_ == null ? com.drone.grpc.DroneService.Coordinates.getDefaultInstance() : newPosition_;
     }
     /**
-     * <code>.com.drone.grpc.Coordinates newPosition = 2;</code>
+     * <code>.com.drone.grpc.Coordinates newPosition = 3;</code>
      */
     public com.drone.grpc.DroneService.CoordinatesOrBuilder getNewPositionOrBuilder() {
       return getNewPosition();
     }
 
-    public static final int KM_FIELD_NUMBER = 3;
+    public static final int KM_FIELD_NUMBER = 4;
     private double km_;
     /**
-     * <code>double km = 3;</code>
+     * <code>double km = 4;</code>
      * @return The km.
      */
     public double getKm() {
       return km_;
     }
 
-    public static final int POLLUTIONAVERAGE_FIELD_NUMBER = 4;
-    private int pollutionAverage_;
+    public static final int MEASUREMENTS_FIELD_NUMBER = 5;
+    private java.util.List<com.drone.grpc.DroneService.Measurement> measurements_;
     /**
-     * <code>int32 pollutionAverage = 4;</code>
-     * @return The pollutionAverage.
+     * <code>repeated .com.drone.grpc.Measurement measurements = 5;</code>
      */
-    public int getPollutionAverage() {
-      return pollutionAverage_;
+    public java.util.List<com.drone.grpc.DroneService.Measurement> getMeasurementsList() {
+      return measurements_;
+    }
+    /**
+     * <code>repeated .com.drone.grpc.Measurement measurements = 5;</code>
+     */
+    public java.util.List<? extends com.drone.grpc.DroneService.MeasurementOrBuilder> 
+        getMeasurementsOrBuilderList() {
+      return measurements_;
+    }
+    /**
+     * <code>repeated .com.drone.grpc.Measurement measurements = 5;</code>
+     */
+    public int getMeasurementsCount() {
+      return measurements_.size();
+    }
+    /**
+     * <code>repeated .com.drone.grpc.Measurement measurements = 5;</code>
+     */
+    public com.drone.grpc.DroneService.Measurement getMeasurements(int index) {
+      return measurements_.get(index);
+    }
+    /**
+     * <code>repeated .com.drone.grpc.Measurement measurements = 5;</code>
+     */
+    public com.drone.grpc.DroneService.MeasurementOrBuilder getMeasurementsOrBuilder(
+        int index) {
+      return measurements_.get(index);
     }
 
-    public static final int RESIDUALBATTERY_FIELD_NUMBER = 5;
+    public static final int RESIDUALBATTERY_FIELD_NUMBER = 6;
     private int residualBattery_;
     /**
-     * <code>int32 residualBattery = 5;</code>
+     * <code>int32 residualBattery = 6;</code>
      * @return The residualBattery.
      */
     public int getResidualBattery() {
@@ -4725,20 +5286,23 @@ public final class DroneService {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      if (id_ != 0) {
+        output.writeInt32(1, id_);
+      }
       if (timestamp_ != 0L) {
-        output.writeInt64(1, timestamp_);
+        output.writeInt64(2, timestamp_);
       }
       if (newPosition_ != null) {
-        output.writeMessage(2, getNewPosition());
+        output.writeMessage(3, getNewPosition());
       }
       if (km_ != 0D) {
-        output.writeDouble(3, km_);
+        output.writeDouble(4, km_);
       }
-      if (pollutionAverage_ != 0) {
-        output.writeInt32(4, pollutionAverage_);
+      for (int i = 0; i < measurements_.size(); i++) {
+        output.writeMessage(5, measurements_.get(i));
       }
       if (residualBattery_ != 0) {
-        output.writeInt32(5, residualBattery_);
+        output.writeInt32(6, residualBattery_);
       }
       unknownFields.writeTo(output);
     }
@@ -4749,25 +5313,29 @@ public final class DroneService {
       if (size != -1) return size;
 
       size = 0;
+      if (id_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(1, id_);
+      }
       if (timestamp_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(1, timestamp_);
+          .computeInt64Size(2, timestamp_);
       }
       if (newPosition_ != null) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, getNewPosition());
+          .computeMessageSize(3, getNewPosition());
       }
       if (km_ != 0D) {
         size += com.google.protobuf.CodedOutputStream
-          .computeDoubleSize(3, km_);
+          .computeDoubleSize(4, km_);
       }
-      if (pollutionAverage_ != 0) {
+      for (int i = 0; i < measurements_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(4, pollutionAverage_);
+          .computeMessageSize(5, measurements_.get(i));
       }
       if (residualBattery_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(5, residualBattery_);
+          .computeInt32Size(6, residualBattery_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -4784,6 +5352,8 @@ public final class DroneService {
       }
       com.drone.grpc.DroneService.OrderResponse other = (com.drone.grpc.DroneService.OrderResponse) obj;
 
+      if (getId()
+          != other.getId()) return false;
       if (getTimestamp()
           != other.getTimestamp()) return false;
       if (hasNewPosition() != other.hasNewPosition()) return false;
@@ -4794,8 +5364,8 @@ public final class DroneService {
       if (java.lang.Double.doubleToLongBits(getKm())
           != java.lang.Double.doubleToLongBits(
               other.getKm())) return false;
-      if (getPollutionAverage()
-          != other.getPollutionAverage()) return false;
+      if (!getMeasurementsList()
+          .equals(other.getMeasurementsList())) return false;
       if (getResidualBattery()
           != other.getResidualBattery()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
@@ -4809,6 +5379,8 @@ public final class DroneService {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + ID_FIELD_NUMBER;
+      hash = (53 * hash) + getId();
       hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getTimestamp());
@@ -4819,8 +5391,10 @@ public final class DroneService {
       hash = (37 * hash) + KM_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           java.lang.Double.doubleToLongBits(getKm()));
-      hash = (37 * hash) + POLLUTIONAVERAGE_FIELD_NUMBER;
-      hash = (53 * hash) + getPollutionAverage();
+      if (getMeasurementsCount() > 0) {
+        hash = (37 * hash) + MEASUREMENTS_FIELD_NUMBER;
+        hash = (53 * hash) + getMeasurementsList().hashCode();
+      }
       hash = (37 * hash) + RESIDUALBATTERY_FIELD_NUMBER;
       hash = (53 * hash) + getResidualBattery();
       hash = (29 * hash) + unknownFields.hashCode();
@@ -4951,11 +5525,14 @@ public final class DroneService {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
+          getMeasurementsFieldBuilder();
         }
       }
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        id_ = 0;
+
         timestamp_ = 0L;
 
         if (newPositionBuilder_ == null) {
@@ -4966,8 +5543,12 @@ public final class DroneService {
         }
         km_ = 0D;
 
-        pollutionAverage_ = 0;
-
+        if (measurementsBuilder_ == null) {
+          measurements_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          measurementsBuilder_.clear();
+        }
         residualBattery_ = 0;
 
         return this;
@@ -4996,6 +5577,8 @@ public final class DroneService {
       @java.lang.Override
       public com.drone.grpc.DroneService.OrderResponse buildPartial() {
         com.drone.grpc.DroneService.OrderResponse result = new com.drone.grpc.DroneService.OrderResponse(this);
+        int from_bitField0_ = bitField0_;
+        result.id_ = id_;
         result.timestamp_ = timestamp_;
         if (newPositionBuilder_ == null) {
           result.newPosition_ = newPosition_;
@@ -5003,7 +5586,15 @@ public final class DroneService {
           result.newPosition_ = newPositionBuilder_.build();
         }
         result.km_ = km_;
-        result.pollutionAverage_ = pollutionAverage_;
+        if (measurementsBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) != 0)) {
+            measurements_ = java.util.Collections.unmodifiableList(measurements_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.measurements_ = measurements_;
+        } else {
+          result.measurements_ = measurementsBuilder_.build();
+        }
         result.residualBattery_ = residualBattery_;
         onBuilt();
         return result;
@@ -5053,6 +5644,9 @@ public final class DroneService {
 
       public Builder mergeFrom(com.drone.grpc.DroneService.OrderResponse other) {
         if (other == com.drone.grpc.DroneService.OrderResponse.getDefaultInstance()) return this;
+        if (other.getId() != 0) {
+          setId(other.getId());
+        }
         if (other.getTimestamp() != 0L) {
           setTimestamp(other.getTimestamp());
         }
@@ -5062,8 +5656,31 @@ public final class DroneService {
         if (other.getKm() != 0D) {
           setKm(other.getKm());
         }
-        if (other.getPollutionAverage() != 0) {
-          setPollutionAverage(other.getPollutionAverage());
+        if (measurementsBuilder_ == null) {
+          if (!other.measurements_.isEmpty()) {
+            if (measurements_.isEmpty()) {
+              measurements_ = other.measurements_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureMeasurementsIsMutable();
+              measurements_.addAll(other.measurements_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.measurements_.isEmpty()) {
+            if (measurementsBuilder_.isEmpty()) {
+              measurementsBuilder_.dispose();
+              measurementsBuilder_ = null;
+              measurements_ = other.measurements_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              measurementsBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getMeasurementsFieldBuilder() : null;
+            } else {
+              measurementsBuilder_.addAllMessages(other.measurements_);
+            }
+          }
         }
         if (other.getResidualBattery() != 0) {
           setResidualBattery(other.getResidualBattery());
@@ -5096,17 +5713,48 @@ public final class DroneService {
         }
         return this;
       }
+      private int bitField0_;
+
+      private int id_ ;
+      /**
+       * <code>int32 id = 1;</code>
+       * @return The id.
+       */
+      public int getId() {
+        return id_;
+      }
+      /**
+       * <code>int32 id = 1;</code>
+       * @param value The id to set.
+       * @return This builder for chaining.
+       */
+      public Builder setId(int value) {
+        
+        id_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 id = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearId() {
+        
+        id_ = 0;
+        onChanged();
+        return this;
+      }
 
       private long timestamp_ ;
       /**
-       * <code>int64 timestamp = 1;</code>
+       * <code>int64 timestamp = 2;</code>
        * @return The timestamp.
        */
       public long getTimestamp() {
         return timestamp_;
       }
       /**
-       * <code>int64 timestamp = 1;</code>
+       * <code>int64 timestamp = 2;</code>
        * @param value The timestamp to set.
        * @return This builder for chaining.
        */
@@ -5117,7 +5765,7 @@ public final class DroneService {
         return this;
       }
       /**
-       * <code>int64 timestamp = 1;</code>
+       * <code>int64 timestamp = 2;</code>
        * @return This builder for chaining.
        */
       public Builder clearTimestamp() {
@@ -5131,14 +5779,14 @@ public final class DroneService {
       private com.google.protobuf.SingleFieldBuilderV3<
           com.drone.grpc.DroneService.Coordinates, com.drone.grpc.DroneService.Coordinates.Builder, com.drone.grpc.DroneService.CoordinatesOrBuilder> newPositionBuilder_;
       /**
-       * <code>.com.drone.grpc.Coordinates newPosition = 2;</code>
+       * <code>.com.drone.grpc.Coordinates newPosition = 3;</code>
        * @return Whether the newPosition field is set.
        */
       public boolean hasNewPosition() {
         return newPositionBuilder_ != null || newPosition_ != null;
       }
       /**
-       * <code>.com.drone.grpc.Coordinates newPosition = 2;</code>
+       * <code>.com.drone.grpc.Coordinates newPosition = 3;</code>
        * @return The newPosition.
        */
       public com.drone.grpc.DroneService.Coordinates getNewPosition() {
@@ -5149,7 +5797,7 @@ public final class DroneService {
         }
       }
       /**
-       * <code>.com.drone.grpc.Coordinates newPosition = 2;</code>
+       * <code>.com.drone.grpc.Coordinates newPosition = 3;</code>
        */
       public Builder setNewPosition(com.drone.grpc.DroneService.Coordinates value) {
         if (newPositionBuilder_ == null) {
@@ -5165,7 +5813,7 @@ public final class DroneService {
         return this;
       }
       /**
-       * <code>.com.drone.grpc.Coordinates newPosition = 2;</code>
+       * <code>.com.drone.grpc.Coordinates newPosition = 3;</code>
        */
       public Builder setNewPosition(
           com.drone.grpc.DroneService.Coordinates.Builder builderForValue) {
@@ -5179,7 +5827,7 @@ public final class DroneService {
         return this;
       }
       /**
-       * <code>.com.drone.grpc.Coordinates newPosition = 2;</code>
+       * <code>.com.drone.grpc.Coordinates newPosition = 3;</code>
        */
       public Builder mergeNewPosition(com.drone.grpc.DroneService.Coordinates value) {
         if (newPositionBuilder_ == null) {
@@ -5197,7 +5845,7 @@ public final class DroneService {
         return this;
       }
       /**
-       * <code>.com.drone.grpc.Coordinates newPosition = 2;</code>
+       * <code>.com.drone.grpc.Coordinates newPosition = 3;</code>
        */
       public Builder clearNewPosition() {
         if (newPositionBuilder_ == null) {
@@ -5211,7 +5859,7 @@ public final class DroneService {
         return this;
       }
       /**
-       * <code>.com.drone.grpc.Coordinates newPosition = 2;</code>
+       * <code>.com.drone.grpc.Coordinates newPosition = 3;</code>
        */
       public com.drone.grpc.DroneService.Coordinates.Builder getNewPositionBuilder() {
         
@@ -5219,7 +5867,7 @@ public final class DroneService {
         return getNewPositionFieldBuilder().getBuilder();
       }
       /**
-       * <code>.com.drone.grpc.Coordinates newPosition = 2;</code>
+       * <code>.com.drone.grpc.Coordinates newPosition = 3;</code>
        */
       public com.drone.grpc.DroneService.CoordinatesOrBuilder getNewPositionOrBuilder() {
         if (newPositionBuilder_ != null) {
@@ -5230,7 +5878,7 @@ public final class DroneService {
         }
       }
       /**
-       * <code>.com.drone.grpc.Coordinates newPosition = 2;</code>
+       * <code>.com.drone.grpc.Coordinates newPosition = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           com.drone.grpc.DroneService.Coordinates, com.drone.grpc.DroneService.Coordinates.Builder, com.drone.grpc.DroneService.CoordinatesOrBuilder> 
@@ -5248,14 +5896,14 @@ public final class DroneService {
 
       private double km_ ;
       /**
-       * <code>double km = 3;</code>
+       * <code>double km = 4;</code>
        * @return The km.
        */
       public double getKm() {
         return km_;
       }
       /**
-       * <code>double km = 3;</code>
+       * <code>double km = 4;</code>
        * @param value The km to set.
        * @return This builder for chaining.
        */
@@ -5266,7 +5914,7 @@ public final class DroneService {
         return this;
       }
       /**
-       * <code>double km = 3;</code>
+       * <code>double km = 4;</code>
        * @return This builder for chaining.
        */
       public Builder clearKm() {
@@ -5276,46 +5924,256 @@ public final class DroneService {
         return this;
       }
 
-      private int pollutionAverage_ ;
+      private java.util.List<com.drone.grpc.DroneService.Measurement> measurements_ =
+        java.util.Collections.emptyList();
+      private void ensureMeasurementsIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          measurements_ = new java.util.ArrayList<com.drone.grpc.DroneService.Measurement>(measurements_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.drone.grpc.DroneService.Measurement, com.drone.grpc.DroneService.Measurement.Builder, com.drone.grpc.DroneService.MeasurementOrBuilder> measurementsBuilder_;
+
       /**
-       * <code>int32 pollutionAverage = 4;</code>
-       * @return The pollutionAverage.
+       * <code>repeated .com.drone.grpc.Measurement measurements = 5;</code>
        */
-      public int getPollutionAverage() {
-        return pollutionAverage_;
+      public java.util.List<com.drone.grpc.DroneService.Measurement> getMeasurementsList() {
+        if (measurementsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(measurements_);
+        } else {
+          return measurementsBuilder_.getMessageList();
+        }
       }
       /**
-       * <code>int32 pollutionAverage = 4;</code>
-       * @param value The pollutionAverage to set.
-       * @return This builder for chaining.
+       * <code>repeated .com.drone.grpc.Measurement measurements = 5;</code>
        */
-      public Builder setPollutionAverage(int value) {
-        
-        pollutionAverage_ = value;
-        onChanged();
+      public int getMeasurementsCount() {
+        if (measurementsBuilder_ == null) {
+          return measurements_.size();
+        } else {
+          return measurementsBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .com.drone.grpc.Measurement measurements = 5;</code>
+       */
+      public com.drone.grpc.DroneService.Measurement getMeasurements(int index) {
+        if (measurementsBuilder_ == null) {
+          return measurements_.get(index);
+        } else {
+          return measurementsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .com.drone.grpc.Measurement measurements = 5;</code>
+       */
+      public Builder setMeasurements(
+          int index, com.drone.grpc.DroneService.Measurement value) {
+        if (measurementsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureMeasurementsIsMutable();
+          measurements_.set(index, value);
+          onChanged();
+        } else {
+          measurementsBuilder_.setMessage(index, value);
+        }
         return this;
       }
       /**
-       * <code>int32 pollutionAverage = 4;</code>
-       * @return This builder for chaining.
+       * <code>repeated .com.drone.grpc.Measurement measurements = 5;</code>
        */
-      public Builder clearPollutionAverage() {
-        
-        pollutionAverage_ = 0;
-        onChanged();
+      public Builder setMeasurements(
+          int index, com.drone.grpc.DroneService.Measurement.Builder builderForValue) {
+        if (measurementsBuilder_ == null) {
+          ensureMeasurementsIsMutable();
+          measurements_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          measurementsBuilder_.setMessage(index, builderForValue.build());
+        }
         return this;
+      }
+      /**
+       * <code>repeated .com.drone.grpc.Measurement measurements = 5;</code>
+       */
+      public Builder addMeasurements(com.drone.grpc.DroneService.Measurement value) {
+        if (measurementsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureMeasurementsIsMutable();
+          measurements_.add(value);
+          onChanged();
+        } else {
+          measurementsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.drone.grpc.Measurement measurements = 5;</code>
+       */
+      public Builder addMeasurements(
+          int index, com.drone.grpc.DroneService.Measurement value) {
+        if (measurementsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureMeasurementsIsMutable();
+          measurements_.add(index, value);
+          onChanged();
+        } else {
+          measurementsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.drone.grpc.Measurement measurements = 5;</code>
+       */
+      public Builder addMeasurements(
+          com.drone.grpc.DroneService.Measurement.Builder builderForValue) {
+        if (measurementsBuilder_ == null) {
+          ensureMeasurementsIsMutable();
+          measurements_.add(builderForValue.build());
+          onChanged();
+        } else {
+          measurementsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.drone.grpc.Measurement measurements = 5;</code>
+       */
+      public Builder addMeasurements(
+          int index, com.drone.grpc.DroneService.Measurement.Builder builderForValue) {
+        if (measurementsBuilder_ == null) {
+          ensureMeasurementsIsMutable();
+          measurements_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          measurementsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.drone.grpc.Measurement measurements = 5;</code>
+       */
+      public Builder addAllMeasurements(
+          java.lang.Iterable<? extends com.drone.grpc.DroneService.Measurement> values) {
+        if (measurementsBuilder_ == null) {
+          ensureMeasurementsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, measurements_);
+          onChanged();
+        } else {
+          measurementsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.drone.grpc.Measurement measurements = 5;</code>
+       */
+      public Builder clearMeasurements() {
+        if (measurementsBuilder_ == null) {
+          measurements_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          measurementsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.drone.grpc.Measurement measurements = 5;</code>
+       */
+      public Builder removeMeasurements(int index) {
+        if (measurementsBuilder_ == null) {
+          ensureMeasurementsIsMutable();
+          measurements_.remove(index);
+          onChanged();
+        } else {
+          measurementsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .com.drone.grpc.Measurement measurements = 5;</code>
+       */
+      public com.drone.grpc.DroneService.Measurement.Builder getMeasurementsBuilder(
+          int index) {
+        return getMeasurementsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .com.drone.grpc.Measurement measurements = 5;</code>
+       */
+      public com.drone.grpc.DroneService.MeasurementOrBuilder getMeasurementsOrBuilder(
+          int index) {
+        if (measurementsBuilder_ == null) {
+          return measurements_.get(index);  } else {
+          return measurementsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .com.drone.grpc.Measurement measurements = 5;</code>
+       */
+      public java.util.List<? extends com.drone.grpc.DroneService.MeasurementOrBuilder> 
+           getMeasurementsOrBuilderList() {
+        if (measurementsBuilder_ != null) {
+          return measurementsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(measurements_);
+        }
+      }
+      /**
+       * <code>repeated .com.drone.grpc.Measurement measurements = 5;</code>
+       */
+      public com.drone.grpc.DroneService.Measurement.Builder addMeasurementsBuilder() {
+        return getMeasurementsFieldBuilder().addBuilder(
+            com.drone.grpc.DroneService.Measurement.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.drone.grpc.Measurement measurements = 5;</code>
+       */
+      public com.drone.grpc.DroneService.Measurement.Builder addMeasurementsBuilder(
+          int index) {
+        return getMeasurementsFieldBuilder().addBuilder(
+            index, com.drone.grpc.DroneService.Measurement.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .com.drone.grpc.Measurement measurements = 5;</code>
+       */
+      public java.util.List<com.drone.grpc.DroneService.Measurement.Builder> 
+           getMeasurementsBuilderList() {
+        return getMeasurementsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.drone.grpc.DroneService.Measurement, com.drone.grpc.DroneService.Measurement.Builder, com.drone.grpc.DroneService.MeasurementOrBuilder> 
+          getMeasurementsFieldBuilder() {
+        if (measurementsBuilder_ == null) {
+          measurementsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.drone.grpc.DroneService.Measurement, com.drone.grpc.DroneService.Measurement.Builder, com.drone.grpc.DroneService.MeasurementOrBuilder>(
+                  measurements_,
+                  ((bitField0_ & 0x00000001) != 0),
+                  getParentForChildren(),
+                  isClean());
+          measurements_ = null;
+        }
+        return measurementsBuilder_;
       }
 
       private int residualBattery_ ;
       /**
-       * <code>int32 residualBattery = 5;</code>
+       * <code>int32 residualBattery = 6;</code>
        * @return The residualBattery.
        */
       public int getResidualBattery() {
         return residualBattery_;
       }
       /**
-       * <code>int32 residualBattery = 5;</code>
+       * <code>int32 residualBattery = 6;</code>
        * @param value The residualBattery to set.
        * @return This builder for chaining.
        */
@@ -5326,7 +6184,7 @@ public final class DroneService {
         return this;
       }
       /**
-       * <code>int32 residualBattery = 5;</code>
+       * <code>int32 residualBattery = 6;</code>
        * @return This builder for chaining.
        */
       public Builder clearResidualBattery() {
@@ -7365,6 +8223,11 @@ public final class DroneService {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_drone_grpc_OrderRequest_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_drone_grpc_Measurement_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_drone_grpc_Measurement_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_drone_grpc_OrderResponse_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -7412,25 +8275,27 @@ public final class DroneService {
       "\005\022\020\n\010isMaster\030\002 \001(\010\"p\n\014OrderRequest\022\n\n\002i" +
       "d\030\001 \001(\005\022*\n\005start\030\002 \001(\0132\033.com.drone.grpc." +
       "Coordinates\022(\n\003end\030\003 \001(\0132\033.com.drone.grp" +
-      "c.Coordinates\"\223\001\n\rOrderResponse\022\021\n\ttimes" +
-      "tamp\030\001 \001(\003\0220\n\013newPosition\030\002 \001(\0132\033.com.dr" +
-      "one.grpc.Coordinates\022\n\n\002km\030\003 \001(\001\022\030\n\020poll" +
-      "utionAverage\030\004 \001(\005\022\027\n\017residualBattery\030\005 " +
-      "\001(\005\"\r\n\013PingRequest\" \n\014PingResponse\022\020\n\010is" +
-      "Master\030\001 \001(\010\"?\n\017ElectionRequest\022\n\n\002id\030\001 " +
-      "\001(\005\022\017\n\007battery\030\002 \001(\005\022\017\n\007elected\030\003 \001(\010\"\022\n" +
-      "\020ElectionResponse2T\n\nInfoGetter\022F\n\007GetIn" +
-      "fo\022\033.com.drone.grpc.InfoRequest\032\034.com.dr" +
-      "one.grpc.InfoResponse\"\0002a\n\nInfoSender\022S\n" +
-      "\010SendInfo\022!.com.drone.grpc.SenderInfoReq" +
-      "uest\032\".com.drone.grpc.SenderInfoResponse" +
-      "\"\0002_\n\017OrderAssignment\022L\n\013AssignOrder\022\034.c" +
-      "om.drone.grpc.OrderRequest\032\035.com.drone.g" +
-      "rpc.OrderResponse\"\0002L\n\004Ping\022D\n\005Alive\022\033.c" +
-      "om.drone.grpc.PingRequest\032\034.com.drone.gr" +
-      "pc.PingResponse\"\0002X\n\010Election\022L\n\005elect\022\037" +
-      ".com.drone.grpc.ElectionRequest\032 .com.dr" +
-      "one.grpc.ElectionResponse\"\000b\006proto3"
+      "c.Coordinates\"\032\n\013Measurement\022\013\n\003avg\030\001 \001(" +
+      "\001\"\270\001\n\rOrderResponse\022\n\n\002id\030\001 \001(\005\022\021\n\ttimes" +
+      "tamp\030\002 \001(\003\0220\n\013newPosition\030\003 \001(\0132\033.com.dr" +
+      "one.grpc.Coordinates\022\n\n\002km\030\004 \001(\001\0221\n\014meas" +
+      "urements\030\005 \003(\0132\033.com.drone.grpc.Measurem" +
+      "ent\022\027\n\017residualBattery\030\006 \001(\005\"\r\n\013PingRequ" +
+      "est\" \n\014PingResponse\022\020\n\010isMaster\030\001 \001(\010\"?\n" +
+      "\017ElectionRequest\022\n\n\002id\030\001 \001(\005\022\017\n\007battery\030" +
+      "\002 \001(\005\022\017\n\007elected\030\003 \001(\010\"\022\n\020ElectionRespon" +
+      "se2T\n\nInfoGetter\022F\n\007GetInfo\022\033.com.drone." +
+      "grpc.InfoRequest\032\034.com.drone.grpc.InfoRe" +
+      "sponse\"\0002a\n\nInfoSender\022S\n\010SendInfo\022!.com" +
+      ".drone.grpc.SenderInfoRequest\032\".com.dron" +
+      "e.grpc.SenderInfoResponse\"\0002_\n\017OrderAssi" +
+      "gnment\022L\n\013AssignOrder\022\034.com.drone.grpc.O" +
+      "rderRequest\032\035.com.drone.grpc.OrderRespon" +
+      "se\"\0002L\n\004Ping\022D\n\005Alive\022\033.com.drone.grpc.P" +
+      "ingRequest\032\034.com.drone.grpc.PingResponse" +
+      "\"\0002X\n\010Election\022L\n\005elect\022\037.com.drone.grpc" +
+      ".ElectionRequest\032 .com.drone.grpc.Electi" +
+      "onResponse\"\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -7472,32 +8337,38 @@ public final class DroneService {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_drone_grpc_OrderRequest_descriptor,
         new java.lang.String[] { "Id", "Start", "End", });
-    internal_static_com_drone_grpc_OrderResponse_descriptor =
+    internal_static_com_drone_grpc_Measurement_descriptor =
       getDescriptor().getMessageTypes().get(6);
+    internal_static_com_drone_grpc_Measurement_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_drone_grpc_Measurement_descriptor,
+        new java.lang.String[] { "Avg", });
+    internal_static_com_drone_grpc_OrderResponse_descriptor =
+      getDescriptor().getMessageTypes().get(7);
     internal_static_com_drone_grpc_OrderResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_drone_grpc_OrderResponse_descriptor,
-        new java.lang.String[] { "Timestamp", "NewPosition", "Km", "PollutionAverage", "ResidualBattery", });
+        new java.lang.String[] { "Id", "Timestamp", "NewPosition", "Km", "Measurements", "ResidualBattery", });
     internal_static_com_drone_grpc_PingRequest_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(8);
     internal_static_com_drone_grpc_PingRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_drone_grpc_PingRequest_descriptor,
         new java.lang.String[] { });
     internal_static_com_drone_grpc_PingResponse_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(9);
     internal_static_com_drone_grpc_PingResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_drone_grpc_PingResponse_descriptor,
         new java.lang.String[] { "IsMaster", });
     internal_static_com_drone_grpc_ElectionRequest_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(10);
     internal_static_com_drone_grpc_ElectionRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_drone_grpc_ElectionRequest_descriptor,
         new java.lang.String[] { "Id", "Battery", "Elected", });
     internal_static_com_drone_grpc_ElectionResponse_descriptor =
-      getDescriptor().getMessageTypes().get(10);
+      getDescriptor().getMessageTypes().get(11);
     internal_static_com_drone_grpc_ElectionResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_drone_grpc_ElectionResponse_descriptor,

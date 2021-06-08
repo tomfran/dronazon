@@ -174,8 +174,10 @@ public class DronesList {
                 closest = d;
             }
         }
-        if (closest != null)
+        if (closest != null) {
             closest.setAvailable(false);
+            closest.decreaseBattery();
+        }
 
         return closest;
     }
