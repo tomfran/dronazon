@@ -74,18 +74,22 @@ public class AdminClient {
             if(command != 0)
                 sc.nextLine();
             System.out.print(commandList);
-            command = sc.nextInt();
-            switch (command) {
-                case 1: getDrones(); break;
-                case 2: getNStats(); break;
-                case 3: getAvgDeliveries(); break;
-                case 4: getAvgkm(); break;
-                case 5: System.exit(0);
-                default:
-                    System.out.println("Please enter a valid command.");
+            try{
+                command = sc.nextInt();
+                switch (command) {
+                    case 1: getDrones(); break;
+                    case 2: getNStats(); break;
+                    case 3: getAvgDeliveries(); break;
+                    case 4: getAvgkm(); break;
+                    case 5: System.exit(0);
+                    default:
+                        System.out.println("Please enter a valid command.");
+                }
+                System.out.print("\nPress ENTER to continue...");
+                sc.nextLine();
+            } catch (Exception e){
+                System.out.println("Please enter a valid command.");
             }
-            System.out.print("\nPress ENTER to continue...");
-            sc.nextLine();
         }
     }
 

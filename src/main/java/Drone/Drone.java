@@ -39,8 +39,12 @@ public class Drone implements Comparable<Drone>{
 
     protected double totKm;
     private final Object totKmLock;
+
     protected int totDeliveries;
     private final Object totDeliveriesLock;
+
+    protected boolean isQuitting;
+    private final Object isQuittingLock;
 
     /*
     Master fields, and required locks
@@ -70,6 +74,7 @@ public class Drone implements Comparable<Drone>{
         coordinates = new int[2];
         restMethods = new RestMethods(this);
         isAvailable = true;
+        isQuitting = false;
         successor = null;
         totKm = 0;
         totDeliveries = 0;
@@ -80,6 +85,7 @@ public class Drone implements Comparable<Drone>{
         masterLock = new Object();
         totDeliveriesLock = new Object();
         totKmLock = new Object();
+        isQuittingLock = new Object();
         isParticipant = false;
     }
 
@@ -98,6 +104,7 @@ public class Drone implements Comparable<Drone>{
         masterLock = new Object();
         totDeliveriesLock = new Object();
         totKmLock = new Object();
+        isQuittingLock = new Object();
     }
 
     /*
@@ -167,77 +174,81 @@ public class Drone implements Comparable<Drone>{
     master it also empty the order queue and send the stats to the REST API.
      */
     public void stop() {
-        System.out.println("\n\nQUIT RECEIVED:");
+        if(!isQuitting()) {
+            setIsQuitting(true);
+            System.out.println("\n\nQUIT RECEIVED:");
 
         /*
         Disconnect mqtt client to not receive new orders
          */
-        if (isMaster())
-            monitorOrders.disconnect();
+            if (isMaster())
+                monitorOrders.disconnect();
 
         /*
         Wait if there is an election in progress
          */
-        while(isParticipant()){
-            System.out.println("\t- Election in progress, can't quit now...");
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            while (isParticipant()) {
+                System.out.println("\t- Election in progress, can't quit now...");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-        }
 
         /*
         A delivery is in progress, need to wait
          */
-        while(!isAvailable()){
-            System.out.println("\t- Delivery in progress, can't quit now...");
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            while (!isAvailable()) {
+                System.out.println("\t- Delivery in progress, can't quit now...");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-        }
 
-        if (isMaster()){
-            // this make sure to run orderqueue until it's empty
-            orderQueue.setExit(true);
+            if (isMaster()) {
+                // this make sure to run orderqueue until it's empty
+                orderQueue.setExit(true);
             /*
             if orders are still in the queue, notifyAll, as
             there might be a produce that's stuck.
             Then wait on the queue, there will be a notify when all the
             current deliveries are finished
              */
-            if(!orderQueue.isEmpty()) {
-                System.out.println(orderQueue);
-                try {
-                    synchronized (orderQueue.queueLock) {
-                        orderQueue.queueLock.notifyAll();
-                        orderQueue.queueLock.wait();
+                if (!orderQueue.isEmpty()) {
+                    System.out.println(orderQueue);
+                    try {
+                        synchronized (orderQueue.queueLock) {
+                            orderQueue.queueLock.notifyAll();
+                            orderQueue.queueLock.wait();
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
-            }
-            System.out.println("\t- All orders have been assigned\n" +
-                    "\t- Sending statistics to the REST API...");
+                System.out.println("\t- All orders have been assigned\n" +
+                        "\t- Sending statistics to the REST API...");
 
-            synchronized (statisticsMonitor.statisticLock) {
-                try {
-                    statisticsMonitor.statisticLock.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                synchronized (statisticsMonitor.statisticLock) {
+                    try {
+                        statisticsMonitor.statisticLock.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
+                System.out.println("\t- STATS SENT");
             }
-            System.out.println("\t- STATS SENT");
+
+            grpcServer.interrupt();
+            System.out.println("\t- GRPC server interrupted");
+            restMethods.quit();
+            System.out.println("\t- REST API delete sent");
+            System.exit(0);
+        } else {
+            System.out.println("QUIT IS ALREADY IN PROGRESS");
         }
-
-        grpcServer.interrupt();
-        System.out.println("\t- GRPC server interrupted");
-        restMethods.quit();
-        System.out.println("\t- REST API delete sent");
-        System.exit(0);
-
     }
 
     /*
@@ -468,6 +479,20 @@ public class Drone implements Comparable<Drone>{
             ret = totDeliveries;
         }
         return ret;
+    }
+
+    public boolean isQuitting() {
+        boolean ret;
+        synchronized (isQuittingLock) {
+            ret = isQuitting;
+        }
+        return ret;
+    }
+
+    public void setIsQuitting(boolean b) {
+        synchronized (isQuittingLock) {
+            isQuitting = b;
+        }
     }
 
 
