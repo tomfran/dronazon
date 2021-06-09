@@ -178,15 +178,15 @@ public class Drone implements Comparable<Drone>{
             setIsQuitting(true);
             System.out.println("\n\nQUIT RECEIVED:");
 
-        /*
-        Disconnect mqtt client to not receive new orders
-         */
+            /*
+            Disconnect mqtt client to not receive new orders
+             */
             if (isMaster())
                 monitorOrders.disconnect();
 
-        /*
-        Wait if there is an election in progress
-         */
+            /*
+            Wait if there is an election in progress
+             */
             while (isParticipant()) {
                 System.out.println("\t- Election in progress, can't quit now...");
                 try {
@@ -196,9 +196,9 @@ public class Drone implements Comparable<Drone>{
                 }
             }
 
-        /*
-        A delivery is in progress, need to wait
-         */
+            /*
+            A delivery is in progress, need to wait
+             */
             while (!isAvailable()) {
                 System.out.println("\t- Delivery in progress, can't quit now...");
                 try {
@@ -211,12 +211,12 @@ public class Drone implements Comparable<Drone>{
             if (isMaster()) {
                 // this make sure to run orderqueue until it's empty
                 orderQueue.setExit(true);
-            /*
-            if orders are still in the queue, notifyAll, as
-            there might be a produce that's stuck.
-            Then wait on the queue, there will be a notify when all the
-            current deliveries are finished
-             */
+                /*
+                if orders are still in the queue, notifyAll, as
+                there might be a produce that's stuck.
+                Then wait on the queue, there will be a notify when all the
+                current deliveries are finished
+                 */
                 if (!orderQueue.isEmpty()) {
                     System.out.println(orderQueue);
                     try {

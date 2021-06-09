@@ -17,12 +17,16 @@ public class OrderAssignmentImpl extends OrderAssignmentImplBase {
     @Override
     public void assignOrder(OrderRequest request, StreamObserver<OrderResponse> responseObserver) {
         System.out.println("ORDER ASSIGNMENT RECEIVED: \n\t- order id: " + request.getId());
-        OrderResponse response = drone.deliver(request);
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
-        if (response.getResidualBattery() < 15){
-            System.out.println("\nLOW BATTERY WARNING: exiting the network!");
-            drone.stop();
+        if (drone.getBattery() < 15){
+            responseObserver.onError(new Exception());
+        } else {
+            OrderResponse response = drone.deliver(request);
+            responseObserver.onNext(response);
+            if (response.getResidualBattery() < 15) {
+                System.out.println("\nLOW BATTERY WARNING: exiting the network!");
+                drone.stop();
+            }
         }
+        responseObserver.onCompleted();
     }
 }

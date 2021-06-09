@@ -176,7 +176,8 @@ public class DronesList {
         }
         if (closest != null) {
             closest.setAvailable(false);
-            closest.decreaseBattery();
+            if (closest != this.drone)
+                closest.decreaseBattery();
         }
 
         return closest;
