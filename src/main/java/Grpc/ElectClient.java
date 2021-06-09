@@ -31,8 +31,6 @@ public class ElectClient extends Thread{
         senderDrone.enterRing();
         receiverDrone = senderDrone.getSuccessor();
 
-        ElectClient pointer = this;
-
         final ManagedChannel channel =
                 ManagedChannelBuilder.forTarget(receiverDrone.getIp() + ":" + receiverDrone.getPort())
                 .usePlaintext().build();
