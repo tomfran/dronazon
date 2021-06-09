@@ -72,28 +72,21 @@ public class DronesList {
 
     /*
     Add a new Drone to the list
-    TODO simple drone does not need all of this info
+    If I am not the master, I set the coordinates to -1, -1, so
+    during the order assignment I can stop
      */
     public synchronized void addNewDrone(DroneService.SenderInfoRequest value){
         dronesList.add(new Drone(
                 value.getId(),
                 value.getIp(),
                 value.getPort(),
-                new int[]{value.getPosition().getX(), value.getPosition().getY()},
+                ((drone.isMaster())?
+                        new int[]{value.getPosition().getX(), value.getPosition().getY()} :
+                        new int[]{-1, -1}),
                 value.getResidualBattery(),
                 value.getIsMaster(),
                 value.getAvailable()
         ));
-    }
-
-    /*
-    Called when an info request fails
-     */
-    public synchronized void invalidateDrone(int listIndex) {
-        // method used to invalidate a drone entry
-        Drone d = getDronesList().get(listIndex);
-        d.coordinates[0] = -1;
-        d.coordinates[1] = -1;
     }
 
     /*
@@ -166,6 +159,9 @@ public class DronesList {
         list.add(drone);
 
         for ( Drone d : list ) {
+            if(d.getX() == -1){
+                return null;
+            }
             Double currentDistance = distance(o.startCoordinates, d.getCoordinates());
             if ((d.isAvailable() && d.getBattery() > 15) && (closest == null || currentDistance.compareTo(dist) < 0 ||
                     (currentDistance.compareTo(dist) == 0 && d.getBattery() > maxBattery))) {

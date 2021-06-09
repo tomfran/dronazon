@@ -52,8 +52,8 @@ public class GetInfoClient extends Thread {
 
             @Override
             public void onError(Throwable t) {
-                //System.out.println("GET INFO ERROR");
-                senderDrone.getDronesList().invalidateDrone(listIndex);
+                System.out.println("GET INFO ERROR, removing the drone");
+                senderDrone.getDronesList().remove(receiverDrone);
             }
 
             @Override

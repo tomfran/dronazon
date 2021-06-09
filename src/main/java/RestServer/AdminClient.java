@@ -69,8 +69,8 @@ public class AdminClient {
     public static void main(String[] args){
         System.out.println("==== Smart-city ADMIN CLIENT ====\n");
         int command = 0;
-
-        while (true) {
+        boolean exit = false;
+        while (!exit) {
             if(command != 0)
                 sc.nextLine();
             System.out.print(commandList);
@@ -81,16 +81,19 @@ public class AdminClient {
                     case 2: getNStats(); break;
                     case 3: getAvgDeliveries(); break;
                     case 4: getAvgkm(); break;
-                    case 5: System.exit(0);
+                    case 5: exit = true; break;
                     default:
                         System.out.println("Please enter a valid command.");
                 }
                 System.out.print("\nPress ENTER to continue...");
                 sc.nextLine();
             } catch (Exception e){
+                command = 0;
                 System.out.println("Please enter a valid command.");
             }
         }
+        sc.close();
+        System.exit(0);
     }
 
 
