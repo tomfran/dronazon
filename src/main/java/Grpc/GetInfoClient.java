@@ -39,21 +39,14 @@ public class GetInfoClient extends Thread {
         stub.getInfo(req, new StreamObserver<InfoResponse>() {
             @Override
             public void onNext(InfoResponse value) {
-                /*
-
-                System.out.println("DRONE RESPONSE");
-                System.out.println(value.getId());
-                System.out.println(value.getPosition().getX() + ", " + value.getPosition().getY());
-                System.out.println(value.getResidualBattery());
-                System.out.println(value.getIsMaster());
-                 */
                 senderDrone.getDronesList().updateDrone(value, listIndex);
             }
 
             @Override
             public void onError(Throwable t) {
-                System.out.println("GET INFO ERROR, removing the drone");
+                System.out.println("GET INFO ERROR, removing drone " + receiverDrone.getId());
                 senderDrone.getDronesList().remove(receiverDrone);
+                channel.shutdown();
             }
 
             @Override

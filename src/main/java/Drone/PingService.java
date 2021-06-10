@@ -19,18 +19,21 @@ public class PingService extends Thread{
         TimerTask tt = new TimerTask() {
             @Override
             public void run() {
-                ArrayList<AliveClient> threads = new ArrayList<>();
-                for ( Drone d : drone.getDronesList().getDronesList()) {
-                    AliveClient t = new AliveClient(drone, d);
-                    threads.add(t);
-                    t.start();
-                }
-
-                for ( AliveClient t : threads ){
-                    try {
-                        t.join();
-                    } catch (InterruptedException e) {
-                        System.out.println("Interrupted exception in join");
+                if(!drone.isMaster()) {
+                    AliveClient t = null;
+                    for (Drone d : drone.getDronesList().getDronesList()) {
+                        if (d.isMaster()) {
+                            t = new AliveClient(drone, d);
+                            t.start();
+                            break;
+                        }
+                    }
+                    if (t != null) {
+                        try {
+                            t.join();
+                        } catch (InterruptedException e) {
+                            System.out.println("Interrupted exception in join");
+                        }
                     }
                 }
             };

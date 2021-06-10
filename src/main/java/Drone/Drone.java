@@ -132,7 +132,7 @@ public class Drone implements Comparable<Drone>{
 
         // becomeMaster, it is a separate function
         // as one might become it later
-        if (isMaster)
+        if (isMaster())
             becomeMaster();
 
         pingService = new PingService(this);

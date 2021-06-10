@@ -121,8 +121,8 @@ RestServer/StartServer.java
  RestServer.StartServer
 RestServer/beans/CoordDroneList.java
  RestServer.beans.CoordDroneList
-Drone/OrderQueue.java
- Drone.OrderQueue
+RestServer/AdminClient.java
+ RestServer.AdminClient
 Simulators/Measurement.java
  Simulators.Measurement
 com/drone/grpc/InfoGetterGrpc.java
@@ -185,5 +185,5 @@ Drone/DronesList.java
  Drone.DronesList
 Simulators/PollutionSensor.java
  Simulators.PollutionSensor
-RestServer/AdminClient.java
- RestServer.AdminClient
+Drone/OrderQueue.java
+ Drone.OrderQueue

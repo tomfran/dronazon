@@ -49,7 +49,8 @@ public class ElectClient extends Thread{
 
                 @Override
                 public void onError(Throwable t) {
-                    System.out.println("\nELECTION ERROR: caused by " + receiverDrone.getId());
+                    System.out.println("\nSuccessor is dead, forwarding to the next");
+                    senderDrone.getDronesList().remove(receiverDrone);
                     senderDrone.forwardElection(request);
                     channel.shutdown();
                 }

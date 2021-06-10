@@ -25,6 +25,7 @@ public class AliveClient extends Thread{
         master an election is started
          */
     public void start() {
+        //System.out.println("Ping service started to drone: " + receiverDrone.getId());
         final ManagedChannel channel =
                 ManagedChannelBuilder.forTarget(receiverDrone.getIp() + ":" + receiverDrone.getPort())
                         .usePlaintext().build();
@@ -41,15 +42,14 @@ public class AliveClient extends Thread{
 
             @Override
             public void onError(Throwable t) {
-                System.out.println("PING ERROR: drone " + receiverDrone.getId() + " is offline");
+                channel.shutdown();
+                //System.out.println("PING ERROR: drone " + receiverDrone.getId() + " is offline");
                 senderDrone.getDronesList().remove(receiverDrone);
 
                 if (receiverDrone.isMaster()) {
-                    System.out.println("MASTER DOWN: starting election");
+                    //System.out.println("MASTER DOWN: starting election");
                     senderDrone.startElection();
                 }
-
-                channel.shutdown();
             }
 
             @Override

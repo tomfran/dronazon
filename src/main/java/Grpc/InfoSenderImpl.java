@@ -16,7 +16,7 @@ public class InfoSenderImpl extends InfoSenderImplBase {
 
     @Override
     public void sendInfo(SenderInfoRequest request, StreamObserver<SenderInfoResponse> responseObserver) {
-        //System.out.println("GRPC Send info received at drone " + drone.getId());
+        System.out.println("GRPC Send info received from " + request.getId() );
         drone.getDronesList().addNewDrone(request);
 
         SenderInfoResponse response = SenderInfoResponse.newBuilder()
