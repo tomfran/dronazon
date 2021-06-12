@@ -1,7 +1,7 @@
-RestServer/services/StatsService.java
- RestServer.services.StatsService
-RestServer/beans/Statistics.java
- RestServer.beans.Statistics
+RestServer/beans/Drone.java
+ RestServer.beans.Drone
+Simulators/Measurement.java
+ Simulators.Measurement
 com/drone/grpc/DroneService.java
  com.drone.grpc.DroneService
  com.drone.grpc.DroneService$1
@@ -70,8 +70,8 @@ com/drone/grpc/OrderAssignmentGrpc.java
  com.drone.grpc.OrderAssignmentGrpc$OrderAssignmentStub
 Simulators/Simulator.java
  Simulators.Simulator
-Dronazon/Dronazon.java
- Dronazon.Dronazon
+RestServer/AdminClient.java
+ RestServer.AdminClient
 com/drone/grpc/ElectionGrpc.java
  com.drone.grpc.ElectionGrpc
  com.drone.grpc.ElectionGrpc$1
@@ -87,8 +87,8 @@ RestServer/beans/Statistic.java
  RestServer.beans.Statistic
 Simulators/Buffer.java
  Simulators.Buffer
-RestServer/beans/Drone.java
- RestServer.beans.Drone
+RestServer/services/StatsService.java
+ RestServer.services.StatsService
 Simulators/MeasurementsBuffer.java
  Simulators.MeasurementsBuffer
 Simulators/PM10Simulator.java
@@ -121,10 +121,10 @@ RestServer/StartServer.java
  RestServer.StartServer
 RestServer/beans/CoordDroneList.java
  RestServer.beans.CoordDroneList
-RestServer/AdminClient.java
- RestServer.AdminClient
-Simulators/Measurement.java
- Simulators.Measurement
+Dronazon/Dronazon.java
+ Dronazon.Dronazon
+RestServer/beans/Statistics.java
+ RestServer.beans.Statistics
 com/drone/grpc/InfoGetterGrpc.java
  com.drone.grpc.InfoGetterGrpc
  com.drone.grpc.InfoGetterGrpc$1

@@ -131,8 +131,10 @@ public class RestMethods {
             ClientResponse response = webResource.type("application/json")
                     .post(ClientResponse.class, payload);
 
+            /*
             // if the id is not present in the system
             int status = response.getStatus();
+
 
             if (status == 200) {
                 System.out.println("STATISTIC SENT TO THE REST API");
@@ -140,6 +142,7 @@ public class RestMethods {
             } else {
                 System.out.println("ERROR SENDING STATISTIC: status code " + status);
             }
+             */
         } catch (Exception e) {
             e.printStackTrace();
         }

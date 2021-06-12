@@ -15,10 +15,12 @@ public class ElectionImpl extends ElectionImplBase {
 
     @Override
     public void elect(ElectionRequest request, StreamObserver<ElectionResponse> responseObserver) {
+
         System.out.println("\nElection message received:");
         System.out.println("\t- id: " + request.getId());
         System.out.println("\t- battery: " + request.getBattery());
         System.out.println("\t- elected: " + request.getElected());
+
         boolean master = false;
         // if this drone is being elected
         if (request.getElected() && request.getId() == drone.getId()){
@@ -79,7 +81,6 @@ public class ElectionImpl extends ElectionImplBase {
         System.out.println("\t- id: " + chosenId);
         System.out.println("\t- battery: " + battery);
         System.out.println("\t- elected: " + elected);
-
 
         return ElectionRequest.newBuilder()
                 .setId(chosenId)

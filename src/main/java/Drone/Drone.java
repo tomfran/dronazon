@@ -188,9 +188,9 @@ public class Drone implements Comparable<Drone>{
             Wait if there is an election in progress
              */
             while (isParticipant()) {
-                System.out.println("\t- Election in progress, can't quit now...");
+                //System.out.println("\t- Election in progress, can't quit now...");
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -200,9 +200,9 @@ public class Drone implements Comparable<Drone>{
             A delivery is in progress, need to wait
              */
             while (!isAvailable()) {
-                System.out.println("\t- Delivery in progress, can't quit now...");
+                //System.out.println("\t- Delivery in progress, can't quit now...");
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
