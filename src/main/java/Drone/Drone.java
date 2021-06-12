@@ -151,23 +151,21 @@ public class Drone implements Comparable<Drone>{
      */
     public synchronized void becomeMaster(){
         setParticipant(false);
-        if(!isMaster()) {
-            setMaster(true);
-            System.out.println("\nBECOMING THE NEW MASTER:");
-            // request drones infos
-            dronesList.requestDronesInfo();
-            System.out.println("\t- Other drones info requested");
-            // start the order queue
-            orderQueue = new OrderQueue(this);
-            monitorOrders = new MonitorOrders(this, orderQueue);
-            orderQueue.start();
-            System.out.println("\t- Order queue started");
-            // start the order monitor mqtt client
-            monitorOrders.start();
-            System.out.println("\t- MQTT client started\n\n");
-            statisticsMonitor = new StatisticsMonitor(this);
-            statisticsMonitor.start();
-        }
+        setMaster(true);
+        System.out.println("\nBECOMING THE NEW MASTER:");
+        // request drones infos
+        dronesList.requestDronesInfo();
+        System.out.println("\t- Other drones info requested");
+        // start the order queue
+        orderQueue = new OrderQueue(this);
+        monitorOrders = new MonitorOrders(this, orderQueue);
+        orderQueue.start();
+        System.out.println("\t- Order queue started");
+        // start the order monitor mqtt client
+        monitorOrders.start();
+        System.out.println("\t- MQTT client started\n\n");
+        statisticsMonitor = new StatisticsMonitor(this);
+        statisticsMonitor.start();
     }
 
     /*
