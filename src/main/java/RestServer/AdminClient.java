@@ -1,9 +1,15 @@
 package RestServer;
 
+import RestServer.beans.Drone;
 import RestServer.beans.Drones;
+import com.google.gson.Gson;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -23,12 +29,21 @@ public class AdminClient {
             "Insert a command between 1 and 5: ";
 
     private static void getDrones(){
-        System.out.println("\nDRONES IN THE SYSTEM: \n");
         WebResource webResource = client
                 .resource(restBaseAddressDrones + "get");
         ClientResponse response = webResource.type("application/json")
                 .get(ClientResponse.class);
-        System.out.println(response.getEntity(String.class));
+        try {
+            JSONArray r = new JSONArray(response.getEntity(String.class));
+            System.out.println( (r.length() > 0)? "Drones in the smart city: \n" : "No drones found\n");
+            for (int i = 0; i < r.length(); i++) {
+                JSONObject d = r.getJSONObject(i);
+                System.out.println((i+1)+". drone: " + "\n\t- id: "+ d.getInt("id")
+                + "\n\t- ip: " + d.getString("ip") + "\n\t- port: " + d.getInt("port") + '\n');
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void getNStats(){
@@ -38,7 +53,22 @@ public class AdminClient {
                 .resource(restBaseAddressStatistics + "get/" + n);
         ClientResponse response = webResource.type("application/json")
                 .get(ClientResponse.class);
-        System.out.println(response.getEntity(String.class));
+        try {
+            JSONArray r = new JSONArray(response.getEntity(String.class));
+            System.out.println( (r.length() > 0)? "LAST STATISTICS: \n" : "No statistics found\n");
+            for (int i = 0; i < r.length(); i++) {
+                JSONObject d = r.getJSONObject(i);
+                System.out.println((i+1)+". statistic: "
+                        + "\n\t- avgDelivery: "+ d.getDouble("avgDelivery")
+                        + "\n\t- avgKm: " + d.getDouble("avgKm")
+                        + "\n\t- avgPollution: " + d.getDouble("avgPollution")
+                        + "\n\t- avgBattery: " + d.getDouble("avgBattery")
+                        + "\n\t- timestamp: " + d.getLong("timestamp")
+                        + '\n');
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void getAvgDeliveries(){
@@ -50,7 +80,10 @@ public class AdminClient {
                 .resource(restBaseAddressStatistics + "get/delivery/" + t1 + "-" + t2);
         ClientResponse response = webResource.type("application/json")
                 .get(ClientResponse.class);
-        System.out.println(response.getEntity(String.class));
+
+        System.out.println("Average number of deliveries " +
+                "between " + t1 + " and " + t2 + ": " +
+                response.getEntity(String.class));
     }
 
     private static void getAvgkm(){
@@ -62,7 +95,9 @@ public class AdminClient {
                 .resource(restBaseAddressStatistics + "get/km/" + t1 + "-" + t2);
         ClientResponse response = webResource.type("application/json")
                 .get(ClientResponse.class);
-        System.out.println(response.getEntity(String.class));
+        System.out.println("Average number of km " +
+                "between " + t1 + " and " + t2 + ": " +
+                response.getEntity(String.class));
     }
 
 
@@ -71,8 +106,6 @@ public class AdminClient {
         int command = 0;
         boolean exit = false;
         while (!exit) {
-            if(command != 0)
-                sc.nextLine();
             System.out.print(commandList);
             try{
                 command = sc.nextInt();
@@ -85,8 +118,6 @@ public class AdminClient {
                     default:
                         System.out.println("Please enter a valid command.");
                 }
-                System.out.print("\nPress ENTER to continue...");
-                sc.nextLine();
             } catch (Exception e){
                 command = 0;
                 System.out.println("Please enter a valid command.");
