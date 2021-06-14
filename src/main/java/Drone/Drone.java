@@ -188,20 +188,24 @@ public class Drone implements Comparable<Drone>{
             Disconnect mqtt client to not receive new orders
              */
             if (isMaster()) {
-                if (monitorOrders != null) {
+                try {
                     monitorOrders.disconnect();
+                } catch (NullPointerException e ) {
+                    System.out.println("Monitor orders was not initialized");
                 }
             }
-
             /*
             Wait if there is an election in progress
              */
             while (isParticipant()) {
                 //System.out.println("\t- Election in progress, can't quit now...");
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                synchronized (participantLock) {
+
+                    try {
+                        participantLock.wait(3000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
@@ -209,43 +213,55 @@ public class Drone implements Comparable<Drone>{
             A delivery is in progress, need to wait
              */
             while (!isAvailable()) {
-                //System.out.println("\t- Delivery in progress, can't quit now...");
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                System.out.println("\t- Delivery in progress, can't quit now...");
+                synchronized (isAvailableLock) {
+                    try {
+                        isAvailableLock.wait(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
             if (isMaster()) {
                 // this make sure to run orderqueue until it's empty
-                orderQueue.setExit(true);
+                try {
+                    orderQueue.setExit(true);
                 /*
                 if orders are still in the queue, notifyAll, as
                 there might be a produce that's stuck.
                 Then wait on the queue, there will be a notify when all the
                 current deliveries are finished
                  */
-                if (!orderQueue.isEmpty()) {
-                    System.out.println(orderQueue);
-                    try {
-                        synchronized (orderQueue.queueLock) {
-                            orderQueue.queueLock.notifyAll();
-                            orderQueue.queueLock.wait();
+                    if (!orderQueue.isEmpty()) {
+                        System.out.println(orderQueue);
+                        try {
+                            synchronized (orderQueue.queueLock) {
+                                orderQueue.queueLock.notifyAll();
+                                orderQueue.queueLock.wait();
+                            }
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
                     }
+                } catch (NullPointerException e ){
+                    System.out.println("Order queue was not initialized");
                 }
                 System.out.println("\t- All orders have been assigned\n" +
                         "\t- Sending statistics to the REST API...");
-
-                synchronized (statisticsMonitor.statisticLock) {
-                    try {
-                        statisticsMonitor.statisticLock.wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                try {
+                    synchronized (statisticsMonitor.statisticLock) {
+                        statisticsMonitor.statisticLock.notify();
                     }
+                    synchronized (statisticsMonitor.statisticLock) {
+                        try {
+                            statisticsMonitor.statisticLock.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (NullPointerException e ){
+                    System.out.println("Statistic monitor was not initialized");
                 }
                 System.out.println("\t- STATS SENT");
             }
@@ -259,7 +275,6 @@ public class Drone implements Comparable<Drone>{
             System.out.println("QUIT IS ALREADY IN PROGRESS");
         }
     }
-
     /*
     Enter the ring overlay network,
     The function computes the predecessor and successor,
