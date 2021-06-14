@@ -92,18 +92,19 @@ public class StatisticsMonitor extends Thread{
     }
 
     public void start() {
-        Timer t = new Timer();
-        TimerTask tt = new TimerTask() {
-            @Override
-            public void run() {
-                synchronized (statisticLock) {
-                    Statistic ret = getStatisticAndClean();
-                    if (ret.getAvgDelivery() > 0)
-                        drone.restMethods.sendStatistic(ret);
-                    statisticLock.notify();
+
+        while (true) {
+            synchronized (statisticLock) {
+                try {
+                    statisticLock.wait(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-            };
-        };
-        t.scheduleAtFixedRate(tt,new Date(),10000);
+                Statistic ret = getStatisticAndClean();
+                if (ret.getAvgDelivery() > 0)
+                    drone.restMethods.sendStatistic(ret);
+                statisticLock.notify();
+            }
+        }
     }
 }

@@ -63,7 +63,7 @@ public class Drone implements Comparable<Drone>{
     private PingService pingService;
     private QuitDrone quitDrone;
     private PrintDroneInfo printDroneInfo;
-    private PollutionSensor pollutionSensor;
+    protected PollutionSensor pollutionSensor;
 
     public Drone(int id, String ip, int port) {
         this.id = id;
@@ -187,9 +187,13 @@ public class Drone implements Comparable<Drone>{
             /*
             Disconnect mqtt client to not receive new orders
              */
-            if (isMaster())
-                monitorOrders.disconnect();
-
+            if (isMaster()) {
+                try {
+                    monitorOrders.disconnect();
+                } catch (NullPointerException e ) {
+                    System.out.println("Monitor orders was not initialized");
+                }
+            }
             /*
             Wait if there is an election in progress
              */
@@ -198,7 +202,7 @@ public class Drone implements Comparable<Drone>{
                 synchronized (participantLock) {
 
                     try {
-                        participantLock.wait(500);
+                        participantLock.wait(3000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -209,10 +213,10 @@ public class Drone implements Comparable<Drone>{
             A delivery is in progress, need to wait
              */
             while (!isAvailable()) {
-                //System.out.println("\t- Delivery in progress, can't quit now...");
+                System.out.println("\t- Delivery in progress, can't quit now...");
                 synchronized (isAvailableLock) {
                     try {
-                        isAvailableLock.wait(500);
+                        isAvailableLock.wait(2000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -221,33 +225,43 @@ public class Drone implements Comparable<Drone>{
 
             if (isMaster()) {
                 // this make sure to run orderqueue until it's empty
-                orderQueue.setExit(true);
+                try {
+                    orderQueue.setExit(true);
                 /*
                 if orders are still in the queue, notifyAll, as
                 there might be a produce that's stuck.
                 Then wait on the queue, there will be a notify when all the
                 current deliveries are finished
                  */
-                if (!orderQueue.isEmpty()) {
-                    System.out.println(orderQueue);
-                    try {
-                        synchronized (orderQueue.queueLock) {
-                            orderQueue.queueLock.notifyAll();
-                            orderQueue.queueLock.wait();
+                    if (!orderQueue.isEmpty()) {
+                        System.out.println(orderQueue);
+                        try {
+                            synchronized (orderQueue.queueLock) {
+                                orderQueue.queueLock.notifyAll();
+                                orderQueue.queueLock.wait();
+                            }
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
                     }
+                } catch (NullPointerException e ){
+                    System.out.println("Order queue was not initialized");
                 }
                 System.out.println("\t- All orders have been assigned\n" +
                         "\t- Sending statistics to the REST API...");
-
-                synchronized (statisticsMonitor.statisticLock) {
-                    try {
-                        statisticsMonitor.statisticLock.wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                try {
+                    synchronized (statisticsMonitor.statisticLock) {
+                        statisticsMonitor.statisticLock.notify();
                     }
+                    synchronized (statisticsMonitor.statisticLock) {
+                        try {
+                            statisticsMonitor.statisticLock.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (NullPointerException e ){
+                    System.out.println("Statistic monitor was not initialized");
                 }
                 System.out.println("\t- STATS SENT");
             }
@@ -336,9 +350,14 @@ public class Drone implements Comparable<Drone>{
                 .setKm(deliveryKm)
                 .setResidualBattery(getBattery());
 
-        for (Measurement m : pollutionSensor.getDeliveryPollution()) {
+        try {
+            for (Measurement m : pollutionSensor.getDeliveryPollution()) {
+                response.addMeasurements(DroneService.Measurement.newBuilder()
+                        .setAvg(m.getValue()).build());
+            }
+        } catch (NullPointerException e ) {
             response.addMeasurements(DroneService.Measurement.newBuilder()
-                    .setAvg(m.getValue()).build());
+                    .setAvg(0).build());
         }
 
         setCoordinates(orderEndPosition);

@@ -70,8 +70,17 @@ com/drone/grpc/OrderAssignmentGrpc.java
  com.drone.grpc.OrderAssignmentGrpc$OrderAssignmentStub
 Simulators/Simulator.java
  Simulators.Simulator
-Dronazon/Dronazon.java
- Dronazon.Dronazon
+com/drone/grpc/InfoGetterGrpc.java
+ com.drone.grpc.InfoGetterGrpc
+ com.drone.grpc.InfoGetterGrpc$1
+ com.drone.grpc.InfoGetterGrpc$InfoGetterBaseDescriptorSupplier
+ com.drone.grpc.InfoGetterGrpc$InfoGetterBlockingStub
+ com.drone.grpc.InfoGetterGrpc$InfoGetterFileDescriptorSupplier
+ com.drone.grpc.InfoGetterGrpc$InfoGetterFutureStub
+ com.drone.grpc.InfoGetterGrpc$InfoGetterImplBase
+ com.drone.grpc.InfoGetterGrpc$InfoGetterMethodDescriptorSupplier
+ com.drone.grpc.InfoGetterGrpc$InfoGetterStub
+ com.drone.grpc.InfoGetterGrpc$MethodHandlers
 com/drone/grpc/ElectionGrpc.java
  com.drone.grpc.ElectionGrpc
  com.drone.grpc.ElectionGrpc$1
@@ -125,17 +134,8 @@ RestServer/AdminClient.java
  RestServer.AdminClient
 RestServer/beans/Statistics.java
  RestServer.beans.Statistics
-com/drone/grpc/InfoGetterGrpc.java
- com.drone.grpc.InfoGetterGrpc
- com.drone.grpc.InfoGetterGrpc$1
- com.drone.grpc.InfoGetterGrpc$InfoGetterBaseDescriptorSupplier
- com.drone.grpc.InfoGetterGrpc$InfoGetterBlockingStub
- com.drone.grpc.InfoGetterGrpc$InfoGetterFileDescriptorSupplier
- com.drone.grpc.InfoGetterGrpc$InfoGetterFutureStub
- com.drone.grpc.InfoGetterGrpc$InfoGetterImplBase
- com.drone.grpc.InfoGetterGrpc$InfoGetterMethodDescriptorSupplier
- com.drone.grpc.InfoGetterGrpc$InfoGetterStub
- com.drone.grpc.InfoGetterGrpc$MethodHandlers
+Dronazon/Dronazon.java
+ Dronazon.Dronazon
 Grpc/ElectClient.java
  Grpc.ElectClient
  Grpc.ElectClient$1
@@ -159,7 +159,6 @@ Grpc/InfoGetterImpl.java
  Grpc.InfoGetterImpl
 Drone/StatisticsMonitor.java
  Drone.StatisticsMonitor
- Drone.StatisticsMonitor$1
 Grpc/ElectionImpl.java
  Grpc.ElectionImpl
 Grpc/PingImpl.java

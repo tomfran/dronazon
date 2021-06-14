@@ -45,15 +45,18 @@ public class Dronazon {
 
             Random rd = new Random();
 
-            for (int i = 0; i < 1000; i++) {
-                Order o = generateRandomOrder(rd, i);
-                String payload = o.getJson();
-                MqttMessage message = new MqttMessage(payload.getBytes());
-                message.setQos(qos);
-                System.out.println(clientId + " Publishing order: " + payload + " ...");
-                client.publish(topic, message);
-                System.out.println(clientId + " Order published");
-                Thread.sleep(5000);
+            Object sleep = new Object();
+            synchronized (sleep) {
+                for (int i = 0; i < 1000; i++) {
+                    Order o = generateRandomOrder(rd, i);
+                    String payload = o.getJson();
+                    MqttMessage message = new MqttMessage(payload.getBytes());
+                    message.setQos(qos);
+                    System.out.println(clientId + " Publishing order: " + payload + " ...");
+                    client.publish(topic, message);
+                    System.out.println(clientId + " Order published");
+                    sleep.wait(5000);
+                }
             }
 
             if (client.isConnected())
