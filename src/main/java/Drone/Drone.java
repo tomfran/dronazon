@@ -349,11 +349,16 @@ public class Drone implements Comparable<Drone>{
                 .setKm(deliveryKm)
                 .setResidualBattery(getBattery());
 
-        for (Measurement m : pollutionSensor.getDeliveryPollution()) {
+        try {
+            for (Measurement m : pollutionSensor.getDeliveryPollution()) {
+                response.addMeasurements(DroneService.Measurement.newBuilder()
+                        .setAvg(m.getValue()).build());
+            }
+        } catch (NullPointerException e ) {
             response.addMeasurements(DroneService.Measurement.newBuilder()
-                    .setAvg(m.getValue()).build());
+                    .setAvg(0).build());
         }
-
+        
         setCoordinates(orderEndPosition);
         incrementTotKm(deliveryKm);
         incrementTotDeliveries();
