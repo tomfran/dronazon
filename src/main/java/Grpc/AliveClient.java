@@ -47,7 +47,7 @@ public class AliveClient extends Thread{
                 senderDrone.getDronesList().remove(receiverDrone);
 
                 if (receiverDrone.isMaster()) {
-                    //System.out.println("MASTER DOWN: starting election");
+                    System.out.println("MASTER DOWN: starting election");
                     senderDrone.startElection();
                 }
             }

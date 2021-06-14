@@ -157,15 +157,21 @@ public class Drone implements Comparable<Drone>{
         dronesList.requestDronesInfo();
         System.out.println("\t- Other drones info requested");
         // start the order queue
-        orderQueue = new OrderQueue(this);
-        monitorOrders = new MonitorOrders(this, orderQueue);
-        orderQueue.start();
-        System.out.println("\t- Order queue started");
-        // start the order monitor mqtt client
-        monitorOrders.start();
-        System.out.println("\t- MQTT client started\n\n");
-        statisticsMonitor = new StatisticsMonitor(this);
-        statisticsMonitor.start();
+        if (orderQueue == null) {
+            orderQueue = new OrderQueue(this);
+            orderQueue.start();
+            System.out.println("\t- Order queue started");
+        }
+        if (monitorOrders == null) {
+            monitorOrders = new MonitorOrders(this, orderQueue);
+            // start the order monitor mqtt client
+            monitorOrders.start();
+            System.out.println("\t- MQTT client started\n\n");
+        }
+        if(statisticsMonitor == null) {
+            statisticsMonitor = new StatisticsMonitor(this);
+            statisticsMonitor.start();
+        }
     }
 
     /*
@@ -181,8 +187,11 @@ public class Drone implements Comparable<Drone>{
             /*
             Disconnect mqtt client to not receive new orders
              */
-            if (isMaster())
-                monitorOrders.disconnect();
+            if (isMaster()) {
+                if (monitorOrders != null) {
+                    monitorOrders.disconnect();
+                }
+            }
 
             /*
             Wait if there is an election in progress
