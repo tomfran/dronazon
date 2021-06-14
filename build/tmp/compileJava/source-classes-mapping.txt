@@ -139,8 +139,9 @@ com/drone/grpc/InfoGetterGrpc.java
 Grpc/ElectClient.java
  Grpc.ElectClient
  Grpc.ElectClient$1
-Drone/OrderQueue.java
- Drone.OrderQueue
+Drone/PingService.java
+ Drone.PingService
+ Drone.PingService$1
 Drone/OrderAssignment.java
  Drone.OrderAssignment
  Drone.OrderAssignment$1
@@ -165,8 +166,9 @@ Grpc/PingImpl.java
  Grpc.PingImpl
 Grpc/OrderAssignmentImpl.java
  Grpc.OrderAssignmentImpl
-Simulators/PollutionSensor.java
- Simulators.PollutionSensor
+Grpc/AliveClient.java
+ Grpc.AliveClient
+ Grpc.AliveClient$1
 Grpc/GetInfoClient.java
  Grpc.GetInfoClient
  Grpc.GetInfoClient$1
@@ -181,9 +183,7 @@ Drone/RestMethods.java
  Drone.RestMethods
 Drone/DronesList.java
  Drone.DronesList
-Drone/PingService.java
- Drone.PingService
- Drone.PingService$1
-Grpc/AliveClient.java
- Grpc.AliveClient
- Grpc.AliveClient$1
+Simulators/PollutionSensor.java
+ Simulators.PollutionSensor
+Drone/OrderQueue.java
+ Drone.OrderQueue
