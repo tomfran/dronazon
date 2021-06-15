@@ -20,12 +20,16 @@ public class AdminClient {
     public static Client client = Client.create();
     public static Scanner sc=new Scanner(System.in);
 
-    static String commandList = "\nAvailable methods:\n\n" +
-            "\t(1) Get drones in the smart-city\n" +
-            "\t(2) Get last N stats from the smart-city\n" +
-            "\t(3) Get the average number of deliveries between two timestamps\n" +
-            "\t(4) Get the average km between two timestamps\n" +
-            "\t(5) Quit\n\n" +
+    static String commandList = "Available methods:\n\n" +
+            "\t1) GET DRONES:\n" +
+            "\t\t\tno parameters needed\n" +
+            "\t2) GET LAST N STATISTICS:\n" +
+            "\t\t\tneed to specify an integer after choosing the command\n" +
+            "\t3) GET AVERAGE DELIVERIES\n" +
+            "\t\t\tneed to enter start and end timestamp in long format\n" +
+            "\t4) GET AVERAGE KILOMETERS\n" +
+            "\t\t\tneed to enter start and end timestamp in long format\n" +
+            "\t5) QUIT \n\n" +
             "Insert a command between 1 and 5: ";
 
     private static void getDrones(){
@@ -35,7 +39,7 @@ public class AdminClient {
                 .get(ClientResponse.class);
         try {
             JSONArray r = new JSONArray(response.getEntity(String.class));
-            System.out.println( (r.length() > 0)? "Drones in the smart city: \n" : "No drones found\n");
+            System.out.println( (r.length() > 0)? "\nDrones in the smart city: \n" : "\nNo drones found\n");
             for (int i = 0; i < r.length(); i++) {
                 JSONObject d = r.getJSONObject(i);
                 System.out.println((i+1)+". drone: " + "\n\t- id: "+ d.getInt("id")
@@ -47,15 +51,15 @@ public class AdminClient {
     }
 
     private static void getNStats(){
-        System.out.print("\nEnter the number of statistics you want: ");
-        int n = sc.nextInt();
+        System.out.print("Enter the number of statistics you want: ");
+        String n = sc.nextLine();
         WebResource webResource = client
                 .resource(restBaseAddressStatistics + "get/" + n);
         ClientResponse response = webResource.type("application/json")
                 .get(ClientResponse.class);
         try {
             JSONArray r = new JSONArray(response.getEntity(String.class));
-            System.out.println( (r.length() > 0)? "LAST STATISTICS: \n" : "No statistics found\n");
+            System.out.println( (r.length() > 0)? "\nLAST STATISTICS: \n" : "\nNo statistics found\n");
             for (int i = 0; i < r.length(); i++) {
                 JSONObject d = r.getJSONObject(i);
                 System.out.println((i+1)+". statistic: "
@@ -72,7 +76,7 @@ public class AdminClient {
     }
 
     private static void getAvgDeliveries(){
-        System.out.print("\nEnter the start timestamp: ");
+        System.out.print("Enter the start timestamp: ");
         long t1 = sc.nextLong();
         System.out.print("Enter the end timestamp: ");
         long t2 = sc.nextLong();
@@ -81,7 +85,7 @@ public class AdminClient {
         ClientResponse response = webResource.type("application/json")
                 .get(ClientResponse.class);
 
-        System.out.println("Average number of deliveries " +
+        System.out.println("\nAverage number of deliveries " +
                 "between " + t1 + " and " + t2 + ": " +
                 response.getEntity(String.class));
     }
@@ -95,7 +99,7 @@ public class AdminClient {
                 .resource(restBaseAddressStatistics + "get/km/" + t1 + "-" + t2);
         ClientResponse response = webResource.type("application/json")
                 .get(ClientResponse.class);
-        System.out.println("Average number of km " +
+        System.out.println("\nAverage number of km " +
                 "between " + t1 + " and " + t2 + ": " +
                 response.getEntity(String.class));
     }
@@ -103,23 +107,37 @@ public class AdminClient {
 
     public static void main(String[] args){
         System.out.println("==== Smart-city ADMIN CLIENT ====\n");
-        int command = 0;
+        String command = "1";
         boolean exit = false;
         while (!exit) {
-            System.out.print(commandList);
+            System.out.print((!command.equals(""))? commandList : "");
             try{
-                command = sc.nextInt();
-                switch (command) {
-                    case 1: getDrones(); break;
-                    case 2: getNStats(); break;
-                    case 3: getAvgDeliveries(); break;
-                    case 4: getAvgkm(); break;
-                    case 5: exit = true; break;
-                    default:
-                        System.out.println("Please enter a valid command.");
+                command = sc.nextLine();
+                if (!command.equals("")) {
+                    int c = Integer.parseInt(command);
+                    switch (c) {
+                        case 1:
+                            getDrones();
+                            break;
+                        case 2:
+                            getNStats();
+                            break;
+                        case 3:
+                            getAvgDeliveries();
+                            break;
+                        case 4:
+                            getAvgkm();
+                            break;
+                        case 5:
+                            exit = true;
+                            break;
+                        default:
+                            System.out.println("Please enter a valid command.");
+                    }
                 }
             } catch (Exception e){
-                command = 0;
+                e.printStackTrace();
+                command = "";
                 System.out.println("Please enter a valid command.");
             }
         }

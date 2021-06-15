@@ -14,8 +14,8 @@ Grpc/ElectionImpl.java
  Grpc.ElectionImpl
 Simulators/Simulator.java
  Simulators.Simulator
-RestServer/AdminClient.java
- RestServer.AdminClient
+Simulators/Measurement.java
+ Simulators.Measurement
 com/drone/grpc/ElectionGrpc.java
  com.drone.grpc.ElectionGrpc
  com.drone.grpc.ElectionGrpc$1
@@ -59,8 +59,8 @@ RestServer/beans/CoordDroneList.java
 Grpc/ElectClient.java
  Grpc.ElectClient
  Grpc.ElectClient$1
-RestServer/beans/Statistics.java
- RestServer.beans.Statistics
+Dronazon/Dronazon.java
+ Dronazon.Dronazon
 com/drone/grpc/InfoGetterGrpc.java
  com.drone.grpc.InfoGetterGrpc
  com.drone.grpc.InfoGetterGrpc$1
@@ -147,8 +147,8 @@ Drone/StatisticsMonitor.java
  Drone.StatisticsMonitor$1
 Simulators/Buffer.java
  Simulators.Buffer
-RestServer/services/StatsService.java
- RestServer.services.StatsService
+Simulators/PollutionSensor.java
+ Simulators.PollutionSensor
 com/drone/grpc/OrderAssignmentGrpc.java
  com.drone.grpc.OrderAssignmentGrpc
  com.drone.grpc.OrderAssignmentGrpc$1
@@ -181,9 +181,9 @@ Dronazon/Order.java
  Dronazon.Order
 Drone/RestMethods.java
  Drone.RestMethods
-Simulators/Measurement.java
- Simulators.Measurement
-Simulators/PollutionSensor.java
- Simulators.PollutionSensor
-Dronazon/Dronazon.java
- Dronazon.Dronazon
+RestServer/beans/Statistics.java
+ RestServer.beans.Statistics
+RestServer/services/StatsService.java
+ RestServer.services.StatsService
+RestServer/AdminClient.java
+ RestServer.AdminClient

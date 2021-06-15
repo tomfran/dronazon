@@ -51,7 +51,7 @@ public class Statistics {
                 tot += s.getAvgDelivery();
             }
         }
-        return (tot > 0)? sum / tot : 0;
+        return (tot > 0)? tot / sum : 0;
     }
 
     public synchronized double avgKm(long t1, long t2){
@@ -66,7 +66,7 @@ public class Statistics {
                 tot += s.getAvgKm();
             }
         }
-        return (tot > 0)? sum / tot : 0;
+        return (tot > 0)? tot / sum : 0;
     }
 
 }
