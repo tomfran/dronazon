@@ -15,17 +15,6 @@
           </set>
         </option>
       </GradleProjectSettings>
-      <GradleProjectSettings>
-        <option name="delegatedBuild" value="true" />
-        <option name="testRunner" value="GRADLE" />
-        <option name="distributionType" value="DEFAULT_WRAPPED" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/../unimi/unimi-notes/material/sistemi-distribuiti/lab/setup_rest_mqtt-master" />
-        <option name="modules">
-          <set>
-            <option value="$PROJECT_DIR$/../unimi/unimi-notes/material/sistemi-distribuiti/lab/setup_rest_mqtt-master" />
-          </set>
-        </option>
-      </GradleProjectSettings>
     </option>
   </component>
 </project>
