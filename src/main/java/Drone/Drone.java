@@ -400,7 +400,7 @@ public class Drone implements Comparable<Drone>{
 
     public void decreaseBattery() {
         synchronized (batteryLock){
-            battery -= 15;
+            battery -= 10;
         }
     }
 
