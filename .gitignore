@@ -1,5 +1,8 @@
 # mqtt
 paho*
+.gradle
+.idea
+build
 
 # Compiled class file
 *.class
